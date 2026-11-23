@@ -79,11 +79,15 @@ function renderWallpaper(html, imageUrl) {
   return html.replace(HERO_IMAGE, () => `<div class="hero"><img src="${escapeAttr(imageUrl)}" alt="">`);
 }
 
-function generate(options = {}) {
+// Applies the Prime Cars branding (logo, palette, SEO, contact buttons) to the root index.html template.
+// live: page served by the Node server (keeps the /api calls, payment form and /i18n.js);
+// otherwise: single self-contained file for the static site (data inlined, no backend).
+function renderSite(options = {}, { live = false } = {}) {
   const settings = readSettings(options.settings);
   const analytics = readAnalytics(options.analytics);
   const data = options.data || { cars: readJson('cars.json'), social: readJson('social.json') };
-  if (settings.wallpaperImage && !options.wallpaperDataUrl) throw new Error('Image de fond manquante pour la génération du site.');
+  const wallpaperUrl = live ? settings.wallpaperImage : options.wallpaperDataUrl;
+  if (settings.wallpaperImage && !wallpaperUrl) throw new Error('Image de fond manquante pour la génération du site.');
   // "<" escaped so the inlined JSON can never close the <script> tag.
   const dataScript = `<script>window.SITE_DATA = ${JSON.stringify(data, null, 2).replace(/</g, '\\u003c')};</script>`;
 
@@ -200,14 +204,16 @@ function generate(options = {}) {
     @media(max-width:420px){.brand-logo{width:126px;height:40px}}${CONTACT_CSS}
   </style>`;
 
-  // Single self-contained file: data inlined, API calls replaced, deposit form hidden (no payment server).
+  // Static version = single self-contained file: data inlined, API calls replaced, deposit form hidden (no payment server).
   const REPLACEMENTS = [
-    ['<script src="/social-links.js"></script>', `<script>\n${fs.readFileSync(path.join(ROOT, 'social-links.js'), 'utf8').replace(/<\/script/gi, '<\\/script')}\n</script>`],
-    ['</head>', `  ${THEME_CSS}\n  ${dataScript}\n</head>`],
+    ...(live ? [] : [['<script src="/social-links.js"></script>', `<script>\n${fs.readFileSync(path.join(ROOT, 'social-links.js'), 'utf8').replace(/<\/script/gi, '<\\/script')}\n</script>`]]),
+    ['</head>', live ? `  ${THEME_CSS}\n</head>` : `  ${THEME_CSS}\n  ${dataScript}\n</head>`],
     ['<title>ALLANI Auto — Votre prochaine destination</title>', `<title>${escapeAttr(TITLE)}</title>\n  ${seoTags}`],
-    ["(await fetch('/api/cars').then(response=>response.ok?response.json():[]).catch(()=>[]))", 'window.SITE_DATA.cars'],
-    ["await fetch('/api/social').then(response=>response.json()).catch(()=>({posts:[]}))", 'window.SITE_DATA.social'],
-    ["fetch('/api/payment-config')", 'Promise.reject()'],
+    ...(live ? [] : [
+      ["(await fetch('/api/cars').then(response=>response.ok?response.json():[]).catch(()=>[]))", 'window.SITE_DATA.cars'],
+      ["await fetch('/api/social').then(response=>response.json()).catch(()=>({posts:[]}))", 'window.SITE_DATA.social'],
+      ["fetch('/api/payment-config')", 'Promise.reject()']
+    ]),
     // Rebranding: ALLANI Auto -> Prime Cars, with the PrimeCar logo
     ['<span class="brandmark"><b></b><b></b></span>ALLANI<small>AUTO</small>', '<span class="logo-img brand-logo" aria-hidden="true"></span>'],
     ['<a href="?screen=accueil" style="font-family:Manrope;font-size:17px;font-weight:800;color:var(--ink)">ALLANI <span style="font-size:9px;font-weight:500">AUTO</span></a>', '<a href="?screen=accueil" class="logo-img footer-logo" aria-label="ALLANI Auto, accueil"></a>'],
@@ -221,7 +227,7 @@ function generate(options = {}) {
   ];
 
   let html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
-  if (settings.wallpaperImage) html = renderWallpaper(html, options.wallpaperDataUrl);
+  if (settings.wallpaperImage) html = renderWallpaper(html, wallpaperUrl);
   for (const [search, replacement] of REPLACEMENTS) {
     if (!html.includes(search)) throw new Error(`index.html : code introuvable, mettre à jour sync.js : ${search}`);
     // "$&" in a replacement stands for the searched text (to insert content before/after it).
@@ -231,8 +237,10 @@ function generate(options = {}) {
   // Language switcher (FR / EN / AR): the server version loads /i18n.js, the single-file demo inlines it.
   const I18N_TAG = '<script src="/i18n.js"></script>';
   if (!html.includes(I18N_TAG)) throw new Error(`index.html : code introuvable, mettre à jour sync.js : ${I18N_TAG}`);
-  const i18n = fs.readFileSync(path.join(ROOT, 'i18n.js'), 'utf8').replace(/<\/script/gi, '<\\/script');
-  html = html.replace(I18N_TAG, () => `<script>\n${i18n}</script>`);
+  if (!live) {
+    const i18n = fs.readFileSync(path.join(ROOT, 'i18n.js'), 'utf8').replace(/<\/script/gi, '<\\/script');
+    html = html.replace(I18N_TAG, () => `<script>\n${i18n}</script>`);
+  }
   const contactScript = fs.readFileSync(path.join(OUT, 'contact.js'), 'utf8').replace(/<\/script/gi, '<\\/script');
   html = html.replace('</head>', () => `  <script>\nwindow.SITE_CONTACT = ${JSON.stringify(CONTACT).replace(/</g, '\\u003c')};\n${contactScript}</script>\n</head>`);
   if (analytics.measurementId) {
@@ -242,6 +250,27 @@ function generate(options = {}) {
   html = html
     .replace(/#[0-9a-f]{6}(?=[0-9a-f]{2}\b|\b)/gi, color => COLOR_MAP[color.toLowerCase()] || color)
     .replace(/rgba\(8,21,16,/g, 'rgba(10,10,12,');
+  return { html, settings, analytics, data, siteUrl: SITE_URL, logo: LOGO };
+}
+
+function renderLiveSite(options = {}) {
+  return renderSite(options, { live: true }).html;
+}
+
+function renderLiveInfoPage(options = {}) {
+  const settings = readSettings(options.settings);
+  const logo = `data:image/jpeg;base64,${fs.readFileSync(path.join(OUT, 'assets', 'logo.jpg')).toString('base64')}`;
+  return infoPage.renderInfoPage({
+    settings,
+    social: options.social || readJson('social.json'),
+    logo,
+    siteUrl: (options.siteUrl || settings.siteUrl || '').replace(/\/$/, '')
+  });
+}
+
+function generate(options = {}) {
+  const { html, settings, analytics, data, siteUrl: SITE_URL, logo: LOGO } = renderSite(options);
+  const i18n = fs.readFileSync(path.join(ROOT, 'i18n.js'), 'utf8').replace(/<\/script/gi, '<\\/script');
   const demoSettings = { ...settings, wallpaperImage: options.wallpaperDataUrl || '' };
   const admin = renderAdmin({ snapshot: { ...data, staticSite: demoSettings, analytics }, i18n, logo: LOGO });
   fs.writeFileSync(path.join(OUT, 'index.html'), html);
@@ -345,4 +374,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { generate, renderLiveAdmin, renderWallpaper, readSnapshot, readSettings, readAnalytics, MEASUREMENT_ID_RE, DEFAULT_SETTINGS };
+module.exports = { generate, renderLiveSite, renderLiveInfoPage, renderLiveAdmin, renderWallpaper, readSnapshot, readSettings, readAnalytics, MEASUREMENT_ID_RE, DEFAULT_SETTINGS };

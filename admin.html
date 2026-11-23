@@ -118,6 +118,17 @@
     .social-accounts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:14px 0 24px}.social-account{min-width:0;padding:16px;border:1px solid var(--line);border-radius:6px;background:white}.social-account-head{display:flex;align-items:center;gap:9px;margin-bottom:16px;font-weight:800}.social-avatar{display:grid;place-items:center;width:32px;height:32px;border-radius:8px;background:#e8f0e7;color:var(--green);font:800 16px Manrope,sans-serif}.social-account input{font-size:13px}.social-profile-preview{display:block;margin-top:10px;color:var(--green);font-size:11px;overflow-wrap:anywhere;text-decoration:none}.social-account .field-hint{min-height:33px}
     .social-section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}.social-section-head h3{margin:0;font:800 15px Manrope,sans-serif}.social-posts{display:grid;gap:10px;margin:14px 0;padding:0;list-style:none}.social-post-row{display:grid;grid-template-columns:26px minmax(0,1fr) auto;gap:10px;align-items:start;padding:14px;border:1px solid var(--line);border-radius:5px}.post-order{padding-top:10px;color:var(--muted);font-weight:700;font-size:12px}.post-controls{display:flex;gap:5px;margin-top:22px}.post-controls button{min-width:32px;padding:8px;font-size:12px}.post-meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px;font-size:11px}.post-meta a{color:var(--green)}.social-empty{padding:20px;border:1px dashed var(--line);border-radius:5px;text-align:center;color:var(--muted);font-size:12px}.social-live-fields{margin-top:16px}.social-live-fields[disabled]{opacity:.6}input[aria-invalid="true"]{border-color:var(--red)}
     @media(max-width:1100px){.editor-layout{grid-template-columns:minmax(0,1fr)}.vehicle-preview{position:static;display:none}.social-accounts{grid-template-columns:minmax(0,1fr)}.social-account .field-hint{min-height:0}}
+    .toast{position:fixed;top:20px;left:50%;z-index:1000;display:flex;align-items:flex-start;gap:14px;width:min(460px,calc(100% - 32px));padding:18px 18px 18px 20px;border-radius:10px;background:var(--ink);color:#fff;box-shadow:0 18px 50px rgba(0,0,0,.28);transform:translateX(-50%);animation:toast-in .35s cubic-bezier(.2,.9,.3,1.2)}
+    .toast-icon{display:grid;place-items:center;flex-shrink:0;width:40px;height:40px;border-radius:50%;background:#1f9d55;color:#fff;font-size:22px;font-weight:800}
+    .toast-body{flex:1;min-width:0}.toast-body strong{display:block;font:800 16px Manrope,sans-serif}.toast-car{display:block;margin-top:3px;color:#fff;font-weight:600;font-size:13px;overflow-wrap:anywhere}.toast-body p{margin:4px 0 0;color:rgba(255,255,255,.75);font-size:12px;line-height:1.5}
+    .toast-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.toast-actions a,.toast-actions button{display:inline-flex;align-items:center;padding:8px 12px;border-radius:4px;border:1px solid rgba(255,255,255,.3);background:transparent;color:#fff;font-size:12px;font-weight:600;text-decoration:none}.toast-actions a{background:#fff;border-color:#fff;color:var(--ink)}
+    .toast-close{flex-shrink:0;padding:0 4px;border:0;background:transparent;color:rgba(255,255,255,.7);font-size:22px;line-height:1}.toast-close:hover{color:#fff}
+    .toast-progress{position:absolute;left:0;bottom:0;height:3px;border-radius:0 0 0 10px;background:#1f9d55;animation:toast-progress 8s linear forwards}.toast:hover .toast-progress{animation-play-state:paused}
+    @keyframes toast-in{from{opacity:0;transform:translate(-50%,-16px) scale(.97)}to{opacity:1;transform:translate(-50%,0)}}
+    @keyframes toast-progress{from{width:100%}to{width:0}}
+    #car-list tr.row-new td{animation:row-new 3.5s ease-out}
+    @keyframes row-new{0%,40%{background:#dff3e7}100%{background:transparent}}
+    @media(prefers-reduced-motion:reduce){.toast,#car-list tr.row-new td{animation:none}.toast-progress{display:none}}
     @media(max-width:480px){.form-block{padding:14px}.social-post-row{grid-template-columns:20px minmax(0,1fr);padding:10px}.post-controls{grid-column:2;margin-top:0}.social-section-head{align-items:flex-start;flex-direction:column}.editor-actions{align-items:stretch}.editor-actions .actions{width:100%}.editor-actions .actions button{flex:1}.photo-heading{align-items:flex-start;flex-direction:column}}
   </style>
   <script src="/social-links.js"></script>
@@ -356,6 +367,18 @@
     </div>
   </main>
 
+  <div class="toast hidden" id="car-toast" role="status" aria-live="polite" aria-atomic="true">
+    <span class="toast-icon" aria-hidden="true">✓</span>
+    <div class="toast-body">
+      <strong id="car-toast-title"></strong>
+      <span class="toast-car" id="car-toast-car" data-no-i18n></span>
+      <p id="car-toast-text"></p>
+      <div class="toast-actions"><a id="car-toast-view" href="/" target="_blank" rel="noopener">Voir l’annonce sur le site ↗</a><button type="button" id="car-toast-add">+ Ajouter un autre véhicule</button></div>
+    </div>
+    <button type="button" class="toast-close" id="car-toast-close" aria-label="Fermer">×</button>
+    <span class="toast-progress" aria-hidden="true"></span>
+  </div>
+
   <script>
     const $ = id => document.getElementById(id);
     const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -368,6 +391,7 @@
     let carBrandFilter = '';
     let showDemoReservations = false;
     let editingId = null;
+    let highlightedCarId = null;
     const adminReadOnly = false;
     let selectedPhotos = [];
     let currentPhotoUrls = [];
@@ -572,7 +596,7 @@
 
     function renderCars() {
       const visibleCars = carBrandFilter ? cars.filter(car => car.brand === carBrandFilter) : cars;
-      $('car-list').innerHTML = visibleCars.map(car => `<tr><td><img src="${esc(imgUrl(car.image))}" alt=""></td><td><strong>${esc(car.name)}</strong><br><small>${esc(car.trim)} · ${esc(car.year)} · ${esc(car.origin)}</small></td><td>${Number(car.price).toLocaleString('fr-FR')} TND</td><td><span class="pill ${esc(car.status)}">${statusLabel[car.status] || ''}</span></td><td><div class="share-actions"><button class="light" type="button" data-share-facebook="${esc(car.id)}">Facebook</button><button class="light" type="button" data-share-instagram="${esc(car.id)}">Instagram</button></div></td><td style="white-space:nowrap"><button class="light" data-edit="${esc(car.id)}">Modifier</button> <button class="danger" data-delete="${esc(car.id)}">Supprimer</button></td></tr>`).join('') || '<tr><td colspan="6">Aucun véhicule pour cette marque.</td></tr>';
+      $('car-list').innerHTML = visibleCars.map(car => `<tr data-car-id="${esc(car.id)}"${car.id === highlightedCarId ? ' class="row-new"' : ''}><td><img src="${esc(imgUrl(car.image))}" alt=""></td><td><strong>${esc(car.name)}</strong><br><small>${esc(car.trim)} · ${esc(car.year)} · ${esc(car.origin)}</small></td><td>${Number(car.price).toLocaleString('fr-FR')} TND</td><td><span class="pill ${esc(car.status)}">${statusLabel[car.status] || ''}</span></td><td><div class="share-actions"><button class="light" type="button" data-share-facebook="${esc(car.id)}">Facebook</button><button class="light" type="button" data-share-instagram="${esc(car.id)}">Instagram</button></div></td><td style="white-space:nowrap"><button class="light" data-edit="${esc(car.id)}">Modifier</button> <button class="danger" data-delete="${esc(car.id)}">Supprimer</button></td></tr>`).join('') || '<tr><td colspan="6">Aucun véhicule pour cette marque.</td></tr>';
       $('clear-car-filter').classList.toggle('hidden', !carBrandFilter);
       $('clear-car-filter').textContent = carBrandFilter ? `Voir tous · ${carBrandFilter}` : 'Voir tous';
     }
@@ -840,6 +864,26 @@
       }
     });
 
+    let carToastTimer;
+    function hideCarToast() { clearTimeout(carToastTimer); $('car-toast').classList.add('hidden'); }
+    function showCarToast(car, updated) {
+      $('car-toast-title').textContent = updated ? 'Véhicule mis à jour' : 'Véhicule ajouté !';
+      $('car-toast-car').textContent = car ? [car.name, car.trim, car.year].filter(Boolean).join(' · ') : '';
+      $('car-toast-text').textContent = updated ? 'Vos modifications sont enregistrées.' : 'Véhicule ajouté et visible sur le site.';
+      const siteUrl = document.querySelector('.sidebar-site-link').href;
+      $('car-toast-view').href = car?.id ? new URL(`?screen=vehicule&id=${encodeURIComponent(car.id)}`, siteUrl).href : siteUrl;
+      $('car-toast-add').classList.toggle('hidden', updated);
+      const toast = $('car-toast');
+      toast.classList.add('hidden'); void toast.offsetWidth; toast.classList.remove('hidden');
+      clearTimeout(carToastTimer);
+      carToastTimer = setTimeout(hideCarToast, 8000);
+      document.querySelector('#car-list tr.row-new')?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+    $('car-toast').addEventListener('mouseenter', () => clearTimeout(carToastTimer));
+    $('car-toast').addEventListener('mouseleave', () => { carToastTimer = setTimeout(hideCarToast, 3000); });
+    $('car-toast-close').addEventListener('click', hideCarToast);
+    $('car-toast-add').addEventListener('click', () => { hideCarToast(); resetForm(); openCarForm(); });
+
     $('car-form').addEventListener('submit', async event => {
       event.preventDefault();
       if (!editingId && !selectedPhotos.length) {
@@ -854,9 +898,16 @@
       $('submit-car').disabled = true; message('car-msg', 'Envoi en cours…', true);
       try {
         const url = editingId ? '/api/admin/cars/' + encodeURIComponent(editingId) : '/api/admin/cars';
-        await api(url, { method: editingId ? 'PUT' : 'POST', body });
-        message('car-msg', editingId ? 'Véhicule mis à jour.' : 'Véhicule ajouté et visible sur le site.', true);
-        resetForm(); await loadAll();
+        const wasEditing = Boolean(editingId);
+        const saved = await api(url, { method: wasEditing ? 'PUT' : 'POST', body });
+        resetForm();
+        message('car-msg', 'Votre annonce n’est pas encore enregistrée.', true);
+        highlightedCarId = saved?.id || null;
+        carBrandFilter = '';
+        await loadAll();
+        showAdminPage('vehicles', true);
+        $('admin-content').scrollTop = 0;
+        showCarToast(saved, wasEditing);
       } catch (error) { message('car-msg', error.message); }
       finally {
         $('car-form').querySelectorAll('fieldset,button:not(.panel-toggle)').forEach(field => { field.disabled = false; });

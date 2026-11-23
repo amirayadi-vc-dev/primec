@@ -157,7 +157,7 @@ without committing secrets. The server loads `.env` when present.
 | Variables | Purpose |
 | --- | --- |
 | `PORT`, `BASE_URL` | Listening port and public URL used for return/share links and cookie security |
-| `DATABASE_URL`, `DATABASE_URL_POOLED` | Direct PostgreSQL URL for initialization and pooled URL for application requests |
+| `DATABASE_URL`, `DATABASE_URL_POOLED` | Direct PostgreSQL URL for initialization and pooled URL for application requests. `*.neon.tech` URLs use the Neon WebSocket driver (`@neondatabase/serverless`, port 443); other hosts use `postgrejs` (port 5432) |
 | `ADMIN_PASSWORD` | Admin password; administration login is disabled if shorter than 12 characters |
 | `DEPOSIT_AMOUNT`, `DEPOSIT_CURRENCY` | Deposit configuration |
 | `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` | Stripe checkout and optional signed webhook |

@@ -57,6 +57,37 @@ function query(connection, sql, params = []) {
   return connection.query(sql, { params, rowDecoder: 'object' });
 }
 
+const isNeonUrl = url => {
+  try { return /\.neon\.tech$/i.test(new URL(url).hostname); } catch { return false; }
+};
+
+// Neon over WebSocket (port 443): works on networks that block PostgreSQL's port 5432.
+// Exposes the subset of the postgrejs API used below (query / acquire / close / connect).
+function neonDriver() {
+  const { Pool: NeonPool, Client: NeonClient, neonConfig } = require('@neondatabase/serverless');
+  neonConfig.webSocketConstructor = WebSocket;
+  const wrap = (target, close) => ({ query: (sql, { params }) => target.query(sql, params), close });
+  return {
+    pool(connectionString, max) {
+      const pool = new NeonPool({ connectionString, max, connectionTimeoutMillis: 10000 });
+      return {
+        ...wrap(pool, () => pool.end()),
+        on: (event, listener) => pool.on(event, listener),
+        async acquire() { const client = await pool.connect(); return wrap(client, async () => client.release()); }
+      };
+    },
+    connection(connectionString) {
+      const client = new NeonClient(connectionString);
+      return { ...wrap(client, () => client.end()), connect: () => client.connect() };
+    }
+  };
+}
+
+const postgrejsDriver = {
+  pool: (connectionString, max) => new Pool({ connectionString, max, acquireTimeoutMillis: 10000, pipelineMaxQueries: 1 }),
+  connection: connectionString => new Connection(connectionString)
+};
+
 class FileStorage {
   constructor({ dataDir, uploadDir }) {
     this.dataDir = dataDir;
@@ -137,12 +168,8 @@ class PostgresStorage {
     this.dataDir = dataDir;
     this.uploadDir = uploadDir;
     this.directUrl = databaseUrl || pooledUrl;
-    this.pool = new Pool({
-      connectionString: pooledUrl || databaseUrl,
-      max: 10,
-      acquireTimeoutMillis: 10000,
-      pipelineMaxQueries: 1
-    });
+    this.driver = isNeonUrl(this.directUrl) ? neonDriver() : postgrejsDriver;
+    this.pool = this.driver.pool(pooledUrl || databaseUrl, 10);
     this.pool.on('error', error => console.error('Erreur de connexion PostgreSQL inactive :', error.message));
     this.documents = `"${schema}"."prime_cars_documents"`;
     this.uploads = `"${schema}"."prime_cars_uploads"`;
@@ -175,7 +202,7 @@ class PostgresStorage {
   }
 
   async seed({ emptyCatalog = false } = {}) {
-    const client = new Connection(this.directUrl);
+    const client = this.driver.connection(this.directUrl);
     await client.connect();
     try {
       await query(client, 'BEGIN');

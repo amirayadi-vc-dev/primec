@@ -97,6 +97,20 @@ test('Node /allani is authenticated and editable; the static snapshot uses an is
   assert.doesNotMatch(html, /#logout, #car-form \.actions/);
   assert.match(html, /class="light hidden" id="logout"/);
   assert.equal((await fetch(`${base}/allani/?section=social&lang=ar`)).status, 200);
+  const adminAlias = await fetch(`${base}/admin?section=add-car&lang=en`);
+  assert.equal(adminAlias.status, 200);
+  assert.equal(adminAlias.headers.get('cache-control'), 'no-store');
+  assert.equal(await adminAlias.text(), html);
+
+  for (const route of ['/info', '/info/']) {
+    const info = await fetch(`${base}${route}`);
+    assert.equal(info.status, 200);
+    assert.equal(info.headers.get('cache-control'), 'no-store');
+    const infoHtml = await info.text();
+    assert.match(infoHtml, /Prime Cars · Liens & réseaux sociaux/);
+    assert.ok(infoHtml.includes(`<meta property="og:url" content="${base}/info/">`));
+    assert.match(infoHtml, /data:image\/jpeg;base64,/);
+  }
 
   assert.equal((await fetch(`${base}/api/admin/me`)).status, 401);
   assert.equal((await fetch(`${base}/api/admin/cars`, { method: 'POST' })).status, 401);

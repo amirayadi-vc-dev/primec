@@ -65,29 +65,43 @@ app.get('/health', async (req, res) => {
   res.set('Cache-Control', 'no-store').sendStatus(200);
 });
 app.get('/', async (req, res) => {
-  const wallpaper = staticSite.readSettings(await readJson('static-site.json')).wallpaperImage;
-  if (typeof wallpaper !== 'string') throw new Error('Image de fond invalide dans les réglages du site.');
-  if (!wallpaper) return res.sendFile(path.join(__dirname, 'index.html'));
-  uploadNameFromUrl(wallpaper);
-  const html = await fsp.readFile(path.join(__dirname, 'index.html'), 'utf8');
-  res.type('html').send(staticSite.renderWallpaper(html, wallpaper));
+  const documents = await storage.readMany(['cars.json', 'social.json', 'static-site.json', 'analytics.json']);
+  const settings = staticSite.readSettings(documents['static-site.json']);
+  if (typeof settings.wallpaperImage !== 'string') throw new Error('Image de fond invalide dans les réglages du site.');
+  if (settings.wallpaperImage) uploadNameFromUrl(settings.wallpaperImage);
+  res.set('Cache-Control', 'no-store').type('html').send(staticSite.renderLiveSite({
+    settings: documents['static-site.json'],
+    analytics: documents['analytics.json'],
+    data: { cars: documents['cars.json'], social: documents['social.json'] },
+    siteUrl: settings.siteUrl || BASE_URL
+  }));
 });
-app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
-app.get('/allani', (req, res) => res.set('Cache-Control', 'no-store').type('html').send(staticSite.renderLiveAdmin()));
+const liveAdminPage = (req, res) => res.set('Cache-Control', 'no-store').type('html').send(staticSite.renderLiveAdmin());
+app.get('/admin', liveAdminPage);
+app.get('/allani', liveAdminPage);
+app.get(['/info', '/info/'], async (req, res) => {
+  const documents = await storage.readMany(['social.json', 'static-site.json']);
+  const settings = staticSite.readSettings(documents['static-site.json']);
+  res.set('Cache-Control', 'no-store').type('html').send(staticSite.renderLiveInfoPage({
+    settings: documents['static-site.json'],
+    social: documents['social.json'],
+    siteUrl: settings.siteUrl || BASE_URL
+  }));
+});
 app.get('/i18n.js', (req, res) => res.sendFile(path.join(__dirname, 'i18n.js')));
 app.get('/social-links.js', (req, res) => res.sendFile(path.join(__dirname, 'social-links.js')));
 app.get('/share/:id', async (req, res) => {
   const car = (await readJson('cars.json')).find(item => item.id === req.params.id);
   if (!car) return res.status(404).send('Véhicule introuvable.');
   const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));
-  const title = `${car.name} · ALLANI Auto`;
-  const description = `${car.trim || car.name} · ${car.year} · ${Number(car.price).toLocaleString('fr-FR')} TND. Découvrez ce véhicule chez ALLANI Auto.`;
+  const title = `${car.name} · Prime Cars`;
+  const description = `${car.trim || car.name} · ${car.year} · ${Number(car.price).toLocaleString('fr-FR')} TND. Découvrez ce véhicule chez Prime Cars.`;
   const image = /^\/uploads\/[a-f0-9]{24}\.(jpg|png|webp)$/.test(car.image || '')
     ? `${BASE_URL}${car.image}`
     : `https://images.unsplash.com/${encodeURIComponent(car.image || 'photo-1492144534655-ae79c964c9d7')}?auto=format&fit=crop&w=1200&q=85`;
   const shareUrl = `${BASE_URL}/share/${encodeURIComponent(car.id)}`;
   const vehicleUrl = `${BASE_URL}/?screen=vehicule&id=${encodeURIComponent(car.id)}`;
-  res.set('Cache-Control', 'public, max-age=300').type('html').send(`<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta property="og:type" content="website"><meta property="og:locale" content="fr_FR"><meta property="og:site_name" content="ALLANI Auto"><meta property="og:title" content="${escapeHtml(title)}"><meta property="og:description" content="${escapeHtml(description)}"><meta property="og:image" content="${escapeHtml(image)}"><meta property="og:url" content="${escapeHtml(shareUrl)}"><meta name="twitter:card" content="summary_large_image"><meta http-equiv="refresh" content="0;url=${escapeHtml(vehicleUrl)}"><title>${escapeHtml(title)}</title></head><body><p><a href="${escapeHtml(vehicleUrl)}">Ouvrir la fiche ${escapeHtml(car.name)}</a></p></body></html>`);
+  res.set('Cache-Control', 'public, max-age=300').type('html').send(`<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta property="og:type" content="website"><meta property="og:locale" content="fr_FR"><meta property="og:site_name" content="Prime Cars"><meta property="og:title" content="${escapeHtml(title)}"><meta property="og:description" content="${escapeHtml(description)}"><meta property="og:image" content="${escapeHtml(image)}"><meta property="og:url" content="${escapeHtml(shareUrl)}"><meta name="twitter:card" content="summary_large_image"><meta http-equiv="refresh" content="0;url=${escapeHtml(vehicleUrl)}"><title>${escapeHtml(title)}</title></head><body><p><a href="${escapeHtml(vehicleUrl)}">Ouvrir la fiche ${escapeHtml(car.name)}</a></p></body></html>`);
 });
 app.get('/uploads/:name', async (req, res) => {
   if (!IMAGE_NAME_RE.test(req.params.name)) return res.sendStatus(404);
