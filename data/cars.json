@@ -1,0 +1,128 @@
+[
+  {
+    "id": "mercedes",
+    "brand": "Mercedes-Benz",
+    "name": "Mercedes-Benz Classe C",
+    "trim": "220 d AMG Line",
+    "year": 2023,
+    "km": "24 500",
+    "fuel": "Diesel",
+    "origin": "France",
+    "kind": "occasion",
+    "price": 169000,
+    "power": "200 ch",
+    "image": "photo-1618843479313-40f8afb4b4d8",
+    "images": [],
+    "status": "available",
+    "description": {
+      "fr": "Berline de référence, la Classe C 220 d allie confort de grande routière et sobriété du diesel. La finition AMG Line lui donne une allure sportive : boucliers spécifiques, jantes AMG et sellerie soignée. Avec 200 ch et seulement 24 500 km, cet exemplaire de 2023 importé de France est idéal pour les longs trajets comme pour la ville.",
+      "en": "A benchmark saloon, the C-Class 220 d combines grand-touring comfort with diesel efficiency. The AMG Line trim adds a sporty look: dedicated bumpers, AMG wheels and refined upholstery. With 200 hp and only 24,500 km, this 2023 car imported from France is ideal for long journeys as well as city driving.",
+      "ar": "سيدان مرجعية، تجمع مرسيدس الفئة C ‏220 d بين راحة السفر الطويل واقتصاد محرك الديزل. تمنحها فئة AMG Line مظهرًا رياضيًا: مصدّات خاصة وجنوط AMG ومقاعد راقية. بقوة 200 حصان و24,500 كم فقط، هذه النسخة من موديل 2023 المستوردة من فرنسا مثالية للرحلات الطويلة وللقيادة في المدينة."
+    }
+  },
+  {
+    "id": "bmw",
+    "brand": "BMW",
+    "name": "BMW Série 3",
+    "trim": "320i M Sport",
+    "year": 2025,
+    "km": "0",
+    "fuel": "Essence",
+    "origin": "Dubaï",
+    "kind": "neuf",
+    "price": 195000,
+    "power": "184 ch",
+    "image": "photo-1555215695-3004980ad54e",
+    "images": [],
+    "status": "available",
+    "description": {
+      "fr": "Neuve et livrée depuis les Émirats arabes unis, cette BMW Série 3 320i M Sport incarne le plaisir de conduite à la bavaroise : propulsion, direction précise et moteur essence de 184 ch. Le pack M Sport ajoute un look affûté, des sièges sport et un châssis plus dynamique. Une berline polyvalente, élégante au quotidien.",
+      "en": "Brand new and shipped from the United Arab Emirates, this BMW 3 Series 320i M Sport embodies Bavarian driving pleasure: rear-wheel drive, precise steering and a 184 hp petrol engine. The M Sport package adds a sharper look, sport seats and a more dynamic chassis. A versatile saloon that stays elegant every day.",
+      "ar": "جديدة ومشحونة من الإمارات العربية المتحدة، تجسّد BMW الفئة الثالثة 320i M Sport متعة القيادة البافارية: دفع خلفي وتوجيه دقيق ومحرك بنزين بقوة 184 حصانًا. تضيف حزمة M Sport مظهرًا أكثر حدّة ومقاعد رياضية وهيكلًا أكثر ديناميكية. سيدان متعددة الاستخدامات وأنيقة في الحياة اليومية."
+    }
+  },
+  {
+    "id": "audi",
+    "brand": "Audi",
+    "name": "Audi A5 Sportback",
+    "trim": "40 TDI S line",
+    "year": 2022,
+    "km": "38 000",
+    "fuel": "Diesel",
+    "origin": "France",
+    "kind": "occasion",
+    "price": 158000,
+    "power": "204 ch",
+    "image": "photo-1606152421802-db97b9c7a11b",
+    "images": [],
+    "status": "available",
+    "description": {
+      "fr": "L'Audi A5 Sportback marie la ligne d'un coupé à la praticité d'un hayon cinq portes. Le moteur 40 TDI de 204 ch offre de belles performances avec une consommation maîtrisée, et la finition S line apporte une présentation sportive. Un exemplaire de 2022 avec 38 000 km, en provenance de France.",
+      "en": "The Audi A5 Sportback blends coupé styling with the practicality of a five-door hatch. The 204 hp 40 TDI engine delivers strong performance with controlled fuel consumption, and the S line trim adds a sporty finish. A 2022 car with 38,000 km, coming from France.",
+      "ar": "تجمع أودي A5 سبورتباك بين خطوط الكوبيه وعملية الباب الخلفي بخمسة أبواب. يقدّم محرك 40 TDI بقوة 204 أحصنة أداءً قويًا مع استهلاك معتدل للوقود، وتضيف فئة S line لمسة رياضية. نسخة من موديل 2022 بعدّاد 38,000 كم، قادمة من فرنسا."
+    }
+  },
+  {
+    "id": "volkswagen",
+    "brand": "Volkswagen",
+    "name": "Volkswagen Golf",
+    "trim": "1.5 eTSI R-Line",
+    "year": 2025,
+    "km": "0",
+    "fuel": "Hybride",
+    "origin": "France",
+    "kind": "neuf",
+    "price": 132000,
+    "power": "150 ch",
+    "image": "photo-1502877338535-766e1452684a",
+    "images": [],
+    "status": "available",
+    "description": {
+      "fr": "Icône de sa catégorie, la Golf neuve en finition R-Line associe compacité, qualité de fabrication et équipement moderne. Sa motorisation 1.5 eTSI de 150 ch à hybridation légère réduit la consommation en ville. Une compacte facile à vivre, parfaite pour le quotidien en Tunisie.",
+      "en": "An icon of its class, the new Golf in R-Line trim combines compact size, build quality and modern equipment. Its 150 hp 1.5 eTSI mild-hybrid engine lowers fuel consumption in town. An easy-going hatchback, perfect for everyday life in Tunisia.",
+      "ar": "أيقونة فئتها، تجمع فولكس فاغن غولف الجديدة بفئة R-Line بين الحجم المدمج وجودة التصنيع والتجهيزات الحديثة. يقلّل محرك 1.5 eTSI الهجين الخفيف بقوة 150 حصانًا استهلاك الوقود داخل المدينة. سيارة مدمجة سهلة الاستخدام، مثالية للحياة اليومية في تونس."
+    }
+  },
+  {
+    "id": "porsche",
+    "brand": "Porsche",
+    "name": "Porsche 911",
+    "trim": "Carrera PDK",
+    "year": 2021,
+    "km": "31 200",
+    "fuel": "Essence",
+    "origin": "Dubaï",
+    "kind": "occasion",
+    "price": 389000,
+    "power": "385 ch",
+    "image": "photo-1503376780353-7e6692767b70",
+    "images": [],
+    "status": "available",
+    "description": {
+      "fr": "Mythe de l'automobile sportive, la Porsche 911 Carrera (génération 992) associe un six-cylindres à plat de 385 ch à la boîte PDK à double embrayage. Performances, sonorité et confort au quotidien : ce modèle 2021 de 31 200 km, en provenance des Émirats arabes unis, offre l'expérience 911 dans toute sa pureté.",
+      "en": "A legend among sports cars, the Porsche 911 Carrera (992 generation) pairs a 385 hp flat-six engine with the PDK dual-clutch gearbox. Performance, sound and everyday comfort: this 2021 car with 31,200 km, coming from the United Arab Emirates, delivers the pure 911 experience.",
+      "ar": "أسطورة السيارات الرياضية، تجمع بورشه 911 كاريرا (الجيل 992) بين محرك سداسي الأسطوانات متقابل بقوة 385 حصانًا وعلبة تروس PDK مزدوجة القابض. أداء وصوت وراحة يومية: هذه النسخة من موديل 2021 بعدّاد 31,200 كم، القادمة من الإمارات العربية المتحدة، تقدّم تجربة 911 بكل نقائها."
+    }
+  },
+  {
+    "id": "bmw-electric",
+    "brand": "BMW",
+    "name": "BMW i4",
+    "trim": "eDrive35 M Sport",
+    "year": 2025,
+    "km": "0",
+    "fuel": "Électrique",
+    "origin": "France",
+    "kind": "neuf",
+    "price": 218000,
+    "power": "286 ch",
+    "image": "photo-1556189250-72ba954cfc2b",
+    "images": [],
+    "status": "available",
+    "description": {
+      "fr": "La BMW i4 eDrive35 est un Gran Coupé 100 % électrique : silencieux, réactif et sans émissions à l'usage. Ses 286 ch et la finition M Sport lui donnent un caractère dynamique, tandis que son hayon offre un vrai coffre familial. Un véhicule neuf pour passer à l'électrique sans renoncer au plaisir de conduire.",
+      "en": "The BMW i4 eDrive35 is a fully electric Gran Coupé: quiet, responsive and emission-free on the road. Its 286 hp and M Sport trim give it a dynamic character, while its tailgate provides a genuine family-sized boot. A brand-new car to go electric without giving up driving pleasure.",
+      "ar": "BMW i4 eDrive35 هي غران كوبيه كهربائية بالكامل: هادئة وسريعة الاستجابة وبدون انبعاثات أثناء القيادة. تمنحها قوة 286 حصانًا وفئة M Sport طابعًا ديناميكيًا، بينما يوفّر بابها الخلفي صندوقًا عائليًا حقيقيًا. سيارة جديدة للانتقال إلى الكهرباء دون التخلي عن متعة القيادة."
+    }
+  }
+]

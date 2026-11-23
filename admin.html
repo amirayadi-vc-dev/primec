@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>ALLANI Auto — Espace admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@650;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--ink:#172821;--green:#205c47;--muted:#758079;--line:#e1e6e1;--paper:#f5f7f3;--red:#b3261e}
+    *{box-sizing:border-box}body{margin:0;height:100vh;height:100dvh;display:flex;flex-direction:column;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--paper)}
+    h1,h2{font-family:Manrope,sans-serif;margin:0}h1{font-size:24px}h2{font-size:18px;margin-bottom:16px}
+    header{flex-shrink:0;background:var(--ink);color:white;padding:16px 28px;display:flex;justify-content:space-between;align-items:center}
+    header a{color:#d8f278;text-decoration:none;font-size:13px}
+    main{max-width:1100px;margin:28px auto;padding:0 20px;display:grid;gap:24px}
+    #app.admin-shell{flex:1;max-width:none;width:100%;min-height:0;margin:0;padding:0;grid-template-columns:238px minmax(0,1fr);grid-template-rows:minmax(0,1fr);gap:0;align-items:stretch;overflow:hidden}
+    .admin-sidebar{display:flex;flex-direction:column;min-height:0;height:100%;padding:22px 14px;background:white;border-right:1px solid var(--line);overflow:hidden}
+    .sidebar-heading{flex-shrink:0;display:flex;justify-content:space-between;align-items:center;padding:0 8px 18px;border-bottom:1px solid var(--line)}
+    .sidebar-brand{font-family:Manrope,sans-serif;font-size:15px;font-weight:800;color:var(--ink);text-decoration:none}.sidebar-brand small{display:block;color:var(--muted);font:600 9px 'DM Sans',sans-serif;margin-top:3px}
+    .sidebar-label{flex-shrink:0;padding:18px 10px 8px;color:var(--muted);font-size:9px;font-weight:700;letter-spacing:.08em}
+    .sidebar-menu-toggle{display:grid;width:38px;height:38px;padding:0;background:white;color:var(--ink);border:1px solid var(--line);place-items:center}
+    .sidebar-menu-icon,.sidebar-menu-icon:before,.sidebar-menu-icon:after{width:16px;height:2px;background:currentColor;display:block;position:relative}.sidebar-menu-icon:before,.sidebar-menu-icon:after{content:'';position:absolute;left:0}.sidebar-menu-icon:before{top:-5px}.sidebar-menu-icon:after{top:5px}
+    .sidebar-menu-toggle[aria-expanded="true"] .sidebar-menu-icon{background:transparent}.sidebar-menu-toggle[aria-expanded="true"] .sidebar-menu-icon:before{top:0;transform:rotate(45deg)}.sidebar-menu-toggle[aria-expanded="true"] .sidebar-menu-icon:after{top:0;transform:rotate(-45deg)}
+    #app.admin-shell.menu-collapsed{grid-template-columns:66px minmax(0,1fr)}.admin-sidebar.menu-collapsed{padding-inline:10px}.admin-sidebar.menu-collapsed .sidebar-heading{justify-content:center;padding-inline:0}.admin-sidebar.menu-collapsed .sidebar-brand,.admin-sidebar.menu-collapsed .sidebar-label,.admin-sidebar.menu-collapsed .admin-nav,.admin-sidebar.menu-collapsed .sidebar-site-link{display:none}
+    .admin-content{width:min(1400px,100%);min-width:0;min-height:0;height:100%;overflow-y:auto;overscroll-behavior:contain;grid-template-columns:minmax(0,1fr);margin:0 auto;padding:26px clamp(18px,3vw,42px);display:grid;align-content:start;gap:20px}
+    .card{background:white;border:1px solid var(--line);border-radius:6px;padding:24px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+    label{display:block;font-size:12px;font-weight:600;margin-bottom:6px}
+    input,select,textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:4px;font:inherit;background:white}
+    textarea{min-height:120px;resize:vertical}
+    button{font:inherit;cursor:pointer;border-radius:4px;padding:11px 18px;border:1px solid var(--green);background:var(--green);color:white;font-weight:600}
+    button.light{background:white;color:var(--ink);border-color:var(--line)}button.danger{background:white;color:var(--red);border-color:#f0c9c6}
+    .actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+    .help{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.6}
+    .msg{margin-top:12px;font-size:13px}.msg.error{color:var(--red)}.msg.ok{color:var(--green)}
+    table{width:100%;border-collapse:collapse;font-size:13px}td,th{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+    td img{width:84px;height:56px;object-fit:cover;border-radius:4px}
+    .pill{display:inline-block;padding:3px 8px;border-radius:20px;font-size:11px;background:#e8f0e7;color:var(--green)}.pill.reserved{background:#fff3d6;color:#8a5a00}.pill.sold,.pill.pending{background:#eee;color:#555}
+    .switch{display:flex;align-items:center;gap:10px;font-weight:600}.switch input{width:auto}
+    #login{flex-shrink:0;width:calc(100% - 32px);max-width:380px;margin:80px auto}.hidden{display:none!important}
+    .previews{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.previews img{width:90px;height:60px;object-fit:cover;border-radius:4px}
+    .dashboard-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}.dashboard-head h2{margin:0}
+    .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.stat{padding:16px;border:1px solid var(--line);border-radius:4px}.stat span{display:block;color:var(--muted);font-size:12px}.stat strong{display:block;font:800 28px Manrope,sans-serif;margin-top:8px}.stat small{color:var(--muted);font-size:11px}
+    .brand-list{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.brand-chip{background:white;color:var(--ink);border-color:var(--line);padding:8px 11px;font-size:12px}.brand-chip:hover,.brand-chip.active{background:#e8f0e7;border-color:var(--green);color:var(--green)}
+    .section-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}.section-heading h2{margin:0}.table-wrap{overflow-x:auto}.appointment-form{margin-bottom:20px}
+    .admin-nav{display:grid;align-items:start;min-height:0;overflow-y:auto;overscroll-behavior:contain;gap:4px;padding:0 2px}.admin-nav a{display:flex;align-items:center;min-height:42px;padding:10px 12px;border-left:3px solid transparent;border-radius:0 4px 4px 0;color:var(--ink);font-size:12px;font-weight:600;text-decoration:none}.admin-nav a:hover,.admin-nav a:focus-visible,.admin-nav a.active{background:#e8f0e7;border-left-color:var(--green);color:var(--green)}
+    .admin-nav-group{display:grid;gap:4px}.admin-nav .admin-nav-child{margin-inline-start:16px}
+    .sidebar-site-link{flex-shrink:0;display:block;margin:auto 10px 0;padding-top:16px;border-top:1px solid var(--line);font-size:12px;font-weight:600;color:var(--green);text-decoration:none}
+    #admin-content>.card{width:100%;min-width:0;scroll-margin-top:18px;border-radius:4px;border-color:#dbe2dc;box-shadow:0 2px 8px #17282108}
+    .panel-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}.panel-heading h2,.dashboard-head h2,.section-heading h2{margin:0}.panel-heading-extra{display:flex;align-items:center;gap:8px}.panel-toggle{width:38px;height:38px;display:grid;place-items:center;padding:0;background:white;color:var(--ink);border:1px solid var(--line)}.panel-toggle .chevron{width:9px;height:9px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(225deg);transition:transform .18s ease}.panel-toggle[aria-expanded="false"] .chevron{transform:rotate(45deg)}
+    #vehicle-list-section .panel-heading-extra{justify-content:flex-end}
+    .wallpaper-settings{margin:0 0 18px}.wallpaper-preview{display:block;width:min(100%,560px);aspect-ratio:16/7;object-fit:cover;margin:8px 0;border:1px solid var(--line);border-radius:4px}.wallpaper-settings input{max-width:560px}.wallpaper-settings button{margin-top:8px}
+    .share-actions{display:flex;gap:6px}.share-actions button{padding:7px 9px;font-size:11px;white-space:nowrap}.demo-note{font-size:12px;color:var(--muted);margin:-7px 0 12px}.pill.demo{background:#eaf1f8;color:#315d7a}
+    @media(max-width:760px){#app.admin-shell,#app.admin-shell.menu-collapsed{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}.admin-sidebar,.admin-sidebar.menu-collapsed{z-index:10;min-height:0;height:auto;max-height:70vh;max-height:70dvh;padding:8px 14px;border-right:0;border-bottom:1px solid var(--line)}.sidebar-heading,.admin-sidebar.menu-collapsed .sidebar-heading{padding:2px 4px;border-bottom:0;justify-content:space-between}.admin-sidebar.menu-collapsed .sidebar-brand{display:block}.admin-nav{display:none;grid-template-columns:1fr 1fr;padding:8px 0 2px}.admin-sidebar.menu-open .admin-nav{display:grid}.admin-nav a{min-height:40px}.sidebar-label,.sidebar-site-link{display:none}.admin-content{padding:18px 16px;gap:16px}}
+    @media(max-width:600px){.stats{grid-template-columns:1fr}.dashboard-head{align-items:flex-start;flex-direction:column}.card{padding:18px}header{padding:12px 16px}header h1{font-size:18px}header a{display:none}header #logout{margin-left:0!important;padding:7px 10px!important}}
+    @media(max-width:380px){.admin-nav{grid-template-columns:1fr}.admin-content{padding:14px 12px}}
+    .ga-period{width:auto;padding:8px 10px;font-size:12px;margin-inline-start:auto}
+    .dash-sub{margin:-6px 0 18px;color:var(--muted);font-size:12px}.dash-sub b{color:var(--ink);font-weight:600}
+    .dash-actions{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+    .dash-actions a{display:inline-flex;align-items:center;min-height:36px;padding:8px 13px;border:1px solid var(--line);border-radius:4px;background:white;color:var(--ink);font-size:12px;font-weight:600;text-decoration:none}
+    .dash-actions a:hover,.dash-actions a:focus-visible{border-color:var(--green);color:var(--green)}.dash-actions a.primary{background:var(--green);border-color:var(--green);color:white}
+    .dash-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+    .kpi{position:relative;min-width:0;padding-block:16px 14px;padding-inline:19px 16px;border:1px solid var(--line);border-radius:6px;background:linear-gradient(180deg,#fff 40%,#f5f7f3);overflow:hidden}
+    .kpi:before{content:'';position:absolute;inset-block:0;inset-inline-start:0;width:3px;background:var(--green)}
+    .kpi>span{display:block;color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+    .kpi strong{display:block;margin:8px 0 6px;font:800 26px Manrope,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .kpi small{display:block;color:var(--muted);font-size:11px;line-height:1.5}.kpi small b{color:var(--ink)}
+    .status-bar{display:flex;height:6px;margin:0 0 8px;border-radius:3px;overflow:hidden;background:#edf0eb}.status-bar span{display:block;height:100%}
+    .st-available{background:var(--green)}.st-reserved{background:#d9a21b}.st-sold{background:#afc195}
+    .dash-row{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:16px;margin-top:16px}.dash-row.even{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .dash-panel{min-width:0;padding:18px;border:1px solid var(--line);border-radius:6px;background:white}
+    .dash-panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}.dash-panel h3{margin:0;font:800 14px Manrope,sans-serif}
+    .dash-panel-head a{color:var(--green);font-size:12px;font-weight:600;text-decoration:none;white-space:nowrap}
+    .dash-legend{display:flex;gap:16px;margin:-4px 0 12px;color:var(--muted);font-size:11px}.dash-legend i{display:inline-block;width:9px;height:9px;margin-inline-end:6px;border-radius:2px;vertical-align:-1px}
+    .series-appointments{background:var(--green)}.series-reservations{background:#afc195}
+    .dash-activity{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;height:210px;margin:0;padding:0;list-style:none}
+    .dash-activity li{display:grid;grid-template-rows:minmax(0,1fr) 18px;gap:6px;min-width:0}
+    .dash-activity .cols{display:flex;align-items:flex-end;justify-content:center;gap:4px;border-bottom:1px solid var(--line);background:repeating-linear-gradient(to top,transparent 0,transparent calc(25% - 1px),#edf0eb calc(25% - 1px),#edf0eb 25%)}
+    .dash-activity .cols span{width:min(18px,34%);min-height:2px;border-radius:3px 3px 0 0}.dash-activity .month{color:var(--muted);font-size:11px;text-align:center}
+    .dash-alerts,.dash-list,.dash-bars{display:grid;margin:0;padding:0;list-style:none}.dash-alerts{gap:8px}
+    .dash-alerts a{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:4px;color:var(--ink);font-size:12px;line-height:1.4;text-decoration:none}
+    .dash-alerts a:hover,.dash-alerts a:focus-visible{border-color:var(--green)}.dash-alerts a:after{content:'→';margin-inline-start:auto;color:var(--muted)}[dir="rtl"] .dash-alerts a:after{content:'←'}
+    .dash-alerts i{flex-shrink:0;width:8px;height:8px;border-radius:50%;background:#d9a21b}.dash-alerts .info i{background:#315d7a}.dash-alerts b{font:800 15px Manrope,sans-serif}
+    .dash-alerts .all-good{padding:12px;border-radius:4px;background:#e8f0e7;color:var(--green);font-size:12px;font-weight:600}
+    .dash-list li{display:grid;grid-template-columns:50px minmax(0,1fr) auto;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}.dash-list li:last-child{border-bottom:0}
+    .dash-date{display:grid;place-items:center;align-content:center;height:48px;border-radius:4px;background:#f5f7f3;color:var(--muted);font-size:10px;line-height:1.15;text-transform:uppercase}.dash-date b{color:var(--ink);font:800 17px Manrope,sans-serif}
+    .dash-list strong{display:block;overflow:hidden;font-size:13px;text-overflow:ellipsis;white-space:nowrap}.dash-list small{display:block;overflow:hidden;color:var(--muted);font-size:11px;text-overflow:ellipsis;white-space:nowrap}
+    .dash-list .dash-empty{display:block;padding:14px 0;color:var(--muted);font-size:12px}
+    .pill.planned{background:#fff3d6;color:#8a5a00}.pill.confirmed,.pill.paid{background:#e8f0e7;color:var(--green)}.pill.cancelled,.pill.failed{background:#fbeaea;color:var(--red)}.pill.completed{background:#eee;color:#555}
+    .dash-breakdowns{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:16px}.dash-bars{gap:10px}
+    .dash-bars li>*,.dash-bar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px 8px;width:100%;font-size:12px}
+    .dash-bar{padding:0;border:0;background:none;color:var(--ink);font-weight:400;text-align:start}.dash-bar:hover .dash-bar-label,.dash-bar.active .dash-bar-label{color:var(--green);font-weight:700}
+    .dash-bar-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dash-track{grid-column:1/-1;height:6px;border-radius:3px;overflow:hidden;background:#edf0eb}.dash-track span{display:block;height:100%;border-radius:inherit;background:var(--green)}
+    .dash-hint{margin:12px 0 0;color:var(--muted);font-size:11px}.dash-range{display:flex;justify-content:space-between;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}.dash-range b{color:var(--ink);text-align:end}
+    @media(max-width:1150px){.dash-kpis,.dash-breakdowns{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:820px){.dash-row,.dash-row.even{grid-template-columns:minmax(0,1fr)}}
+    @media(max-width:480px){.dash-kpis,.dash-breakdowns{grid-template-columns:minmax(0,1fr)}.dash-activity{gap:4px}}
+    .ga-note{display:flex;align-items:center;gap:10px;margin:0 0 16px;font-size:12px;color:var(--muted);line-height:1.6}.ga-note .pill{flex-shrink:0}
+    .ga-kpis{grid-template-columns:repeat(4,minmax(0,1fr))}.stat .ga-change{display:inline;font-size:11px}.ga-change{font-weight:700}.ga-change.up{color:var(--green)}.ga-change.down{color:var(--red)}
+    .ga-chart{margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}.ga-chart h3,.ga-block h3{margin:0 0 12px;font:800 14px Manrope,sans-serif}
+    .ga-chart svg{display:block;width:100%;height:180px}.ga-axis{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-top:6px}
+    .ga-grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:28px;margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}.ga-side{display:grid;gap:22px;align-content:start}
+    .ga-bars{display:grid;gap:9px;padding:0;margin:0;list-style:none}.ga-bars li{display:grid;grid-template-columns:minmax(90px,1fr) minmax(50px,1.3fr) 44px;align-items:center;gap:10px;font-size:12px}
+    .ga-track{display:block;height:7px;background:#eef0ee;border-radius:4px;overflow:hidden}.ga-track span{display:block;height:100%;background:var(--green);border-radius:inherit}.ga-bars strong{text-align:end}
+    .ga-pages td:last-child,.ga-pages th:last-child{text-align:end}.ga-pages small{color:var(--muted)}
+    #analytics-form{margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}#analytics-form input{max-width:320px}
+    @media(max-width:900px){.ga-grid{grid-template-columns:minmax(0,1fr)}.ga-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:600px){.ga-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.ga-note{align-items:flex-start;flex-direction:column}}
+    @media(max-width:700px){.share-actions{flex-direction:column}.share-actions button{width:100%}.panel-heading-extra{gap:5px}}
+    .form-intro{margin:0 0 20px;color:var(--muted);font-size:13px;line-height:1.6}
+    .editor-layout{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:22px;align-items:start}.editor-fields{min-width:0}
+    .form-block{min-width:0;margin:0 0 22px;padding:18px;border:1px solid var(--line);border-radius:6px}.form-block legend{padding:0 8px;font:800 14px Manrope,sans-serif}.step-number{display:inline-grid;place-items:center;width:25px;height:25px;margin-inline-end:7px;border-radius:50%;background:#e8f0e7;color:var(--green);font-size:12px}
+    .form-block .help{margin-bottom:0}.field-hint{display:block;color:var(--muted);font-size:11px;line-height:1.5;margin-top:5px}
+    .vehicle-preview{position:sticky;top:0;padding:16px;border:1px solid var(--line);border-radius:6px;background:#f5f7f3}.vehicle-preview h3{margin:0 0 12px;font-size:13px}.vehicle-preview-media{aspect-ratio:4/3;display:grid;place-items:center;margin-bottom:12px;background:#e8ebe7;border-radius:4px;overflow:hidden;color:var(--muted)}.vehicle-preview-media img{width:100%;height:100%;object-fit:cover}.vehicle-preview strong{display:block;font:800 17px Manrope,sans-serif;overflow-wrap:anywhere}.vehicle-preview p{margin:6px 0;color:var(--muted);font-size:12px}.vehicle-preview .preview-price{color:var(--green);font-weight:800;font-size:20px}.vehicle-preview .pill{margin-top:8px}
+    .photo-dropzone{position:relative;display:grid;place-items:center;gap:7px;padding:24px 16px;margin:0;border:2px dashed var(--line);border-radius:6px;background:#f5f7f3;text-align:center;cursor:pointer}.photo-dropzone input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}.photo-dropzone:focus-within,.photo-dropzone.drag-over{border-color:var(--green);background:#e8f0e7}.photo-dropzone span{color:var(--muted);font-size:12px}.photo-dropzone b{color:var(--green);font-size:13px}
+    .photo-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.photo-heading p{margin:0}.photo-count{white-space:nowrap;color:var(--muted);font-size:12px}.previews{display:grid;grid-template-columns:repeat(auto-fill,minmax(125px,1fr));gap:10px}.photo-tile{min-width:0;margin:0;padding:6px;border:1px solid var(--line);border-radius:5px;background:white}.photo-tile img{display:block;width:100%;height:95px;object-fit:cover;border-radius:3px}.photo-tile figcaption{display:grid;gap:5px;margin-top:6px}.photo-tile button{padding:6px;font-size:10px}.photo-tile .photo-label{font-size:10px;color:var(--muted);text-align:center}.photo-tile .pill{border-radius:3px;text-align:center;font-size:10px}
+    .editor-actions{position:sticky;bottom:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:16px;padding:14px 0 0;background:white;border-top:1px solid var(--line)}.editor-actions .actions{margin:0}.editor-status{margin:0;color:var(--muted);font-size:12px;line-height:1.5}.editor-actions button:disabled{opacity:.55;cursor:not-allowed}
+    .social-accounts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:14px 0 24px}.social-account{min-width:0;padding:16px;border:1px solid var(--line);border-radius:6px;background:white}.social-account-head{display:flex;align-items:center;gap:9px;margin-bottom:16px;font-weight:800}.social-avatar{display:grid;place-items:center;width:32px;height:32px;border-radius:8px;background:#e8f0e7;color:var(--green);font:800 16px Manrope,sans-serif}.social-account input{font-size:13px}.social-profile-preview{display:block;margin-top:10px;color:var(--green);font-size:11px;overflow-wrap:anywhere;text-decoration:none}.social-account .field-hint{min-height:33px}
+    .social-section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}.social-section-head h3{margin:0;font:800 15px Manrope,sans-serif}.social-posts{display:grid;gap:10px;margin:14px 0;padding:0;list-style:none}.social-post-row{display:grid;grid-template-columns:26px minmax(0,1fr) auto;gap:10px;align-items:start;padding:14px;border:1px solid var(--line);border-radius:5px}.post-order{padding-top:10px;color:var(--muted);font-weight:700;font-size:12px}.post-controls{display:flex;gap:5px;margin-top:22px}.post-controls button{min-width:32px;padding:8px;font-size:12px}.post-meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px;font-size:11px}.post-meta a{color:var(--green)}.social-empty{padding:20px;border:1px dashed var(--line);border-radius:5px;text-align:center;color:var(--muted);font-size:12px}.social-live-fields{margin-top:16px}.social-live-fields[disabled]{opacity:.6}input[aria-invalid="true"]{border-color:var(--red)}
+    @media(max-width:1100px){.editor-layout{grid-template-columns:minmax(0,1fr)}.vehicle-preview{position:static;display:none}.social-accounts{grid-template-columns:minmax(0,1fr)}.social-account .field-hint{min-height:0}}
+    @media(max-width:480px){.form-block{padding:14px}.social-post-row{grid-template-columns:20px minmax(0,1fr);padding:10px}.post-controls{grid-column:2;margin-top:0}.social-section-head{align-items:flex-start;flex-direction:column}.editor-actions{align-items:stretch}.editor-actions .actions{width:100%}.editor-actions .actions button{flex:1}.photo-heading{align-items:flex-start;flex-direction:column}}
+  </style>
+  <script src="/social-links.js"></script>
+</head>
+<body>
+  <header><h1>ALLANI Auto · Admin</h1><div><a href="/" target="_blank" rel="noopener">Voir le site ↗</a> <button class="light" id="logout" style="margin-left:14px;padding:7px 12px">Déconnexion</button></div></header>
+
+  <form class="card" id="login">
+    <h2>Connexion</h2>
+    <label for="password">Mot de passe</label>
+    <input id="password" type="password" autocomplete="current-password" required>
+    <div class="actions"><button type="submit">Se connecter</button></div>
+    <p class="msg error" id="login-msg"></p>
+  </form>
+
+  <main id="app" class="hidden admin-shell">
+    <aside class="admin-sidebar" id="admin-sidebar">
+      <div class="sidebar-heading"><a class="sidebar-brand" href="#dashboard-section">ALLANI AUTO<small>ESPACE DE GESTION</small></a><button class="sidebar-menu-toggle" id="sidebar-menu-toggle" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="admin-nav"><span class="sidebar-menu-icon" aria-hidden="true"></span></button></div>
+      <div class="sidebar-label">NAVIGATION</div>
+      <nav class="admin-nav" id="admin-nav" aria-label="Navigation du back-office">
+        <a class="active" aria-current="page" data-admin-page="dashboard" href="?section=dashboard">Dashboard</a>
+        <div class="admin-nav-group">
+          <a data-admin-page="vehicles" href="?section=vehicles">Véhicules</a>
+          <a class="admin-nav-child" data-admin-page="add-car" href="?section=add-car">+ Ajouter un véhicule</a>
+        </div>
+        <a data-admin-page="appointments" href="?section=appointments">Rendez-vous</a><a data-admin-page="social" href="?section=social">Réseaux sociaux</a><a data-admin-page="static-site" href="?section=static-site">Site vitrine</a><a data-admin-page="analytics" href="?section=analytics">Google Analytics</a><a data-admin-page="reservations" href="?section=reservations">Réservations</a>
+      </nav>
+      <a class="sidebar-site-link" href="/" target="_blank" rel="noopener">Voir le site ↗</a>
+    </aside>
+    <div class="admin-content" id="admin-content">
+    <section class="card" id="dashboard-section">
+      <div class="dashboard-head"><h2>Tableau de bord</h2><button class="light" type="button" id="refresh-dashboard">Actualiser</button></div>
+      <p class="dash-sub"><span>Vue d’ensemble de l’activité et du catalogue</span> · <span>Mis à jour</span> <b id="dash-updated">—</b></p>
+      <nav class="dash-actions" aria-label="Actions rapides">
+        <a class="primary" data-admin-page="add-car" href="?section=add-car">+ Ajouter un véhicule</a>
+        <a data-admin-page="appointments" href="?section=appointments">Nouveau rendez-vous</a>
+        <a data-admin-page="social" href="?section=social">Réseaux sociaux</a>
+        <a data-admin-page="static-site" href="?section=static-site">Site vitrine</a>
+        <a data-admin-page="analytics" href="?section=analytics">Google Analytics</a>
+      </nav>
+      <div class="dash-kpis">
+        <div class="kpi"><span>Véhicules au catalogue</span><strong id="stat-cars">0</strong><div class="status-bar" id="stat-status-bar" aria-hidden="true"></div><small id="stat-car-status">0 disponibles</small></div>
+        <div class="kpi"><span>Valeur du stock disponible</span><strong id="stat-stock">0 TND</strong><small><span>Prix moyen</span> <b id="stat-average">—</b></small></div>
+        <div class="kpi"><span>Rendez-vous à venir</span><strong id="stat-appointments">0</strong><small><b id="stat-to-confirm">0</b> <span>à confirmer</span> · <b id="stat-this-week">0</b> <span>sous 7 jours</span></small></div>
+        <div class="kpi"><span>Acomptes encaissés</span><strong id="stat-deposits">0</strong><small><b id="stat-paid">0</b> <span id="stat-paid-label">payés</span> · <b id="stat-pending">0</b> <span>en attente</span></small></div>
+      </div>
+      <div class="dash-row">
+        <section class="dash-panel" aria-labelledby="dash-activity-title">
+          <div class="dash-panel-head"><h3 id="dash-activity-title">Activité des 6 derniers mois</h3><span class="pill demo hidden" id="dash-activity-demo">Données démo</span></div>
+          <div class="dash-legend"><span><i class="series-appointments"></i>Rendez-vous</span><span><i class="series-reservations"></i>Réservations</span></div>
+          <ul class="dash-activity" id="dash-activity"></ul>
+        </section>
+        <section class="dash-panel" aria-labelledby="dash-alerts-title">
+          <div class="dash-panel-head"><h3 id="dash-alerts-title">Points d’attention</h3></div>
+          <ul class="dash-alerts" id="dash-alerts"></ul>
+        </section>
+      </div>
+      <div class="dash-row even">
+        <section class="dash-panel" aria-labelledby="dash-upcoming-title">
+          <div class="dash-panel-head"><h3 id="dash-upcoming-title">Prochains rendez-vous</h3><a data-admin-page="appointments" href="?section=appointments">Tout voir →</a></div>
+          <ul class="dash-list" id="dash-upcoming"></ul>
+        </section>
+        <section class="dash-panel" aria-labelledby="dash-recent-title">
+          <div class="dash-panel-head"><h3 id="dash-recent-title">Dernières réservations</h3><a data-admin-page="reservations" href="?section=reservations">Tout voir →</a></div>
+          <ul class="dash-list" id="dash-recent"></ul>
+        </section>
+      </div>
+      <div class="dash-breakdowns">
+        <section class="dash-panel"><div class="dash-panel-head"><h3>Par marque</h3></div><ul class="dash-bars" id="brand-list"></ul><p class="dash-hint">Cliquer sur une marque pour filtrer les véhicules</p></section>
+        <section class="dash-panel"><div class="dash-panel-head"><h3>Motorisation</h3></div><ul class="dash-bars" id="dash-fuel"></ul></section>
+        <section class="dash-panel"><div class="dash-panel-head"><h3>Provenance</h3></div><ul class="dash-bars" id="dash-origin"></ul></section>
+        <section class="dash-panel"><div class="dash-panel-head"><h3>Neuf ou occasion</h3></div><ul class="dash-bars" id="dash-kind"></ul><div class="dash-range"><span>Gamme de prix</span><b id="dash-price-range">—</b></div></section>
+      </div>
+    </section>
+
+    <form class="card" id="car-form">
+      <h2 id="form-title">Ajouter un véhicule</h2>
+      <p class="form-intro">Préparez votre annonce en trois étapes. Les champs marqués * sont obligatoires.</p>
+      <div class="editor-layout">
+      <div class="editor-fields">
+      <fieldset class="form-block">
+        <legend><span class="step-number">1</span> Identité du véhicule</legend>
+        <div class="grid">
+        <div><label for="f-brand">Marque *</label><input id="f-brand" name="brand" required maxlength="40" placeholder="Mercedes-Benz" list="brand-suggestions"><datalist id="brand-suggestions"></datalist></div>
+        <div><label for="f-name">Modèle (titre) *</label><input id="f-name" name="name" required maxlength="80" placeholder="Mercedes-Benz Classe C"></div>
+        <div><label for="f-trim">Finition</label><input id="f-trim" name="trim" maxlength="80" placeholder="220 d AMG Line"></div>
+        <div><label for="f-year">Année *</label><input id="f-year" name="year" type="number" min="1950" max="2100" required placeholder="2026" inputmode="numeric"></div>
+        </div>
+      </fieldset>
+      <fieldset class="form-block">
+        <legend><span class="step-number">2</span> Caractéristiques et prix</legend>
+        <div class="grid">
+        <div><label for="f-price">Prix (TND) *</label><input id="f-price" name="price" type="number" min="1" step="0.01" required placeholder="169000" inputmode="decimal"><small class="field-hint">Prix du véhicule, hors frais d’importation.</small></div>
+        <div><label for="f-km">Kilométrage</label><input id="f-km" name="km" maxlength="20" placeholder="24 500" inputmode="numeric"><small class="field-hint">Distance parcourue en kilomètres.</small></div>
+        <div><label for="f-power">Puissance</label><input id="f-power" name="power" maxlength="20" placeholder="200 ch"></div>
+        <div><label for="f-fuel">Motorisation</label><select id="f-fuel" name="fuel"><option>Essence</option><option>Diesel</option><option>Hybride</option><option>Électrique</option></select></div>
+        <div><label for="f-origin">Provenance</label><select id="f-origin" name="origin"><option value="France">France</option><option value="Dubaï">Émirats arabes unis</option></select></div>
+        <div><label for="f-kind">État</label><select id="f-kind" name="kind"><option value="occasion">Occasion</option><option value="neuf">Neuf</option></select></div>
+        <div><label for="f-status">Statut</label><select id="f-status" name="status"><option value="available">Disponible</option><option value="reserved">Réservé</option><option value="sold">Vendu</option></select><small class="field-hint">Choisissez la disponibilité affichée au catalogue.</small></div>
+        </div>
+      </fieldset>
+      <fieldset class="form-block">
+        <legend><span class="step-number">3</span> Photos de l’annonce</legend>
+        <div class="photo-heading"><p class="help" id="photo-help">La première photo sert de photo principale.</p><span class="photo-count"><b id="photo-count">0</b> / 10</span></div>
+        <label class="photo-dropzone editor-only" id="photo-dropzone" for="f-photos"><b>Choisir ou déposer des photos</b><span>JPG, PNG ou WebP · 8 Mo par photo · 10 photos maximum</span><input id="f-photos" name="photos" type="file" accept="image/jpeg,image/png,image/webp" multiple aria-describedby="photo-help photo-error"></label>
+        <p class="msg error" id="photo-error" role="alert"></p>
+        <div class="previews" id="previews"></div>
+        <button class="light editor-only hidden" type="button" id="reset-photos">Annuler la sélection de photos</button>
+      </fieldset>
+      </div>
+      <aside class="vehicle-preview" aria-label="Aperçu de l’annonce">
+        <h3>Aperçu de l’annonce</h3>
+        <div class="vehicle-preview-media" id="vehicle-preview-media"><span>Ajoutez vos photos</span></div>
+        <strong id="vehicle-preview-name">Nom du véhicule</strong><p id="vehicle-preview-trim"></p><p id="vehicle-preview-specs"></p><p class="preview-price" id="vehicle-preview-price">— TND</p><span class="pill" id="vehicle-preview-status">Disponible</span><p class="field-hint">Aperçu uniquement. L’annonce sera publiée après enregistrement.</p>
+      </aside>
+      </div>
+      <div class="editor-actions"><p class="editor-status" id="car-msg" role="status" aria-live="polite">Votre annonce n’est pas encore enregistrée.</p><div class="actions"><button type="button" class="light editor-only" id="reset-car">Réinitialiser</button><button type="button" class="light hidden" id="cancel-edit">Annuler la modification</button><button type="submit" id="submit-car">Ajouter le véhicule</button></div></div>
+    </form>
+
+    <section class="card" id="vehicle-list-section">
+      <div class="section-heading"><h2>Véhicules en ligne</h2><div class="actions panel-heading-extra" style="margin:0"><button class="light hidden" type="button" id="clear-car-filter">Voir tous</button><button type="button" id="new-vehicle" class="editor-only">+ Ajouter un véhicule</button></div></div>
+      <div class="table-wrap"><table><thead><tr><th>Photo</th><th>Véhicule</th><th>Prix</th><th>Statut</th><th>Publier</th><th></th></tr></thead><tbody id="car-list"></tbody></table></div>
+      <p class="help">Facebook partage le lien de l’annonce. Instagram ouvre le partage natif avec la photo si le téléphone le permet; sinon la légende est copiée et Instagram s’ouvre pour terminer la publication. La publication automatique nécessite une configuration Meta Business.</p>
+    </section>
+
+    <section class="card" id="appointments-section">
+      <h2>Rendez-vous</h2>
+      <form class="appointment-form" id="appointment-form">
+        <div class="grid">
+          <div><label for="a-car">Véhicule *</label><select id="a-car" required></select></div>
+          <div><label for="a-date">Date et heure *</label><input id="a-date" type="datetime-local" required></div>
+          <div><label for="a-name">Nom du client *</label><input id="a-name" required maxlength="80" autocomplete="name"></div>
+          <div><label for="a-email">E-mail *</label><input id="a-email" type="email" required maxlength="120" autocomplete="email"></div>
+          <div><label for="a-phone">Téléphone</label><input id="a-phone" type="tel" maxlength="30" autocomplete="tel"></div>
+          <div><label for="a-note">Note</label><input id="a-note" maxlength="300" placeholder="Essai, visite du véhicule…"></div>
+        </div>
+        <div class="actions"><button type="submit" id="save-appointment">Ajouter le rendez-vous</button></div>
+        <p class="msg" id="appointment-msg"></p>
+      </form>
+      <div class="table-wrap"><table><thead><tr><th>Date</th><th>Véhicule</th><th>Client</th><th>Note</th><th>Statut</th><th></th></tr></thead><tbody id="appointment-list"></tbody></table></div>
+    </section>
+
+    <form class="card" id="social-form">
+      <h2>Réseaux sociaux</h2>
+      <p class="form-intro">Gérez vos profils, les publications affichées sur le site et vos annonces de live depuis un seul endroit.</p>
+      <div class="social-accounts">
+        <section class="social-account"><div class="social-account-head"><span class="social-avatar" aria-hidden="true">◎</span>Instagram</div><label for="s-insta">Compte Instagram</label><input id="s-insta" placeholder="@allaniauto" maxlength="200" autocomplete="off" spellcheck="false" aria-describedby="instagram-hint"><small class="field-hint" id="instagram-hint">Collez votre nom d’utilisateur ou le lien de votre profil.</small><a class="social-profile-preview hidden" id="instagram-preview" target="_blank" rel="noopener"></a></section>
+        <section class="social-account"><div class="social-account-head"><span class="social-avatar" aria-hidden="true">f</span>Facebook</div><label for="s-fb">Page Facebook</label><input id="s-fb" type="url" placeholder="https://www.facebook.com/allaniauto" maxlength="2000" autocomplete="off" spellcheck="false" aria-describedby="facebook-hint"><small class="field-hint" id="facebook-hint">Collez le lien HTTPS de votre page Facebook.</small><a class="social-profile-preview hidden" id="facebook-preview" target="_blank" rel="noopener"></a></section>
+        <section class="social-account"><div class="social-account-head"><span class="social-avatar" aria-hidden="true">♪</span>TikTok</div><label for="s-tiktok">Compte TikTok</label><input id="s-tiktok" placeholder="@allaniauto" maxlength="200" autocomplete="off" spellcheck="false" aria-describedby="tiktok-hint"><small class="field-hint" id="tiktok-hint">Collez votre nom d’utilisateur ou le lien de votre profil.</small><a class="social-profile-preview hidden" id="tiktok-preview" target="_blank" rel="noopener"></a></section>
+      </div>
+      <fieldset class="form-block">
+        <legend>Publications sur le site</legend>
+        <div class="social-section-head"><h3>Posts, reels et vidéos</h3><span class="photo-count"><b id="social-post-count">0</b> / 24</span></div>
+        <p class="help">Ajoutez des liens publics Instagram, Facebook ou TikTok. Utilisez les flèches pour choisir leur ordre d’affichage.</p>
+        <p class="field-hint">TikTok : utilisez le lien complet tiktok.com/@compte/video/… et non un lien court.</p>
+        <ol class="social-posts" id="social-posts"></ol>
+        <p class="social-empty" id="social-empty">Aucune publication ajoutée. Commencez par coller un lien.</p>
+        <button class="light editor-only" id="add-social-post" type="button">+ Ajouter une publication</button>
+      </fieldset>
+      <fieldset class="form-block">
+        <legend>Diffusion en direct</legend>
+        <label class="switch"><input type="checkbox" id="l-active"> Annoncer un live en cours</label>
+        <p class="help">Activez uniquement pendant votre diffusion, puis désactivez à la fin du live.</p>
+        <div class="grid social-live-fields hidden" id="social-live-fields">
+          <div><label for="l-platform">Plateforme du live</label><select id="l-platform"><option value="instagram">Instagram</option><option value="facebook">Facebook (lecteur intégré au site)</option><option value="tiktok">TikTok</option></select></div>
+          <div id="l-url-wrap"><label for="l-url">Lien de la vidéo live Facebook</label><input id="l-url" type="url" placeholder="https://www.facebook.com/allaniauto/videos/123…"></div>
+        </div>
+        <p class="help">Facebook propose un lecteur intégré. Instagram et TikTok ouvrent le live sur leur plateforme et nécessitent le compte correspondant.</p>
+      </fieldset>
+      <div class="editor-actions"><p class="editor-status" id="social-status" role="status" aria-live="polite">Toutes les modifications sont enregistrées.</p><div class="actions"><button class="light" type="button" id="undo-social" disabled>Annuler les changements</button><button type="submit" id="save-social" disabled>Enregistrer les réseaux sociaux</button></div></div>
+      <p class="msg" id="social-msg" role="status" aria-live="polite"></p>
+    </form>
+
+    <form class="card" id="static-site-form">
+      <h2>Site vitrine statique</h2>
+      <p class="help" style="margin:0 0 16px">Textes et coordonnées du site vitrine généré dans le dossier <code>front-office/</code>. Le catalogue et les réseaux sociaux y sont copiés au moment de la régénération : après une modification des véhicules ou des réseaux sociaux, cliquez sur « Régénérer » puis republiez le dossier.</p>
+      <div class="wallpaper-settings">
+        <label for="st-wallpaper">Image de fond de l’accueil</label>
+        <img class="wallpaper-preview" id="st-wallpaper-preview" alt="Aperçu de l’image de fond">
+        <input id="st-wallpaper" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="st-wallpaper-help st-wallpaper-error">
+        <p class="help" id="st-wallpaper-help">JPG, PNG ou WebP · 8 Mo maximum. L’image sera appliquée après enregistrement et génération.</p>
+        <button class="light" type="button" id="st-wallpaper-reset">Rétablir l’image par défaut</button>
+        <p class="msg error" id="st-wallpaper-error" role="alert"></p>
+      </div>
+      <div class="grid">
+        <div><label for="st-phone">Téléphone (appel, SMS) *</label><input id="st-phone" type="tel" required maxlength="30" placeholder="+971543280723"></div>
+        <div><label for="st-phone-display">Numéro affiché</label><input id="st-phone-display" maxlength="30" placeholder="+971 54 328 0723"></div>
+        <div><label for="st-whatsapp">WhatsApp</label><input id="st-whatsapp" type="tel" maxlength="30" placeholder="+971543280723"></div>
+        <div><label for="st-email">E-mail *</label><input id="st-email" type="email" required maxlength="120" placeholder="contact@prime-cars.com"></div>
+      </div>
+      <div style="margin-top:14px">
+        <label for="st-url">Adresse publique du site</label>
+        <input id="st-url" type="url" maxlength="200" placeholder="https://prime-cars.netlify.app">
+        <p class="help">Facultatif : sert à l’URL canonique et aux liens des véhicules pour le référencement.</p>
+      </div>
+      <div style="margin-top:14px">
+        <label for="st-title">Titre (onglet, Google, aperçu des liens) *</label>
+        <input id="st-title" required maxlength="120">
+      </div>
+      <div style="margin-top:14px">
+        <label for="st-description">Description (Google, aperçu des liens) *</label>
+        <textarea id="st-description" required maxlength="300" style="min-height:90px"></textarea>
+      </div>
+      <div class="actions"><button type="submit" id="save-static-site">Enregistrer et régénérer</button><button type="button" class="light" id="publish-static-site">Régénérer avec les données actuelles</button></div>
+      <p class="help" id="static-site-status"></p>
+      <p class="msg" id="static-site-msg"></p>
+    </form>
+
+    <section class="card" id="analytics-section">
+      <div class="section-heading"><h2>Google Analytics</h2><select class="ga-period" id="ga-period" aria-label="Période"><option value="7">7 derniers jours</option><option value="30" selected>30 derniers jours</option><option value="90">90 derniers jours</option></select></div>
+      <p class="ga-note"><span class="pill demo">Données démo</span><span>Statistiques fictives pour illustrer la page. Les vraies données de Google Analytics seront affichées ici une fois la connexion configurée.</span></p>
+      <div class="stats ga-kpis" id="ga-kpis"></div>
+      <div class="ga-chart"><h3>Visiteurs par jour</h3><div id="ga-chart"></div></div>
+      <div class="ga-grid">
+        <div class="ga-block"><h3>Pages les plus vues</h3><div class="table-wrap"><table class="ga-pages"><thead><tr><th>Page</th><th>Vues</th></tr></thead><tbody id="ga-pages"></tbody></table></div></div>
+        <div class="ga-side">
+          <div class="ga-block"><h3>Sources du trafic</h3><ul class="ga-bars" id="ga-sources"></ul></div>
+          <div class="ga-block"><h3>Appareils</h3><ul class="ga-bars" id="ga-devices"></ul></div>
+          <div class="ga-block"><h3>Pays</h3><ul class="ga-bars" id="ga-countries"></ul></div>
+        </div>
+      </div>
+      <form id="analytics-form">
+        <label for="ga-id">ID de mesure Google Analytics 4 (site vitrine statique)</label>
+        <input id="ga-id" maxlength="20" placeholder="G-XXXXXXXXXX" autocomplete="off" spellcheck="false">
+        <p class="help">Dans Google Analytics : Administration › Flux de données › Web. Une fois l’ID enregistré, le site vitrine affiche un bandeau de consentement et Google Analytics n’est chargé qu’après l’accord du visiteur. Laissez vide pour désactiver le suivi. Republiez ensuite le dossier front-office. <a href="https://analytics.google.com/" target="_blank" rel="noopener">Ouvrir Google Analytics ↗</a></p>
+        <div class="actions"><button type="submit" id="save-analytics">Enregistrer et régénérer</button></div>
+        <p class="msg" id="analytics-msg"></p>
+      </form>
+    </section>
+
+    <section class="card" id="reservations-section">
+      <div class="section-heading"><h2>Réservations (acomptes)</h2><button class="light" type="button" id="toggle-demo-reservations">Afficher les données démo</button></div>
+      <p class="demo-note">Les réservations démo sont fictives et ne sont jamais enregistrées.</p>
+      <div class="table-wrap"><table><thead><tr><th>Date</th><th>Véhicule</th><th>Client</th><th>Montant</th><th>Paiement</th><th>Statut</th></tr></thead><tbody id="resa-list"></tbody></table></div>
+    </section>
+    </div>
+  </main>
+
+  <script>
+    const $ = id => document.getElementById(id);
+    const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const imgUrl = src => /^\/uploads\//.test(src) ? src : `https://images.unsplash.com/${encodeURIComponent(src)}?auto=format&fit=crop&w=200&q=70`;
+    const statusLabel = { available: 'Disponible', reserved: 'Réservé', sold: 'Vendu', pending: 'En attente', paid: 'Payé' };
+    const appointmentStatusLabel = { planned: 'À confirmer', confirmed: 'Confirmé', completed: 'Terminé', cancelled: 'Annulé' };
+    let cars = [];
+    let appointments = [];
+    let reservations = [];
+    let carBrandFilter = '';
+    let showDemoReservations = false;
+    let editingId = null;
+    const adminReadOnly = false;
+    let selectedPhotos = [];
+    let currentPhotoUrls = [];
+    let savedSocial = null;
+    let savedSocialBody = '';
+    let socialSaving = false;
+    let socialPostId = 0;
+    const ADMIN_PAGES = {
+      dashboard: 'dashboard-section',
+      'add-car': 'car-form',
+      vehicles: 'vehicle-list-section',
+      appointments: 'appointments-section',
+      social: 'social-form',
+      'static-site': 'static-site-form',
+      analytics: 'analytics-section',
+      reservations: 'reservations-section'
+    };
+
+    function showAdminPage(pageName, pushHistory = false) {
+      const activePage = Object.hasOwn(ADMIN_PAGES, pageName) ? pageName : 'dashboard';
+      const targetId = ADMIN_PAGES[activePage];
+      document.querySelectorAll('#admin-content > .card').forEach(panel => {
+        panel.classList.toggle('hidden', panel.id !== targetId);
+      });
+      document.querySelectorAll('.admin-nav [data-admin-page]').forEach(link => {
+        const active = link.dataset.adminPage === activePage;
+        link.classList.toggle('active', active);
+        if (active) link.setAttribute('aria-current', 'page');
+        else link.removeAttribute('aria-current');
+      });
+      const params = new URLSearchParams(location.search);
+      if (params.get('section') !== activePage) {
+        params.set('section', activePage);
+        history[pushHistory ? 'pushState' : 'replaceState']({}, '', `${location.pathname}?${params.toString()}`);
+      }
+    }
+
+    async function api(url, options = {}) {
+      const response = await fetch(url, { credentials: 'same-origin', ...options });
+      const data = await response.json().catch(() => ({}));
+      if (response.status === 401 && url !== '/api/admin/login') { showLogin(); throw new Error('Session expirée.'); }
+      if (!response.ok) throw new Error(data.error || 'Erreur.');
+      return data;
+    }
+    function message(id, text, ok) { const el = $(id); el.textContent = text; el.classList.add('msg'); el.classList.toggle('ok', Boolean(ok)); el.classList.toggle('error', !ok); }
+    function showLogin() { $('login').classList.remove('hidden'); $('app').classList.add('hidden'); $('logout').classList.add('hidden'); }
+    function showApp() { $('login').classList.add('hidden'); $('app').classList.remove('hidden'); $('logout').classList.remove('hidden'); loadAll(); }
+
+    $('login').addEventListener('submit', async event => {
+      event.preventDefault();
+      try { await api('/api/admin/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: $('password').value }) }); $('password').value = ''; showApp(); }
+      catch (error) { $('login-msg').textContent = error.message; }
+    });
+    $('logout').addEventListener('click', async () => { await api('/api/admin/logout', { method: 'POST' }); showLogin(); });
+    const sidebar = $('admin-sidebar');
+    const sidebarToggle = $('sidebar-menu-toggle');
+    const mobileSidebar = window.matchMedia('(max-width: 760px)');
+    function syncSidebarToggle() {
+      const expanded = mobileSidebar.matches
+        ? sidebar.classList.contains('menu-open')
+        : !sidebar.classList.contains('menu-collapsed');
+      sidebarToggle.setAttribute('aria-expanded', String(expanded));
+      sidebarToggle.setAttribute('aria-label', expanded ? 'Fermer le menu' : 'Ouvrir le menu');
+    }
+    function closeMobileSidebar() {
+      if (!mobileSidebar.matches) return;
+      sidebar.classList.remove('menu-open');
+      syncSidebarToggle();
+    }
+    sidebarToggle.addEventListener('click', () => {
+      if (mobileSidebar.matches) sidebar.classList.toggle('menu-open');
+      else {
+        const collapsed = $('app').classList.toggle('menu-collapsed');
+        sidebar.classList.toggle('menu-collapsed', collapsed);
+      }
+      syncSidebarToggle();
+    });
+    document.addEventListener('click', event => {
+      if (mobileSidebar.matches && sidebar.classList.contains('menu-open') && !sidebar.contains(event.target)) closeMobileSidebar();
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') closeMobileSidebar();
+    });
+    mobileSidebar.addEventListener('change', () => {
+      sidebar.classList.remove('menu-open', 'menu-collapsed');
+      $('app').classList.remove('menu-collapsed');
+      syncSidebarToggle();
+    });
+    syncSidebarToggle();
+    $('admin-nav').addEventListener('click', event => {
+      const link = event.target.closest('a');
+      if (!link) return;
+      event.preventDefault();
+      showAdminPage(link.dataset.adminPage, true);
+      closeMobileSidebar();
+    });
+    window.addEventListener('popstate', () => showAdminPage(new URLSearchParams(location.search).get('section')));
+
+    async function loadAll() {
+      cars = await api('/api/cars');
+      $('brand-suggestions').innerHTML = [...new Set(cars.map(car => car.brand))].sort().map(brand => `<option value="${esc(brand)}"></option>`).join('');
+      renderDashboard();
+      renderCars();
+      $('a-car').innerHTML = cars.map(car => `<option value="${esc(car.id)}">${esc(car.name)} · ${esc(car.status === 'available' ? 'Disponible' : statusLabel[car.status])}</option>`).join('');
+      renderSocial(await api('/api/social'));
+      renderStaticSite(await api('/api/admin/static-site'));
+      renderAnalytics();
+      $('ga-id').value = dashGaId = (await api('/api/admin/analytics')).measurementId || '';
+      reservations = await api('/api/admin/reservations');
+      renderReservations();
+      appointments = await api('/api/admin/appointments');
+      renderDashboard();
+      renderAppointments();
+    }
+
+    const MONTHS = ['Jan.', 'Fév.', 'Mars', 'Avr.', 'Mai', 'Juin', 'Juil.', 'Août', 'Sept.', 'Oct.', 'Nov.', 'Déc.'];
+    const reservationStatusLabel = { pending: 'En attente', paid: 'Payé', failed: 'Échec' };
+    let dashContactEmail = '';
+    let dashGaId = '';
+    const formatMoney = (value, currency = 'TND') => `${Math.round(Number(value) || 0).toLocaleString('fr-FR')} ${currency}`;
+
+    function countBy(items, key) {
+      const counts = new Map();
+      items.forEach(item => { const value = item[key] || '—'; counts.set(value, (counts.get(value) || 0) + 1); });
+      return [...counts].sort((first, second) => second[1] - first[1] || String(first[0]).localeCompare(String(second[0]), 'fr'));
+    }
+    function barsHtml(entries, labels = {}, brandButtons = false) {
+      if (!entries.length) return '<li class="dash-hint">Aucun véhicule au catalogue.</li>';
+      const max = Math.max(...entries.map(([, count]) => count));
+      return entries.map(([value, count]) => {
+        const inner = `<span class="dash-bar-label">${esc(labels[value] || value)}</span><b>${count}</b><span class="dash-track"><span style="width:${Math.round(count / max * 100)}%"></span></span>`;
+        return brandButtons
+          ? `<li><button type="button" class="dash-bar ${carBrandFilter === value ? 'active' : ''}" data-brand-view="${esc(value)}">${inner}</button></li>`
+          : `<li><div class="dash-bar">${inner}</div></li>`;
+      }).join('');
+    }
+
+    function renderDashboard() {
+      const now = Date.now();
+      const byStatus = status => cars.filter(car => car.status === status).length;
+      const available = cars.filter(car => car.status === 'available');
+      const counts = { available: available.length, reserved: byStatus('reserved'), sold: byStatus('sold') };
+      $('stat-cars').textContent = cars.length;
+      $('stat-car-status').textContent = `${counts.available} disponibles · ${counts.reserved} réservés · ${counts.sold} vendus`;
+      $('stat-status-bar').innerHTML = cars.length ? Object.entries(counts).map(([status, count]) => `<span class="st-${status}" style="width:${count / cars.length * 100}%"></span>`).join('') : '';
+      const stockValue = available.reduce((sum, car) => sum + (Number(car.price) || 0), 0);
+      $('stat-stock').textContent = formatMoney(stockValue);
+      $('stat-average').textContent = available.length ? formatMoney(stockValue / available.length) : '—';
+
+      const upcoming = appointments.filter(item => ['planned', 'confirmed'].includes(item.status) && Date.parse(item.date) >= now).sort((first, second) => Date.parse(first.date) - Date.parse(second.date));
+      const toConfirm = upcoming.filter(item => item.status === 'planned').length;
+      $('stat-appointments').textContent = upcoming.length;
+      $('stat-to-confirm').textContent = toConfirm;
+      $('stat-this-week').textContent = upcoming.filter(item => Date.parse(item.date) - now <= 7 * 86400000).length;
+
+      const paid = reservations.filter(item => item.status === 'paid');
+      const pending = reservations.filter(item => item.status === 'pending');
+      const totals = new Map();
+      paid.forEach(item => totals.set(item.currency || 'EUR', (totals.get(item.currency || 'EUR') || 0) + (Number(item.amount) || 0)));
+      $('stat-deposits').textContent = totals.size ? [...totals].map(([currency, amount]) => formatMoney(amount, currency)).join(' + ') : '0';
+      $('stat-paid').textContent = paid.length;
+      $('stat-paid-label').textContent = paid.length > 1 ? 'payés' : 'payé';
+      $('stat-pending').textContent = pending.length;
+
+      const months = Array.from({ length: 6 }, (_, index) => { const date = new Date(); date.setDate(1); date.setMonth(date.getMonth() - 5 + index); return { key: `${date.getFullYear()}-${date.getMonth()}`, label: MONTHS[date.getMonth()], appointments: 0, reservations: 0 }; });
+      const bucket = value => { const date = new Date(value); return months.find(month => month.key === `${date.getFullYear()}-${date.getMonth()}`); };
+      appointments.forEach(item => { const month = bucket(item.createdAt || item.date); if (month) month.appointments += 1; });
+      reservations.forEach(item => { const month = bucket(item.createdAt); if (month) month.reservations += 1; });
+      const isDemo = months.every(month => !month.appointments && !month.reservations);
+      if (isDemo) months.forEach((month, index) => { month.appointments = [4, 6, 5, 8, 7, 10][index]; month.reservations = [1, 2, 2, 3, 2, 4][index]; });
+      $('dash-activity-demo').classList.toggle('hidden', !isDemo);
+      const peak = Math.max(1, ...months.flatMap(month => [month.appointments, month.reservations]));
+      $('dash-activity').innerHTML = months.map(month => `<li title="${month.appointments} / ${month.reservations}"><div class="cols"><span class="series-appointments" style="height:${month.appointments / peak * 100}%"></span><span class="series-reservations" style="height:${month.reservations / peak * 100}%"></span></div><span class="month">${month.label}</span></li>`).join('');
+
+      const alerts = [];
+      const addAlert = (count, singular, plural, page, info = false) => { if (count) alerts.push(`<li><a class="${info ? 'info' : ''}" data-admin-page="${page}" href="?section=${page}"><i></i><b>${count}</b><span>${count > 1 ? plural : singular}</span></a></li>`); };
+      addAlert(toConfirm, 'rendez-vous à confirmer', 'rendez-vous à confirmer', 'appointments');
+      addAlert(pending.length, 'réservation en attente de paiement', 'réservations en attente de paiement', 'reservations');
+      addAlert(cars.filter(car => !String(car.description?.fr || '').trim()).length, 'véhicule sans description', 'véhicules sans description', 'vehicles');
+      addAlert(cars.filter(car => (car.images?.length || (car.image ? 1 : 0)) < 2).length, 'véhicule avec moins de 2 photos', 'véhicules avec moins de 2 photos', 'vehicles');
+      if (!dashContactEmail || dashContactEmail === 'contact@example.com') alerts.push('<li><a data-admin-page="static-site" href="?section=static-site"><i></i><span>E-mail de contact du site vitrine à personnaliser</span></a></li>');
+      if (!dashGaId) alerts.push('<li><a class="info" data-admin-page="analytics" href="?section=analytics"><i></i><span>Google Analytics n’est pas encore configuré</span></a></li>');
+      $('dash-alerts').innerHTML = alerts.join('') || '<li class="all-good">Tout est en ordre.</li>';
+
+      $('dash-upcoming').innerHTML = upcoming.slice(0, 5).map(item => {
+        const date = new Date(item.date);
+        return `<li><span class="dash-date"><b>${date.getDate()}</b><span>${MONTHS[date.getMonth()]}</span></span><div><strong>${esc(item.name)}</strong><small><span>${esc(item.carName)}</span> · <span>${date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</span></small></div><span class="pill ${esc(item.status)}">${appointmentStatusLabel[item.status] || esc(item.status)}</span></li>`;
+      }).join('') || '<li class="dash-empty">Aucun rendez-vous à venir.</li>';
+      $('dash-recent').innerHTML = [...reservations].sort((first, second) => Date.parse(second.createdAt) - Date.parse(first.createdAt)).slice(0, 5).map(item => {
+        const date = new Date(item.createdAt);
+        return `<li><span class="dash-date"><b>${date.getDate()}</b><span>${MONTHS[date.getMonth()]}</span></span><div><strong>${esc(item.name)}</strong><small><span>${esc(item.carName)}</span> · <span>${esc(formatMoney(item.amount, item.currency))}</span></small></div><span class="pill ${esc(item.status)}">${reservationStatusLabel[item.status] || esc(item.status)}</span></li>`;
+      }).join('') || '<li class="dash-empty">Aucune réservation pour le moment.</li>';
+
+      $('brand-list').innerHTML = barsHtml(countBy(cars, 'brand'), {}, true);
+      $('dash-fuel').innerHTML = barsHtml(countBy(cars, 'fuel'));
+      $('dash-origin').innerHTML = barsHtml(countBy(cars, 'origin'));
+      $('dash-kind').innerHTML = barsHtml(countBy(cars, 'kind'), { new: 'Neuf', used: 'Occasion', neuf: 'Neuf', occasion: 'Occasion' });
+      const prices = cars.map(car => Number(car.price)).filter(Boolean);
+      $('dash-price-range').textContent = prices.length ? `${formatMoney(Math.min(...prices))} – ${formatMoney(Math.max(...prices))}` : '—';
+      $('dash-updated').textContent = new Date().toLocaleString('fr-FR', { dateStyle: 'medium', timeStyle: 'short' });
+    }
+
+    function renderCars() {
+      const visibleCars = carBrandFilter ? cars.filter(car => car.brand === carBrandFilter) : cars;
+      $('car-list').innerHTML = visibleCars.map(car => `<tr><td><img src="${esc(imgUrl(car.image))}" alt=""></td><td><strong>${esc(car.name)}</strong><br><small>${esc(car.trim)} · ${esc(car.year)} · ${esc(car.origin)}</small></td><td>${Number(car.price).toLocaleString('fr-FR')} TND</td><td><span class="pill ${esc(car.status)}">${statusLabel[car.status] || ''}</span></td><td><div class="share-actions"><button class="light" type="button" data-share-facebook="${esc(car.id)}">Facebook</button><button class="light" type="button" data-share-instagram="${esc(car.id)}">Instagram</button></div></td><td style="white-space:nowrap"><button class="light" data-edit="${esc(car.id)}">Modifier</button> <button class="danger" data-delete="${esc(car.id)}">Supprimer</button></td></tr>`).join('') || '<tr><td colspan="6">Aucun véhicule pour cette marque.</td></tr>';
+      $('clear-car-filter').classList.toggle('hidden', !carBrandFilter);
+      $('clear-car-filter').textContent = carBrandFilter ? `Voir tous · ${carBrandFilter}` : 'Voir tous';
+    }
+
+    function renderAppointments() {
+      $('appointment-list').innerHTML = appointments.map(item => `<tr><td>${new Date(item.date).toLocaleString('fr-FR')}</td><td><a href="/?screen=vehicule&id=${encodeURIComponent(item.carId)}" target="_blank" rel="noopener">${esc(item.carName)} ↗</a></td><td><strong>${esc(item.name)}</strong><br><small>${esc(item.email)} ${esc(item.phone)}</small></td><td>${esc(item.note || '—')}</td><td><select aria-label="Statut de ${esc(item.name)}" data-appointment-status="${esc(item.id)}">${Object.entries(appointmentStatusLabel).map(([value, label]) => `<option value="${value}" ${item.status === value ? 'selected' : ''}>${label}</option>`).join('')}</select></td><td><button class="danger" type="button" data-delete-appointment="${esc(item.id)}" aria-label="Supprimer le rendez-vous de ${esc(item.name)}">Supprimer</button></td></tr>`).join('') || '<tr><td colspan="6">Aucun rendez-vous enregistré.</td></tr>';
+    }
+
+    function renderReservations() {
+      const demoRows = showDemoReservations ? [
+        { carName: 'Mercedes-Benz Classe C', name: 'Sarah Ben Ali', email: 'sarah.demo@example.com', phone: '+971 50 000 0001', amount: 500, currency: 'EUR', provider: 'stripe', status: 'paid', createdAt: new Date(Date.now() - 2 * 86400000).toISOString(), demo: true },
+        { carName: 'BMW Série 3', name: 'Youssef Martin', email: 'youssef.demo@example.com', phone: '+216 20 000 002', amount: 500, currency: 'EUR', provider: 'mamo', status: 'pending', createdAt: new Date(Date.now() - 86400000).toISOString(), demo: true },
+        { carName: 'Porsche 911', name: 'Amira Haddad', email: 'amira.demo@example.com', phone: '+971 50 000 0003', amount: 500, currency: 'EUR', provider: 'stripe', status: 'failed', createdAt: new Date(Date.now() - 3600000).toISOString(), demo: true }
+      ] : [];
+      const rows = [...reservations, ...demoRows];
+      $('resa-list').innerHTML = rows.map(item => `<tr><td>${new Date(item.createdAt).toLocaleString('fr-FR')}</td><td>${esc(item.carName)}${item.demo ? ' <span class="pill demo">Démo</span>' : ''}</td><td><strong>${esc(item.name)}</strong><br><small>${esc(item.email)} ${esc(item.phone)}</small></td><td>${esc(item.amount)} ${esc(item.currency)}</td><td>${item.provider === 'stripe' ? 'Stripe' : 'Mamo Pay'}</td><td><span class="pill ${esc(item.status)}">${statusLabel[item.status] || (item.status === 'failed' ? 'Échec' : esc(item.status))}</span></td></tr>`).join('') || '<tr><td colspan="6">Aucune réservation pour le moment.</td></tr>';
+      $('toggle-demo-reservations').textContent = showDemoReservations ? 'Masquer les données démo' : 'Afficher les données démo';
+    }
+
+    function initializeCollapsiblePanels() {
+      document.querySelectorAll('#admin-content > .card').forEach((panel, index) => {
+        const heading = panel.querySelector('h2');
+        if (!heading) return;
+        let headingRow = heading.parentElement;
+        if (!headingRow.matches('.dashboard-head,.section-heading,.panel-heading')) {
+          headingRow = document.createElement('div');
+          headingRow.className = 'panel-heading';
+          heading.before(headingRow);
+          headingRow.append(heading);
+        }
+        let actions = headingRow.querySelector('.panel-heading-extra');
+        if (!actions) {
+          actions = document.createElement('div');
+          actions.className = 'panel-heading-extra';
+          for (const button of [...headingRow.querySelectorAll(':scope > button')]) actions.append(button);
+          headingRow.append(actions);
+        }
+        const content = document.createElement('div');
+        content.className = 'panel-content';
+        content.id = `panel-content-${panel.id || index}`;
+        for (let sibling = headingRow.nextSibling; sibling;) {
+          const next = sibling.nextSibling;
+          content.append(sibling);
+          sibling = next;
+        }
+        panel.append(content);
+        const toggle = document.createElement('button');
+        toggle.type = 'button';
+        toggle.className = 'panel-toggle';
+        toggle.title = 'Masquer cette section';
+        toggle.setAttribute('aria-label', toggle.title);
+        toggle.setAttribute('aria-controls', content.id);
+        toggle.setAttribute('aria-expanded', 'true');
+        toggle.innerHTML = '<span class="chevron" aria-hidden="true"></span>';
+        toggle.addEventListener('click', () => {
+          const expanded = toggle.getAttribute('aria-expanded') === 'true';
+          toggle.setAttribute('aria-expanded', String(!expanded));
+          toggle.title = expanded ? 'Afficher cette section' : 'Masquer cette section';
+          toggle.setAttribute('aria-label', toggle.title);
+          content.classList.toggle('hidden', expanded);
+        });
+        actions.append(toggle);
+      });
+    }
+
+    function vehicleShareUrl(car) { return `${location.origin}/share/${encodeURIComponent(car.id)}`; }
+    function vehicleCaption(car) { return `${car.name} ${car.trim ? `· ${car.trim}` : ''}\n${car.year} · ${Number(car.price).toLocaleString('fr-FR')} TND\n${vehicleShareUrl(car)}`; }
+    function vehicleImageUrl(car) {
+      const source = car.images?.[0] || car.image;
+      return /^\/uploads\//.test(source) ? new URL(source, location.origin).href : `https://images.unsplash.com/${encodeURIComponent(source)}?auto=format&fit=crop&w=1200&q=85`;
+    }
+
+    async function shareToInstagram(car) {
+      const instagramWindow = window.open('about:blank', '_blank');
+      const caption = vehicleCaption(car);
+      try {
+        const response = await fetch(vehicleImageUrl(car));
+        if (!response.ok) throw new Error('Photo inaccessible.');
+        const blob = await response.blob();
+        const extension = blob.type === 'image/png' ? 'png' : blob.type === 'image/webp' ? 'webp' : 'jpg';
+        const photo = new File([blob], `${car.id}.${extension}`, { type: blob.type || 'image/jpeg' });
+        if (navigator.share && navigator.canShare?.({ files: [photo] })) {
+          await navigator.share({ files: [photo], title: car.name, text: caption });
+          instagramWindow?.close();
+          message('car-msg', 'Partage Instagram lancé depuis le menu de partage du téléphone.', true);
+          return;
+        }
+      } catch (error) {
+        if (error.name === 'AbortError') { instagramWindow?.close(); return; }
+      }
+      try { await navigator.clipboard.writeText(caption); } catch {}
+      if (instagramWindow) instagramWindow.location.href = 'https://www.instagram.com/';
+      message('car-msg', 'Légende copiée. Ajoutez la photo dans Instagram pour publier.', true);
+    }
+
+    $('toggle-demo-reservations').addEventListener('click', () => { showDemoReservations = !showDemoReservations; renderReservations(); });
+
+    $('refresh-dashboard').addEventListener('click', () => loadAll().catch(error => alert(error.message)));
+    $('brand-list').addEventListener('click', event => {
+      const brand = event.target.closest('[data-brand-view]')?.dataset.brandView;
+      if (!brand) return;
+      carBrandFilter = carBrandFilter === brand ? '' : brand;
+      renderDashboard(); renderCars();
+      showAdminPage('vehicles', true);
+    });
+    $('clear-car-filter').addEventListener('click', () => { carBrandFilter = ''; renderDashboard(); renderCars(); });
+    $('dashboard-section').addEventListener('click', event => {
+      const link = event.target.closest('a[data-admin-page]');
+      if (!link) return;
+      event.preventDefault();
+      showAdminPage(link.dataset.adminPage, true);
+    });
+
+    const minAppointmentDate = new Date(Date.now() + 60000);
+    minAppointmentDate.setMinutes(minAppointmentDate.getMinutes() - minAppointmentDate.getTimezoneOffset());
+    $('a-date').min = minAppointmentDate.toISOString().slice(0, 16);
+    $('appointment-form').addEventListener('submit', async event => {
+      event.preventDefault();
+      $('save-appointment').disabled = true;
+      try {
+        const appointment = {
+          carId: $('a-car').value, date: new Date($('a-date').value).toISOString(),
+          name: $('a-name').value, email: $('a-email').value, phone: $('a-phone').value, note: $('a-note').value
+        };
+        await api('/api/admin/appointments', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(appointment) });
+        $('appointment-form').reset();
+        message('appointment-msg', 'Rendez-vous ajouté.', true);
+        await loadAll();
+      } catch (error) { message('appointment-msg', error.message); }
+      finally { $('save-appointment').disabled = false; }
+    });
+    $('appointment-list').addEventListener('change', async event => {
+      const select = event.target.closest('[data-appointment-status]');
+      if (!select) return;
+      try {
+        await api('/api/admin/appointments/' + encodeURIComponent(select.dataset.appointmentStatus), { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: select.value }) });
+        await loadAll();
+      } catch (error) { alert(error.message); }
+    });
+    $('appointment-list').addEventListener('click', async event => {
+      const button = event.target.closest('[data-delete-appointment]');
+      if (!button || !confirm('Supprimer ce rendez-vous ?')) return;
+      try {
+        await api('/api/admin/appointments/' + encodeURIComponent(button.dataset.deleteAppointment), { method: 'DELETE' });
+        await loadAll();
+      } catch (error) { alert(error.message); }
+    });
+
+    function clearSelectedPhotos() {
+      selectedPhotos.forEach(photo => URL.revokeObjectURL(photo.url));
+      selectedPhotos = [];
+      $('f-photos').value = '';
+    }
+    function updateCarPreview() {
+      const source = selectedPhotos[0]?.url || currentPhotoUrls[0];
+      $('vehicle-preview-media').innerHTML = source ? `<img src="${esc(source)}" alt="${esc($('f-name').value || 'Aperçu de l’annonce')}">` : '<span>Ajoutez vos photos</span>';
+      $('vehicle-preview-name').textContent = $('f-name').value || 'Nom du véhicule';
+      $('vehicle-preview-trim').textContent = $('f-trim').value;
+      $('vehicle-preview-specs').innerHTML = [$('f-year').value, $('f-fuel').value, $('f-origin').value].filter(Boolean).map(value => `<span>${esc(value)}</span>`).join(' · ');
+      $('vehicle-preview-price').textContent = $('f-price').value ? `${Number($('f-price').value).toLocaleString('fr-FR')} TND` : '— TND';
+      $('vehicle-preview-status').textContent = statusLabel[$('f-status').value];
+      $('vehicle-preview-status').className = 'pill ' + $('f-status').value;
+    }
+    function renderPhotoPreviews() {
+      const photos = selectedPhotos.length ? selectedPhotos.map(photo => ({ url: photo.url, name: photo.file.name })) : currentPhotoUrls.map((url, index) => ({ url, name: `Photo ${index + 1}` }));
+      $('photo-count').textContent = photos.length;
+      $('reset-photos').classList.toggle('hidden', !selectedPhotos.length);
+      $('previews').innerHTML = photos.map((photo, index) => `<figure class="photo-tile"><img src="${esc(photo.url)}" alt="${esc(photo.name)}"><figcaption>${index === 0 ? '<span class="pill">Photo principale</span>' : '<span class="photo-label">Photo secondaire</span>'}${selectedPhotos.length && !adminReadOnly ? `<button type="button" class="light editor-only" data-photo-cover="${index}" ${index === 0 ? 'disabled' : ''}>Définir comme principale</button><button type="button" class="danger editor-only" data-photo-remove="${index}">Supprimer la photo</button>` : ''}</figcaption></figure>`).join('');
+      updateCarPreview();
+    }
+    function addPhotoFiles(files) {
+      if (adminReadOnly) return;
+      const incoming = Array.from(files);
+      let error = '';
+      if (selectedPhotos.length + incoming.length > 10) error = 'Vous pouvez ajouter 10 photos maximum.';
+      else if (incoming.some(file => !['image/jpeg', 'image/png', 'image/webp'].includes(file.type))) error = 'Choisissez des images JPG, PNG ou WebP.';
+      else if (incoming.some(file => file.size > 8 * 1024 * 1024)) error = 'Chaque photo doit peser au maximum 8 Mo.';
+      $('f-photos').value = '';
+      $('photo-error').textContent = error;
+      if (error) return;
+      selectedPhotos.push(...incoming.map(file => ({ file, url: URL.createObjectURL(file) })));
+      renderPhotoPreviews();
+    }
+    function resetForm() {
+      editingId = null;
+      clearSelectedPhotos();
+      currentPhotoUrls = [];
+      $('car-form').reset();
+      $('form-title').textContent = 'Ajouter un véhicule'; $('submit-car').textContent = 'Ajouter le véhicule';
+      $('photo-help').textContent = 'La première photo sert de photo principale.'; $('cancel-edit').classList.add('hidden');
+      $('photo-error').textContent = '';
+      renderPhotoPreviews();
+    }
+    function openCarForm() {
+      showAdminPage('add-car', true);
+      const toggle = $('car-form').querySelector('.panel-toggle');
+      if (toggle?.getAttribute('aria-expanded') === 'false') toggle.click();
+      $('admin-content').scrollTop = 0;
+    }
+    $('cancel-edit').addEventListener('click', () => { resetForm(); showAdminPage('vehicles', true); });
+    $('reset-car').addEventListener('click', () => {
+      if (confirm('Effacer les informations saisies ?')) {
+        resetForm();
+        message('car-msg', 'Votre annonce n’est pas encore enregistrée.', true);
+      }
+    });
+    $('new-vehicle').addEventListener('click', () => { resetForm(); message('car-msg', 'Votre annonce n’est pas encore enregistrée.', true); openCarForm(); });
+    $('f-photos').addEventListener('change', () => addPhotoFiles($('f-photos').files));
+    $('reset-photos').addEventListener('click', () => { clearSelectedPhotos(); $('photo-error').textContent = ''; renderPhotoPreviews(); });
+    $('previews').addEventListener('click', event => {
+      const remove = event.target.closest('[data-photo-remove]');
+      const cover = event.target.closest('[data-photo-cover]');
+      if (remove) {
+        const [photo] = selectedPhotos.splice(Number(remove.dataset.photoRemove), 1);
+        URL.revokeObjectURL(photo.url);
+      } else if (cover) selectedPhotos.unshift(...selectedPhotos.splice(Number(cover.dataset.photoCover), 1));
+      else return;
+      $('photo-error').textContent = '';
+      renderPhotoPreviews();
+    });
+    $('car-form').addEventListener('input', updateCarPreview);
+    $('car-form').addEventListener('change', updateCarPreview);
+    ['dragenter', 'dragover'].forEach(type => $('photo-dropzone').addEventListener(type, event => {
+      event.preventDefault();
+      if (!adminReadOnly && !$('f-photos').disabled) $('photo-dropzone').classList.add('drag-over');
+    }));
+    $('photo-dropzone').addEventListener('dragleave', () => $('photo-dropzone').classList.remove('drag-over'));
+    $('photo-dropzone').addEventListener('drop', event => {
+      event.preventDefault();
+      $('photo-dropzone').classList.remove('drag-over');
+      if (!$('f-photos').disabled) addPhotoFiles(event.dataTransfer.files);
+    });
+
+    $('car-list').addEventListener('click', async event => {
+      const facebookId = event.target.closest('[data-share-facebook]')?.dataset.shareFacebook;
+      const instagramId = event.target.closest('[data-share-instagram]')?.dataset.shareInstagram;
+      if (facebookId) {
+        const car = cars.find(item => item.id === facebookId);
+        if (car) window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(vehicleShareUrl(car))}`, '_blank', 'noopener,noreferrer');
+        return;
+      }
+      if (instagramId) {
+        const car = cars.find(item => item.id === instagramId);
+        if (car) await shareToInstagram(car);
+        return;
+      }
+      const editId = event.target.dataset.edit, deleteId = event.target.dataset.delete;
+      if (editId) {
+        const car = cars.find(item => item.id === editId);
+        clearSelectedPhotos();
+        currentPhotoUrls = (car.images?.length ? car.images : [car.image]).filter(Boolean).map(imgUrl);
+        editingId = editId;
+        for (const key of ['brand', 'name', 'trim', 'year', 'km', 'power', 'price', 'fuel', 'origin', 'kind', 'status']) $('f-' + key).value = car[key] ?? '';
+        $('form-title').textContent = 'Modifier : ' + car.name; $('submit-car').textContent = 'Enregistrer les modifications';
+        $('photo-help').textContent = 'Laissez vide pour conserver les photos actuelles. De nouvelles photos remplacent les anciennes.';
+        $('photo-error').textContent = '';
+        message('car-msg', 'Modifications non enregistrées.', true);
+        $('cancel-edit').classList.remove('hidden');
+        renderPhotoPreviews();
+        openCarForm();
+      }
+      if (deleteId && confirm('Supprimer définitivement ce véhicule et ses photos ?')) {
+        try { await api('/api/admin/cars/' + encodeURIComponent(deleteId), { method: 'DELETE' }); if (editingId === deleteId) resetForm(); loadAll(); }
+        catch (error) { alert(error.message); }
+      }
+    });
+
+    $('car-form').addEventListener('submit', async event => {
+      event.preventDefault();
+      if (!editingId && !selectedPhotos.length) {
+        $('photo-error').textContent = 'Ajoutez au moins une photo.';
+        $('f-photos').focus();
+        return;
+      }
+      const body = new FormData($('car-form'));
+      body.delete('photos');
+      selectedPhotos.forEach(photo => body.append('photos', photo.file));
+      $('car-form').querySelectorAll('fieldset,button:not(.panel-toggle)').forEach(field => { field.disabled = true; });
+      $('submit-car').disabled = true; message('car-msg', 'Envoi en cours…', true);
+      try {
+        const url = editingId ? '/api/admin/cars/' + encodeURIComponent(editingId) : '/api/admin/cars';
+        await api(url, { method: editingId ? 'PUT' : 'POST', body });
+        message('car-msg', editingId ? 'Véhicule mis à jour.' : 'Véhicule ajouté et visible sur le site.', true);
+        resetForm(); await loadAll();
+      } catch (error) { message('car-msg', error.message); }
+      finally {
+        $('car-form').querySelectorAll('fieldset,button:not(.panel-toggle)').forEach(field => { field.disabled = false; });
+        renderPhotoPreviews();
+      }
+    });
+
+    const socialProfiles = [
+      { platform: 'instagram', id: 's-insta', error: 'Nom d’utilisateur ou lien Instagram invalide.' },
+      { platform: 'facebook', id: 's-fb', error: 'Lien de page Facebook invalide.' },
+      { platform: 'tiktok', id: 's-tiktok', error: 'Nom d’utilisateur ou lien TikTok invalide.' }
+    ];
+    function socialFormData() {
+      return {
+        instagramUsername: $('s-insta').value.trim(), facebookUrl: $('s-fb').value.trim(), tiktokUsername: $('s-tiktok').value.trim(),
+        posts: [...$('social-posts').querySelectorAll('input')].map(input => input.value.trim()).filter(Boolean),
+        live: { active: $('l-active').checked, platform: $('l-platform').value, url: $('l-url').value.trim() }
+      };
+    }
+    function toggleLiveUrl() {
+      const active = $('l-active').checked;
+      const facebook = active && $('l-platform').value === 'facebook';
+      $('social-live-fields').classList.toggle('hidden', !active);
+      $('l-url-wrap').classList.toggle('hidden', !facebook);
+      $('l-platform').disabled = !active || socialSaving || adminReadOnly;
+      $('l-url').disabled = !facebook || socialSaving || adminReadOnly;
+      $('l-url').required = facebook;
+      const parsed = facebook ? SocialLinks.parseSocialUrl($('l-url').value) : null;
+      $('l-url').setCustomValidity(facebook && (!parsed || parsed.platform !== 'facebook') ? 'Pour un live Facebook, collez le lien de la vidéo en direct.' : '');
+    }
+    function updatePostRow(row) {
+      const input = row.querySelector('input');
+      const parsed = SocialLinks.parseSocialUrl(input.value);
+      const invalid = Boolean(input.value.trim()) && !parsed;
+      input.setCustomValidity(invalid ? 'Lien non reconnu. Utilisez un lien public Instagram, Facebook ou TikTok complet.' : '');
+      input.setAttribute('aria-invalid', String(invalid));
+      row.querySelector('.post-platform').textContent = parsed ? ({ instagram: 'Instagram', facebook: 'Facebook', tiktok: 'TikTok' })[parsed.platform] : invalid ? 'Lien non reconnu' : 'Lien à compléter';
+      const link = row.querySelector('.post-preview');
+      link.classList.toggle('hidden', !parsed);
+      if (parsed) link.href = parsed.url;
+      else link.removeAttribute('href');
+    }
+    function updateSocialState() {
+      socialProfiles.forEach(({ platform, id, error }) => {
+        const input = $(id);
+        const valid = SocialLinks.normalizeProfile(platform, input.value) !== null;
+        input.setCustomValidity(valid ? '' : error);
+        input.setAttribute('aria-invalid', String(!valid));
+        const href = SocialLinks.profileUrl(platform, input.value);
+        const preview = $(platform + '-preview');
+        preview.setAttribute('data-no-i18n', '');
+        preview.classList.toggle('hidden', !href);
+        if (href) { preview.href = href; preview.textContent = href; }
+        else preview.removeAttribute('href');
+      });
+      toggleLiveUrl();
+      if ($('l-active').checked && ['instagram', 'tiktok'].includes($('l-platform').value)) {
+        const platform = $('l-platform').value;
+        const input = $(platform === 'tiktok' ? 's-tiktok' : 's-insta');
+        if (!input.value.trim()) {
+          input.setCustomValidity(platform === 'tiktok' ? 'Renseignez le compte TikTok pour annoncer le live.' : 'Renseignez le compte Instagram pour annoncer le live.');
+          input.setAttribute('aria-invalid', 'true');
+        }
+      }
+      const rows = [...$('social-posts').children];
+      rows.forEach((row, index) => {
+        row.querySelector('.post-order').textContent = index + 1;
+        row.querySelector('[data-post-action="up"]').disabled = index === 0 || socialSaving || adminReadOnly;
+        row.querySelector('[data-post-action="down"]').disabled = index === rows.length - 1 || socialSaving || adminReadOnly;
+      });
+      $('social-post-count').textContent = rows.length;
+      $('social-empty').classList.toggle('hidden', rows.length > 0);
+      $('add-social-post').disabled = rows.length >= 24 || socialSaving || adminReadOnly;
+      const dirty = savedSocialBody !== JSON.stringify(socialFormData()) || rows.length !== (savedSocial?.posts?.length || 0);
+      $('social-status').textContent = socialSaving ? 'Enregistrement en cours…' : dirty ? 'Modifications non enregistrées.' : 'Toutes les modifications sont enregistrées.';
+      $('save-social').disabled = !dirty || socialSaving || adminReadOnly;
+      $('undo-social').disabled = !dirty || socialSaving || adminReadOnly;
+    }
+    function addSocialPost(url = '') {
+      const row = document.createElement('li');
+      row.className = 'social-post-row';
+      const inputId = `social-post-${++socialPostId}`;
+      row.innerHTML = `<span class="post-order" aria-hidden="true"></span><div><label for="${inputId}">Lien de la publication</label><input id="${inputId}" type="url" maxlength="2000" placeholder="https://www.tiktok.com/@compte/video/…" autocomplete="off" spellcheck="false"><div class="post-meta"><span class="pill post-platform"></span><a class="post-preview hidden" target="_blank" rel="noopener">Ouvrir la publication ↗</a></div></div><div class="post-controls editor-only"><button type="button" class="light" data-post-action="up" aria-label="Monter la publication" title="Monter la publication">↑</button><button type="button" class="light" data-post-action="down" aria-label="Descendre la publication" title="Descendre la publication">↓</button><button type="button" class="danger" data-post-action="remove" aria-label="Supprimer la publication" title="Supprimer la publication">×</button></div>`;
+      row.querySelector('input').value = url;
+      row.querySelector('input').disabled = adminReadOnly;
+      $('social-posts').append(row);
+      updatePostRow(row);
+      return row;
+    }
+    function renderSocial(social) {
+      savedSocial = social;
+      $('s-insta').value = social.instagramUsername || '';
+      $('s-fb').value = social.facebookUrl || '';
+      $('s-tiktok').value = social.tiktokUsername || '';
+      $('social-posts').replaceChildren();
+      (social.posts || []).forEach(post => addSocialPost(post.url));
+      $('l-active').checked = Boolean(social.live?.active);
+      $('l-platform').value = social.live?.platform || 'instagram';
+      $('l-url').value = social.live?.platform === 'facebook' ? social.live.url || '' : '';
+      savedSocialBody = JSON.stringify(socialFormData());
+      updateSocialState();
+    }
+    $('add-social-post').addEventListener('click', () => {
+      if ($('social-posts').children.length >= 24) return;
+      const row = addSocialPost();
+      updateSocialState();
+      row.querySelector('input').focus();
+    });
+    $('social-posts').addEventListener('click', event => {
+      const button = event.target.closest('[data-post-action]');
+      if (!button) return;
+      const row = button.closest('.social-post-row');
+      const action = button.dataset.postAction;
+      if (action === 'remove') row.remove();
+      else if (action === 'up' && row.previousElementSibling) row.previousElementSibling.before(row);
+      else if (action === 'down' && row.nextElementSibling) row.nextElementSibling.after(row);
+      updateSocialState();
+    });
+    $('social-form').addEventListener('input', event => {
+      const row = event.target.closest('.social-post-row');
+      if (row) updatePostRow(row);
+      message('social-msg', '', true);
+      updateSocialState();
+    });
+    $('social-form').addEventListener('change', updateSocialState);
+    $('undo-social').addEventListener('click', () => { renderSocial(savedSocial); message('social-msg', 'Changements annulés.', true); });
+    $('social-form').addEventListener('submit', async event => {
+      event.preventDefault();
+      if (socialSaving) return;
+      updateSocialState();
+      if (!$('social-form').reportValidity()) return;
+      const body = socialFormData();
+      socialSaving = true;
+      $('social-form').querySelectorAll('input,select,button:not(.panel-toggle)').forEach(field => { field.disabled = true; });
+      updateSocialState();
+      try {
+        const saved = await api('/api/admin/social', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+        renderSocial(saved);
+        message('social-msg', 'Réseaux sociaux enregistrés. Pour le site vitrine statique, régénérez puis republiez le dossier front-office.', true);
+      } catch (error) { message('social-msg', error.message); }
+      finally {
+        socialSaving = false;
+        $('social-form').querySelectorAll('input,select,button:not(.panel-toggle)').forEach(field => { field.disabled = adminReadOnly; });
+        updateSocialState();
+      }
+    });
+
+    let defaultWallpaper = '';
+    let savedWallpaper = '';
+    let pendingWallpaperUrl = '';
+    let resetWallpaper = false;
+    function releaseWallpaperPreview() {
+      if (pendingWallpaperUrl) URL.revokeObjectURL(pendingWallpaperUrl);
+      pendingWallpaperUrl = '';
+    }
+    function renderStaticSite({ settings, generatedAt }) {
+      defaultWallpaper = settings.defaultWallpaperImage;
+      savedWallpaper = settings.wallpaperImage || defaultWallpaper;
+      releaseWallpaperPreview();
+      resetWallpaper = false;
+      $('st-wallpaper').value = '';
+      $('st-wallpaper').setCustomValidity('');
+      $('st-wallpaper-error').textContent = '';
+      $('st-wallpaper-preview').src = savedWallpaper;
+      $('st-url').value = settings.siteUrl || '';
+      $('st-title').value = settings.title || '';
+      $('st-description').value = settings.description || '';
+      $('st-phone').value = settings.contact?.phone || '';
+      $('st-phone-display').value = settings.contact?.phoneDisplay || '';
+      $('st-whatsapp').value = settings.contact?.whatsapp || '';
+      $('st-email').value = settings.contact?.email || '';
+      dashContactEmail = settings.contact?.email || '';
+      $('static-site-status').textContent = generatedAt ? `Dernière génération : ${new Date(generatedAt).toLocaleString('fr-FR')}` : '';
+    }
+    $('st-wallpaper').addEventListener('change', () => {
+      const input = $('st-wallpaper');
+      const file = input.files[0];
+      releaseWallpaperPreview();
+      resetWallpaper = false;
+      input.setCustomValidity('');
+      $('st-wallpaper-error').textContent = '';
+      $('st-wallpaper-preview').src = savedWallpaper;
+      if (!file) return;
+      let error = '';
+      if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) error = 'Format d’image invalide (JPG, PNG ou WebP).';
+      else if (file.size > 8 * 1024 * 1024) error = 'Photo trop lourde (8 Mo max).';
+      if (error) {
+        input.setCustomValidity(error);
+        $('st-wallpaper-error').textContent = error;
+        return;
+      }
+      pendingWallpaperUrl = URL.createObjectURL(file);
+      $('st-wallpaper-preview').src = pendingWallpaperUrl;
+    });
+    $('st-wallpaper-reset').addEventListener('click', () => {
+      releaseWallpaperPreview();
+      $('st-wallpaper').value = '';
+      $('st-wallpaper').setCustomValidity('');
+      $('st-wallpaper-error').textContent = '';
+      resetWallpaper = true;
+      $('st-wallpaper-preview').src = defaultWallpaper;
+      message('static-site-msg', 'Image par défaut sélectionnée. Enregistrez pour appliquer.', true);
+    });
+    window.addEventListener('pagehide', event => { if (!event.persisted) releaseWallpaperPreview(); });
+    async function staticSiteRequest(url, options) {
+      const controls = [$('save-static-site'), $('publish-static-site'), $('st-wallpaper'), $('st-wallpaper-reset')];
+      controls.forEach(control => { control.disabled = true; });
+      message('static-site-msg', 'Régénération en cours…', true);
+      try {
+        renderStaticSite(await api(url, options));
+        message('static-site-msg', 'Site vitrine régénéré. Republiez le dossier front-office pour le mettre en ligne.', true);
+      } catch (error) { message('static-site-msg', error.message); }
+      finally { controls.forEach(control => { control.disabled = false; }); }
+    }
+    $('static-site-form').addEventListener('submit', event => {
+      event.preventDefault();
+      const body = new FormData();
+      for (const [key, id] of Object.entries({
+        siteUrl: 'st-url', title: 'st-title', description: 'st-description',
+        phone: 'st-phone', phoneDisplay: 'st-phone-display', whatsapp: 'st-whatsapp', email: 'st-email'
+      })) body.set(key, $(id).value);
+      if ($('st-wallpaper').files[0]) body.set('wallpaper', $('st-wallpaper').files[0]);
+      if (resetWallpaper) body.set('resetWallpaper', 'true');
+      staticSiteRequest('/api/admin/static-site', { method: 'PUT', body });
+    });
+    $('publish-static-site').addEventListener('click', () => {
+      if ($('st-wallpaper').files.length || resetWallpaper) {
+        message('static-site-msg', 'Enregistrez l’image sélectionnée avant de régénérer.', false);
+        return;
+      }
+      staticSiteRequest('/api/admin/static-site/publish', { method: 'POST' });
+    });
+
+    // ---------- Google Analytics: fictitious, deterministic demo data until the GA connection is set up ----------
+    function demoRandom(seed) {
+      return () => { seed = (seed + 0x6d2b79f5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t ^= t + Math.imul(t ^ (t >>> 7), 61 | t); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+    }
+    function demoVisitors(days, offset) {
+      const random = demoRandom(days * 7919 + offset);
+      return Array.from({ length: days }, (_, index) => {
+        const date = new Date(); date.setHours(0, 0, 0, 0); date.setDate(date.getDate() - (days - 1 - index) - offset);
+        const weekend = [0, 6].includes(date.getDay()) ? 1.25 : 1;
+        const trend = 1 + (index / days) * 0.18 - offset / 400;
+        return { date, value: Math.round((95 + random() * 40) * weekend * trend) };
+      });
+    }
+    const gaBars = rows => {
+      const total = rows.reduce((sum, [, value]) => sum + value, 0);
+      return rows.map(([label, value]) => `<li><span>${esc(label)}</span><span class="ga-track" aria-hidden="true"><span style="width:${(value / rows[0][1]) * 100}%"></span></span><strong>${Math.round((value / total) * 100)} %</strong></li>`).join('');
+    };
+    const gaNumber = value => Math.round(value).toLocaleString('fr-FR');
+    function renderAnalytics() {
+      const days = Number($('ga-period').value);
+      const current = demoVisitors(days, 0);
+      const previous = demoVisitors(days, days);
+      const sum = series => series.reduce((total, day) => total + day.value, 0);
+      const users = sum(current), previousUsers = sum(previous);
+      const kpis = [
+        ['Visiteurs', users, previousUsers, gaNumber],
+        ['Sessions', users * 1.34, previousUsers * 1.31, gaNumber],
+        ['Pages vues', users * 4.1, previousUsers * 3.9, gaNumber],
+        ['Durée moyenne (min:s)', 161, 152, seconds => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`]
+      ];
+      $('ga-kpis').innerHTML = kpis.map(([label, value, before, format]) => {
+        const change = Math.round(((value - before) / before) * 100);
+        return `<div class="stat"><span>${label}</span><strong>${format(value)}</strong><small><span class="ga-change ${change >= 0 ? 'up' : 'down'}">${change >= 0 ? '+' : ''}${change} %</span> vs période précédente</small></div>`;
+      }).join('');
+
+      const max = Math.max(...current.map(day => day.value)) * 1.1;
+      const points = current.map((day, index) => [(index / (days - 1)) * 600, 180 - (day.value / max) * 170]);
+      const line = points.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
+      const dateLabel = date => date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
+      $('ga-chart').innerHTML = `<svg viewBox="0 0 600 180" preserveAspectRatio="none" role="img" aria-label="Visiteurs par jour">
+          ${[45, 90, 135].map(y => `<line x1="0" x2="600" y1="${y}" y2="${y}" stroke="#e1e6e1" vector-effect="non-scaling-stroke"/>`).join('')}
+          <polygon points="0,180 ${line} 600,180" fill="#205c47" fill-opacity=".08"/>
+          <polyline points="${line}" fill="none" stroke="#205c47" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>
+        </svg><div class="ga-axis"><span>${dateLabel(current[0].date)}</span><span>${dateLabel(current[Math.floor(days / 2)].date)}</span><span>${dateLabel(current[days - 1].date)}</span></div>`;
+
+      const pageViews = users * 4.1;
+      const pages = [['Accueil', '/', 0.27], ['Catalogue', '/?screen=catalogue', 0.21], ['Importation', '/?screen=livraison', 0.09]];
+      const carShares = [0.08, 0.06, 0.05, 0.04, 0.03];
+      cars.slice(0, carShares.length).forEach((car, index) => pages.push([car.name, `/?screen=vehicule&id=${car.id}`, carShares[index]]));
+      $('ga-pages').innerHTML = pages.sort((first, second) => second[2] - first[2])
+        .map(([title, path, share]) => `<tr><td><strong>${esc(title)}</strong><br><small>${esc(path)}</small></td><td>${gaNumber(pageViews * share)}</td></tr>`).join('');
+      $('ga-sources').innerHTML = gaBars([['Recherche Google', 38], ['Accès direct', 22], ['Instagram', 17], ['Facebook', 11], ['WhatsApp', 8], ['Autres sites', 4]]);
+      $('ga-devices').innerHTML = gaBars([['Mobile', 71], ['Ordinateur', 25], ['Tablette', 4]]);
+      $('ga-countries').innerHTML = gaBars([['Tunisie', 58], ['France', 21], ['Émirats arabes unis', 14], ['Autres pays', 7]]);
+    }
+    $('ga-period').addEventListener('change', renderAnalytics);
+    $('analytics-form').addEventListener('submit', async event => {
+      event.preventDefault();
+      $('save-analytics').disabled = true;
+      message('analytics-msg', 'Régénération en cours…', true);
+      try {
+        const saved = await api('/api/admin/analytics', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ measurementId: $('ga-id').value.trim() }) });
+        $('ga-id').value = dashGaId = saved.measurementId;
+        message('analytics-msg', saved.measurementId ? 'Suivi activé sur le site vitrine. Republiez le dossier front-office pour le mettre en ligne.' : 'Suivi désactivé sur le site vitrine. Republiez le dossier front-office.', true);
+      } catch (error) { message('analytics-msg', error.message); }
+      finally { $('save-analytics').disabled = false; }
+    });
+
+    $('f-year').placeholder = new Date().getFullYear();
+    updateCarPreview();
+    initializeCollapsiblePanels();
+    showAdminPage(new URLSearchParams(location.search).get('section'));
+    api('/api/admin/me').then(showApp).catch(showLogin);
+  </script>
+</body>
+</html>
