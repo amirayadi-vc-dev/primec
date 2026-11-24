@@ -146,6 +146,11 @@ test('Node /allani is authenticated and editable; the static snapshot uses an is
   });
   assert.equal(social.status, 200);
   assert.equal((await social.json()).tiktokUsername, 'test');
+  const liveSocial = body => request('/api/admin/social', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ instagramUsername: '@test', posts: [], live: { active: true, platform: 'instagram', ...body } }) });
+  assert.equal((await liveSocial({ player: 'http://insecure.example.com/' })).status, 400);
+  const liveSaved = await liveSocial({ player: 'https://youtu.be/dQw4w9WgXcQ' });
+  assert.equal(liveSaved.status, 200);
+  assert.equal((await liveSaved.json()).live.player, 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1');
   const appointment = await request('/api/admin/appointments', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ carId: car.id, date: new Date(Date.now() + 86400000).toISOString(),
@@ -181,12 +186,58 @@ test('Node /allani is authenticated and editable; the static snapshot uses an is
   assert.ok(generatedHome.includes(`<div class="hero"><img src="data:image/png;base64,${png.toString('base64')}" alt="">`));
   const generatedAdmin = await fs.readFile(path.join(fixture, 'front-office', 'allani', 'index.html'), 'utf8');
   assert.ok(generatedAdmin.includes(`data:image/png;base64,${png.toString('base64')}`));
+  assert.ok(generatedAdmin.includes("options.method === 'PUT' ? 'Modifications enregistrées dans la démo uniquement.' : 'Simulation terminée. Aucun fichier publié ni modifié.'"));
   const jsonSettings = await request('/api/admin/static-site', {
     method: 'PUT', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ ...siteFields, contact: initialSettings.contact })
   });
   assert.equal(jsonSettings.status, 200);
   assert.equal((await jsonSettings.json()).settings.wallpaperImage, wallpaper);
+  assert.equal((await updateSite(siteForm(null, { shippingFrance: '-1' }))).status, 400);
+  assert.equal((await updateSite(siteForm(null, { insuranceRate: '101' }))).status, 400);
+  const shippingUpdate = await updateSite(siteForm(null, { shippingFrance: '5100', shippingDubai: '9200', shippingSuv: '1800', insuranceRate: '1.5', supportFee: '1300' }));
+  assert.equal(shippingUpdate.status, 200);
+  const shipping = { france: 5100, dubai: 9200, suv: 1800, insuranceRate: 1.5, support: 1300 };
+  assert.deepEqual((await shippingUpdate.json()).settings.shipping, shipping);
+  assert.ok((await (await fetch(base)).text()).includes(`window.SITE_SHIPPING = ${JSON.stringify(shipping)};`));
+  assert.ok((await fs.readFile(path.join(fixture, 'front-office', 'index.html'), 'utf8')).includes(`window.SITE_SHIPPING = ${JSON.stringify(shipping)};`));
+  assert.equal((await updateSite(siteForm(null, { exportCustoms: '-5' }))).status, 400);
+  const exportRates = { france: 6000, dubai: 9900, suv: 1600, insuranceRate: 2, support: 2000, customs: 700 };
+  const exportUpdate = await updateSite(siteForm(null, { exportFrance: '6000', exportDubai: '9900', exportSuv: '1600', exportInsuranceRate: '2', exportSupport: '2000', exportCustoms: '700' }));
+  assert.equal(exportUpdate.status, 200);
+  const exportSettings = (await exportUpdate.json()).settings;
+  assert.deepEqual(exportSettings.exportShipping, exportRates);
+  assert.deepEqual(exportSettings.shipping, shipping);
+  const liveHome = await (await fetch(base)).text();
+  assert.ok(liveHome.includes(`window.SITE_EXPORT_SHIPPING = ${JSON.stringify(exportRates)};`));
+  assert.ok(liveHome.includes("const EXPORT_API='/api/export-requests';"));
+  assert.ok((await fs.readFile(path.join(fixture, 'front-office', 'index.html'), 'utf8')).includes("const EXPORT_API='';"));
+
+  const exportRequest = body => fetch(`${base}/api/export-requests`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  const validExport = { brand: 'Toyota', model: 'Land Cruiser', year: 2021, km: 45000, vin: 'jtmhv05j604123456', listingUrl: 'https://example.com/annonce', departureCountry: 'France', departureCity: 'Marseille', value: 200000, vehicleType: 'suv', condition: 'occasion', customs: true, name: 'Client export', email: 'export@example.com', phone: '+216 20 000 000', note: 'Disponible en mai' };
+  assert.equal((await exportRequest({ ...validExport, brand: '' })).status, 400);
+  assert.equal((await exportRequest({ ...validExport, vin: 'IOQ123' })).status, 400);
+  assert.equal((await exportRequest({ ...validExport, listingUrl: 'javascript:alert(1)' })).status, 400);
+  assert.equal((await exportRequest({ ...validExport, departureCountry: 'Autre' })).status, 400);
+  assert.equal((await exportRequest({ ...validExport, year: new Date().getFullYear() + 2 })).status, 400);
+  const created = await exportRequest(validExport);
+  assert.equal(created.status, 201);
+  // 200000 + (6000 + 1600 SUV) + 2 % insurance + 2000 support + 700 customs
+  assert.deepEqual((await created.json()).estimate, { shipping: 7600, insurance: 4000, support: 2000, customs: 700, total: 214300 });
+  const otherCountry = await exportRequest({ ...validExport, departureCountry: 'Autre', otherCountry: 'Allemagne', customs: false });
+  assert.equal(otherCountry.status, 201);
+  assert.equal((await otherCountry.json()).estimate.total, null);
+  assert.equal((await fetch(`${base}/api/admin/export-requests`)).status, 401);
+  const exportList = await (await request('/api/admin/export-requests')).json();
+  assert.deepEqual(exportList.map(item => item.otherCountry), ['Allemagne', '']);
+  assert.equal(exportList[1].vin, 'JTMHV05J604123456');
+  assert.equal(exportList[1].status, 'new');
+  const exportId = encodeURIComponent(exportList[1].id);
+  const patchExport = status => request(`/api/admin/export-requests/${exportId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status }) });
+  assert.equal((await patchExport('bogus')).status, 400);
+  assert.equal((await (await patchExport('quoted')).json()).status, 'quoted');
+  assert.equal((await request(`/api/admin/export-requests/${exportId}`, { method: 'DELETE' })).status, 200);
+  assert.equal((await (await request('/api/admin/export-requests')).json()).length, 1);
   const restored = await updateSite(siteForm(null, { resetWallpaper: 'true' }));
   assert.equal(restored.status, 200);
   assert.equal((await restored.json()).settings.wallpaperImage, '');

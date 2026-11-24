@@ -118,7 +118,31 @@
     .social-accounts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:14px 0 24px}.social-account{min-width:0;padding:16px;border:1px solid var(--line);border-radius:6px;background:white}.social-account-head{display:flex;align-items:center;gap:9px;margin-bottom:16px;font-weight:800}.social-avatar{display:grid;place-items:center;width:32px;height:32px;border-radius:8px;background:#fde8e9;color:var(--green);font:800 16px Manrope,sans-serif}.social-account input{font-size:13px}.social-profile-preview{display:block;margin-top:10px;color:var(--green);font-size:11px;overflow-wrap:anywhere;text-decoration:none}.social-account .field-hint{min-height:33px}
     .social-section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}.social-section-head h3{margin:0;font:800 15px Manrope,sans-serif}.social-posts{display:grid;gap:10px;margin:14px 0;padding:0;list-style:none}.social-post-row{display:grid;grid-template-columns:26px minmax(0,1fr) auto;gap:10px;align-items:start;padding:14px;border:1px solid var(--line);border-radius:5px}.post-order{padding-top:10px;color:var(--muted);font-weight:700;font-size:12px}.post-controls{display:flex;gap:5px;margin-top:22px}.post-controls button{min-width:32px;padding:8px;font-size:12px}.post-meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px;font-size:11px}.post-meta a{color:var(--green)}.social-empty{padding:20px;border:1px dashed var(--line);border-radius:5px;text-align:center;color:var(--muted);font-size:12px}.social-live-fields{margin-top:16px}.social-live-fields[disabled]{opacity:.6}input[aria-invalid="true"]{border-color:var(--red)}
     @media(max-width:1100px){.editor-layout{grid-template-columns:minmax(0,1fr)}.vehicle-preview{position:static;display:none}.social-accounts{grid-template-columns:minmax(0,1fr)}.social-account .field-hint{min-height:0}}
+    .toast{position:fixed;top:20px;left:50%;z-index:1000;display:flex;align-items:flex-start;gap:14px;width:min(460px,calc(100% - 32px));padding:18px 18px 18px 20px;border-radius:10px;background:var(--ink);color:#fff;box-shadow:0 18px 50px rgba(0,0,0,.28);transform:translateX(-50%);animation:toast-in .35s cubic-bezier(.2,.9,.3,1.2)}
+    .toast-icon{display:grid;place-items:center;flex-shrink:0;width:40px;height:40px;border-radius:50%;background:#1f9d55;color:#fff;font-size:22px;font-weight:800}
+    .toast-body{flex:1;min-width:0}.toast-body strong{display:block;font:800 16px Manrope,sans-serif}.toast-car{display:block;margin-top:3px;color:#fff;font-weight:600;font-size:13px;overflow-wrap:anywhere}.toast-body p{margin:4px 0 0;color:rgba(255,255,255,.75);font-size:12px;line-height:1.5}
+    .toast-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.toast-actions a,.toast-actions button{display:inline-flex;align-items:center;padding:8px 12px;border-radius:4px;border:1px solid rgba(255,255,255,.3);background:transparent;color:#fff;font-size:12px;font-weight:600;text-decoration:none}.toast-actions a{background:#fff;border-color:#fff;color:var(--ink)}
+    .toast-close{flex-shrink:0;padding:0 4px;border:0;background:transparent;color:rgba(255,255,255,.7);font-size:22px;line-height:1}.toast-close:hover{color:#fff}
+    .toast-progress{position:absolute;left:0;bottom:0;height:3px;border-radius:0 0 0 10px;background:#1f9d55;animation:toast-progress 8s linear forwards}.toast:hover .toast-progress{animation-play-state:paused}
+    @keyframes toast-in{from{opacity:0;transform:translate(-50%,-16px) scale(.97)}to{opacity:1;transform:translate(-50%,0)}}
+    @keyframes toast-progress{from{width:100%}to{width:0}}
+    #car-list tr.row-new td{animation:row-new 3.5s ease-out}
+    @keyframes row-new{0%,40%{background:#dff3e7}100%{background:transparent}}
+    @media(prefers-reduced-motion:reduce){.toast,#car-list tr.row-new td{animation:none}.toast-progress{display:none}}
     @media(max-width:480px){.form-block{padding:14px}.social-post-row{grid-template-columns:20px minmax(0,1fr);padding:10px}.post-controls{grid-column:2;margin-top:0}.social-section-head{align-items:flex-start;flex-direction:column}.editor-actions{align-items:stretch}.editor-actions .actions{width:100%}.editor-actions .actions button{flex:1}.photo-heading{align-items:flex-start;flex-direction:column}}
+        .site-settings .form-block{scroll-margin-top:16px}.site-settings .form-block .help{margin:0 0 14px}.site-settings .field{margin-bottom:14px}.site-settings .field:last-child{margin-bottom:0}
+        .site-jump{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px}.site-jump button{padding:7px 12px;font-size:12px;border-radius:999px}
+        .counter.over{color:#b42318;font-weight:700}
+        .site-settings .wallpaper-settings{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:18px;align-items:start;margin:0}.site-settings .wallpaper-preview{width:100%;margin:0}.wallpaper-controls{display:grid;gap:8px}.wallpaper-controls>label:first-child{margin:0}.wallpaper-controls .help,.wallpaper-controls .msg{margin:0}.wallpaper-controls button{justify-self:start;margin:0}.wallpaper-drop{padding:16px 12px}
+        .contact-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+        .rate-wrap{overflow-x:auto}.rate-table{width:100%;border-collapse:collapse;font-size:13px}.rate-table th,.rate-table td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:start;vertical-align:middle}.rate-table thead th{font-size:12px;text-transform:uppercase;letter-spacing:.04em}.rate-table th small{display:block;margin-top:2px;color:var(--muted);font-weight:400;font-size:11px;text-transform:none;letter-spacing:0}.rate-table tbody th{font-weight:700;width:38%}.rate-table tbody tr:last-child>*{border-bottom:0}.rate-na{color:var(--muted);font-size:12px;font-style:italic}.rate-cell-label{display:none}
+        .unit-input{position:relative;display:flex;align-items:center}.unit-input input{width:100%;text-align:start;padding-inline-end:48px;margin:0}.unit-input>span{position:absolute;inset-inline-end:10px;color:var(--muted);font-size:12px;font-weight:700;pointer-events:none}
+        .rate-example{margin:12px 0 0;padding:10px 12px;border-radius:6px;background:#f5f5f6;color:var(--muted);font-size:12px;line-height:1.6}.rate-example b{color:inherit}
+        .serp{padding:12px;border:1px solid var(--line);border-radius:6px;background:white}.serp-url{display:block;color:#3c4043;font-size:11px;overflow-wrap:anywhere}.site-preview .serp-title{margin:4px 0;color:#1a0dab;font:400 16px/1.3 Arial,sans-serif}.site-preview .serp-desc{margin:0;color:#4d5156;font-size:12px;line-height:1.5}
+        .contact-preview{list-style:none;margin:0;padding:0;display:grid;gap:8px;font-size:12px}.contact-preview li{display:flex;justify-content:space-between;gap:8px}.contact-preview span{color:var(--muted)}.contact-preview b{overflow-wrap:anywhere;text-align:end;unicode-bidi:isolate}[dir="rtl"] .site-settings input[dir="ltr"]{text-align:right}
+        .site-settings .editor-actions{padding-bottom:4px}
+        @media(max-width:1100px){.site-settings .site-preview{position:static;display:block;order:-1}}
+        @media(max-width:700px){.site-settings .wallpaper-settings,.contact-grid{grid-template-columns:minmax(0,1fr)}.rate-table thead{display:none}.rate-table,.rate-table tbody,.rate-table tr,.rate-table th,.rate-table td{display:block;width:auto}.rate-table tr{padding:10px 0;border-bottom:1px solid var(--line)}.rate-table tbody th,.rate-table td{border:0;padding:4px 0}.rate-table .rate-cell-label{display:block;margin-bottom:3px;color:var(--muted);font-size:11px;font-weight:700}}
   </style>
   <script>
 (function () {
@@ -324,8 +348,53 @@
     'Description du véhicule': ['Vehicle description', 'وصف السيارة'],
     'Occasion sélectionnée': ['Selected used car', 'سيارة مستعملة مختارة'],
     'Sauvegarder': ['Save', 'حفظ'],
+    'Sauvegardé': ['Saved', 'محفوظة'],
+    'Véhicule sauvegardé dans votre sélection.': ['Vehicle saved to your selection.', 'تم حفظ السيارة في اختيارك.'],
     "Photo d'inspiration": ['Inspiration photo', 'صورة توضيحية'],
     "Galerie d'ambiance": ['Mood gallery', 'معرض الصور'],
+    'Agrandir la photo': ['Enlarge photo', 'تكبير الصورة'],
+    'Photos du véhicule': ['Vehicle photos', 'صور السيارة'],
+    'Fermer': ['Close', 'إغلاق'],
+    'Photo précédente': ['Previous photo', 'الصورة السابقة'],
+    'Photo suivante': ['Next photo', 'الصورة التالية'],
+    'Véhicule concerné': ['Selected vehicle', 'السيارة المعنية'],
+    'Voir le véhicule': ['View vehicle', 'عرض السيارة'],
+    'Changer': ['Change', 'تغيير'],
+    // Export-only service
+    'Type de demande': ['Request type', 'نوع الطلب'],
+    'Un véhicule de notre catalogue': ['A vehicle from our catalogue', 'سيارة من كتالوجنا'],
+    'Achat, transport et formalités': ['Purchase, shipping and paperwork', 'الشراء والنقل والإجراءات'],
+    'Mon propre véhicule': ['My own vehicle', 'سيارتي الخاصة'],
+    "Export uniquement, jusqu'à Tunis": ['Export only, to Tunis', 'التصدير فقط، حتى تونس'],
+    'Votre véhicule': ['Your vehicle', 'سيارتك'],
+    'Modèle': ['Model', 'الطراز'],
+    'Année': ['Year', 'السنة'],
+    'N° de châssis (VIN)': ['Chassis number (VIN)', 'رقم الهيكل (VIN)'],
+    'facultatif': ['optional', 'اختياري'],
+    '17 caractères': ['17 characters', '17 حرفًا'],
+    '17 caractères, sans I, O ni Q': ['17 characters, no I, O or Q', '17 حرفًا، بدون I وO وQ'],
+    "Lien de l'annonce": ['Listing link', 'رابط الإعلان'],
+    'Autre pays': ['Other country', 'بلد آخر'],
+    'Sur devis': ['On quotation', 'حسب عرض السعر'],
+    'Pays de départ': ['Departure country', 'بلد الانطلاق'],
+    'Ex. Allemagne': ['E.g. Germany', 'مثال: ألمانيا'],
+    'Ville de départ': ['Departure city', 'مدينة الانطلاق'],
+    'Ajouter le dédouanement à Tunis': ['Add customs clearance in Tunis', 'إضافة التخليص الجمركي في تونس'],
+    'Nous préparons et déposons votre dossier en douane (droits et taxes en sus).': ['We prepare and file your customs paperwork (duties and taxes extra).', 'نُعدّ ملفك الجمركي ونودعه (الرسوم والضرائب غير مشمولة).'],
+    'Précisions': ['Details', 'تفاصيل'],
+    'Disponibilité, documents, contraintes…': ['Availability, documents, constraints…', 'التوفر، الوثائق، القيود…'],
+    "Votre demande est transmise à notre équipe, qui vous recontacte avec un devis détaillé. L'importation dépend de votre éligibilité et de la réglementation tunisienne en vigueur.": ['Your request goes to our team, who will get back to you with a detailed quote. Import depends on your eligibility and current Tunisian regulations.', 'يُرسل طلبك إلى فريقنا الذي سيتواصل معك بعرض سعر مفصل. يعتمد الاستيراد على أهليتك وعلى التشريعات التونسية السارية.'],
+    'Dédouanement': ['Customs clearance', 'التخليص الجمركي'],
+    'Non demandé': ['Not requested', 'غير مطلوب'],
+    "Demande d'export envoyée !": ['Export request sent!', 'تم إرسال طلب التصدير!'],
+    'Nous avons bien reçu votre demande. Un conseiller vous recontacte rapidement avec un devis détaillé.': ['We have received your request. An advisor will get back to you shortly with a detailed quote.', 'لقد استلمنا طلبك. سيتواصل معك مستشار قريبًا بعرض سعر مفصل.'],
+    'Référence :': ['Reference:', 'المرجع:'],
+    'Démonstration : aucune donnée n’a été envoyée.': ['Demo: no data was sent.', 'عرض تجريبي: لم يتم إرسال أي بيانات.'],
+    'Envoi impossible. Réessayez ou contactez-nous.': ['Could not send. Please try again or contact us.', 'تعذر الإرسال. حاول مرة أخرى أو تواصل معنا.'],
+    'Export seul': ['Export only', 'التصدير فقط'],
+    'Vous avez déjà trouvé votre véhicule ?': ['Already found your vehicle?', 'هل وجدت سيارتك بالفعل؟'],
+    "Il n'est pas sur notre site ? Nous l'expédions pour vous jusqu'à Tunis : transport, assurance et, si besoin, dédouanement.": ["Not on our site? We ship it to Tunis for you: transport, insurance and, if needed, customs clearance.", 'ليست على موقعنا؟ نشحنها لك حتى تونس: النقل والتأمين، والتخليص الجمركي عند الحاجة.'],
+    'Exporter mon véhicule': ['Ship my vehicle', 'شحن سيارتي'],
     'Mercedes-Benz sélectionnée': ['Selected Mercedes-Benz', 'مرسيدس-بنز مختارة'],
     'Vue extérieure': ['Exterior view', 'منظر خارجي'],
     'Vue de la Mercedes': ['View of the Mercedes', 'منظر المرسيدس'],
@@ -465,6 +534,7 @@
     // Brand-agnostic (ALLANI Auto on the server version, Prime Cars on the Netlify demo)
     [/^(.+) — Votre prochaine destination$/, (m, i) => [`${m[1]} — Your next destination`, `${m[1]} — وجهتك القادمة`][i]],
     [/^(.+), accueil$/, (m, i) => [`${m[1]}, home`, `${m[1]}، الصفحة الرئيسية`][i]],
+    [/^Démonstration : votre estimation pour (.+) est prête\. Aucune donnée n’a été envoyée\.$/, (m, i) => [`Demo: your estimate for ${m[1]} is ready. No data was sent.`, `عرض تجريبي: تقديرك لـ ${m[1]} جاهز. لم يتم إرسال أي بيانات.`][i]],
     [/^LA SÉLECTION (.+)$/, (m, i) => [`THE ${m[1]} SELECTION`, `تشكيلة ${m[1]}`][i]],
     [/^LIVE (.+)$/i, (m, i) => [`${m[1]} LIVE`, `بث ${m[1]} المباشر`][i]],
     [new RegExp(`^${NUM} km$`), (m, i) => [`${m[1]} km`, `${isolateNumber(m[1])} كم`][i]],
@@ -490,9 +560,84 @@
 
   Object.assign(DICT, {
     'Prime Cars — Espace admin': ['Prime Cars — Admin', 'برايم كارز — الإدارة'],
+    'Réglez ici ce que voient vos visiteurs : référencement, image d’accueil, coordonnées et tarifs. Le catalogue et les réseaux sociaux sont copiés à chaque régénération du dossier': ['Set what your visitors see: SEO, home image, contact details and rates. The catalogue and social media are copied each time you regenerate the folder', 'اضبط هنا ما يراه زوارك: تحسين الظهور، صورة الصفحة الرئيسية، معلومات الاتصال والتعريفات. يُنسخ الكتالوج وحسابات التواصل عند كل إعادة إنشاء للمجلد'],
+    'Sections du site vitrine': ['Showcase site sections', 'أقسام الموقع التعريفي'],
+    '1 · Référencement': ['1 · SEO', '1 · تحسين الظهور'],
+    '2 · Apparence': ['2 · Appearance', '2 · المظهر'],
+    '3 · Coordonnées': ['3 · Contact', '3 · الاتصال'],
+    '4 · Tarifs': ['4 · Rates', '4 · التعريفات'],
+    'Référencement & partage': ['SEO & sharing', 'تحسين الظهور والمشاركة'],
+    'Ce texte apparaît dans l’onglet du navigateur, sur Google et dans l’aperçu des liens partagés (WhatsApp, Facebook…).': ['This text appears in the browser tab, on Google and in shared link previews (WhatsApp, Facebook…).', 'يظهر هذا النص في تبويب المتصفح وعلى Google وفي معاينة الروابط المشتركة (واتساب، فيسبوك…).'],
+    'Titre *': ['Title *', 'العنوان *'],
+    'Description *': ['Description *', 'الوصف *'],
+    'Apparence de l’accueil': ['Home page appearance', 'مظهر الصفحة الرئيسية'],
+    'Choisir une image': ['Choose an image', 'اختر صورة'],
+    'ou glissez-la ici': ['or drop it here', 'أو اسحبها إلى هنا'],
+    'Coordonnées de contact': ['Contact details', 'معلومات الاتصال'],
+    'Utilisées par les boutons Appeler, WhatsApp, SMS et E-mail du site, ainsi que dans le pied de page.': ['Used by the site’s Call, WhatsApp, SMS and Email buttons, and in the footer.', 'تُستخدم في أزرار الاتصال وواتساب والرسائل والبريد الإلكتروني في الموقع، وفي تذييل الصفحة.'],
+    'Format international, sans espaces.': ['International format, no spaces.', 'بالصيغة الدولية، بدون مسافات.'],
+    'Version lisible montrée aux visiteurs.': ['Readable version shown to visitors.', 'نسخة مقروءة تُعرض للزوار.'],
+    'Laissez vide pour utiliser le téléphone.': ['Leave empty to use the phone number.', 'اتركه فارغًا لاستخدام رقم الهاتف.'],
+    'Reçoit les demandes par e-mail.': ['Receives requests by email.', 'يستقبل الطلبات عبر البريد الإلكتروني.'],
+    'Tarifs d’export vers la Tunisie': ['Export rates to Tunisia', 'تعريفات التصدير إلى تونس'],
+    'Tous les véhicules sont exportés vers la Tunisie.': ['Every vehicle is exported to Tunisia.', 'تُصدَّر جميع السيارات إلى تونس.'],
+    'Export': ['Export', 'التصدير'],
+    ': un de nos véhicules, vendu sur le site (simulateur et fiche véhicule).': [': one of our vehicles, sold on the site (estimator and vehicle page).', ': إحدى سياراتنا المعروضة على الموقع (المحاكي وصفحة السيارة).'],
+    ': un véhicule acheté chez un autre vendeur (formulaire « Mon propre véhicule » ; départ d’un autre pays sur devis).': [': a vehicle bought from another dealer (“My own vehicle” form; other departure countries quoted on request).', ': سيارة مشتراة من بائع آخر (نموذج «سيارتي الخاصة»؛ الانطلاق من بلد آخر حسب عرض السعر).'],
+    'Nos véhicules': ['Our vehicles', 'سياراتنا'],
+    'Véhicules d’autres vendeurs': ['Vehicles from other dealers', 'سيارات من بائعين آخرين'],
+    ': simulateur « Importation & livraison » et fiche véhicule.': [': “Import & delivery” estimator and vehicle page.', ': محاكي «الاستيراد والتوصيل» وصفحة السيارة.'],
+    ': formulaire « Mon propre véhicule » (véhicule hors catalogue ; les départs d’un autre pays sont sur devis).': [': “My own vehicle” form (vehicle not in the catalogue; departures from other countries are quoted on request).', ': نموذج «سيارتي الخاصة» (سيارة خارج الكتالوج؛ الانطلاق من بلد آخر حسب عرض السعر).'],
+    'Poste': ['Item', 'البند'],
+    'Véhicule du catalogue': ['Catalogue vehicle', 'سيارة من الكتالوج'],
+    'Véhicule du client': ['Customer’s vehicle', 'سيارة العميل'],
+    'Transport depuis la France': ['Shipping from France', 'النقل من فرنسا'],
+    'Transport depuis les Émirats arabes unis': ['Shipping from the United Arab Emirates', 'النقل من الإمارات العربية المتحدة'],
+    'Supplément SUV / 4×4': ['SUV / 4×4 surcharge', 'إضافة SUV / دفع رباعي'],
+    'Ajouté au transport': ['Added to shipping', 'تُضاف إلى النقل'],
+    'Assurance transport': ['Shipping insurance', 'تأمين النقل'],
+    '% de la valeur du véhicule': ['% of the vehicle value', '% من قيمة السيارة'],
+    'Accompagnement': ['Support fee', 'المرافقة'],
+    'Frais de dossier et suivi': ['File handling and follow-up', 'رسوم الملف والمتابعة'],
+    'Dédouanement': ['Customs clearance', 'التخليص الجمركي'],
+    'Option cochée par le client': ['Option ticked by the customer', 'خيار يحدده العميل'],
+    'Non proposé': ['Not offered', 'غير متوفر'],
+    'Aperçu sur Google': ['Google preview', 'المعاينة على Google'],
+    'Contact affiché': ['Displayed contact', 'الاتصال المعروض'],
+    'Aperçu': ['Preview', 'معاينة'],
+    'Modifications non enregistrées': ['Unsaved changes', 'تغييرات غير محفوظة'],
+    'Export seul': ['Export only', 'التصدير فقط'],
+    'Tarifs d’importation': ['Import rates', 'تعريفات الاستيراد'],
+    'Montants utilisés par le simulateur « Importation & livraison » et sur la fiche véhicule (« Transport estimatif »).': ['Amounts used by the “Import & delivery” estimator and on the vehicle page (“Estimated shipping”).', 'المبالغ المستخدمة في محاكي «الاستيراد والتوصيل» وفي صفحة السيارة («النقل التقديري»).'],
+    'Transport depuis la France (TND)': ['Shipping from France (TND)', 'النقل من فرنسا (د.ت)'],
+    'Transport depuis Dubaï (TND)': ['Shipping from Dubai (TND)', 'النقل من دبي (د.ت)'],
+    'Supplément SUV / 4×4 (TND)': ['SUV / 4×4 surcharge (TND)', 'إضافة SUV / دفع رباعي (د.ت)'],
+    'Assurance transport (% de la valeur)': ['Shipping insurance (% of value)', 'تأمين النقل (% من القيمة)'],
+    'Accompagnement (TND)': ['Support fee (TND)', 'رسوم المرافقة (د.ت)'],
+    'Tarifs export seul': ['Export-only rates', 'تعريفات التصدير فقط'],
+    'Client qui a déjà son véhicule (hors catalogue) : formulaire « Mon propre véhicule ». Les départs depuis un autre pays sont sur devis.': ['Customer who already has a vehicle (not in the catalogue): “My own vehicle” form. Departures from other countries are quoted on request.', 'عميل لديه سيارته بالفعل (خارج الكتالوج): نموذج «سيارتي الخاصة». الانطلاق من بلد آخر حسب عرض السعر.'],
+    'Accompagnement export (TND)': ['Export support fee (TND)', 'رسوم مرافقة التصدير (د.ت)'],
+    'Dédouanement en option (TND)': ['Optional customs clearance (TND)', 'التخليص الجمركي الاختياري (د.ت)'],
+    'Demandes d’export': ['Export requests', 'طلبات التصدير'],
+    'Véhicules qui ne sont pas sur le site : le client demande uniquement le transport jusqu’à Tunis (formulaire « Mon propre véhicule » de la page Importation & livraison).': ['Vehicles not listed on the site: the customer only requests shipping to Tunis (“My own vehicle” form on the Import & delivery page).', 'سيارات غير معروضة في الموقع: يطلب العميل النقل فقط حتى تونس (نموذج «سيارتي الخاصة» في صفحة الاستيراد والتوصيل).'],
+    'Départ': ['Departure', 'الانطلاق'],
+    'Estimation': ['Estimate', 'التقدير'],
+    'Nouvelle': ['New', 'جديد'],
+    'Client contacté': ['Customer contacted', 'تم التواصل مع العميل'],
+    'Devis envoyé': ['Quote sent', 'تم إرسال العرض'],
+    'Clôturée': ['Closed', 'مغلق'],
+    'Aucune demande d’export pour le moment.': ['No export requests yet.', 'لا توجد طلبات تصدير حاليًا.'],
+    'Supprimer cette demande d’export ?': ['Delete this export request?', 'حذف طلب التصدير هذا؟'],
+    'Annonce ↗': ['Listing ↗', 'الإعلان ↗'],
+    'Sur devis': ['On quotation', 'حسب عرض السعر'],
+    'nouvelle demande d’export': ['new export request', 'طلب تصدير جديد'],
+    'nouvelles demandes d’export': ['new export requests', 'طلبات تصدير جديدة'],
+    'Tarifs d’importation invalides : nombres positifs uniquement (assurance entre 0 et 100 %).': ['Invalid import rates: positive numbers only (insurance between 0 and 100%).', 'تعريفات استيراد غير صالحة: أرقام موجبة فقط (التأمين بين 0 و100%).'],
+    'Tarifs d’importation invalides : nombres positifs uniquement.': ['Invalid import rates: positive numbers only.', 'تعريفات استيراد غير صالحة: أرقام موجبة فقط.'],
     'Démo interactive : modifications effacées à l’actualisation. Aucun envoi au serveur.': ['Interactive demo: changes reset on refresh. Nothing is sent to the server.', 'عرض تجريبي تفاعلي: تُحذف التغييرات عند تحديث الصفحة. لا يتم إرسال أي بيانات إلى الخادم.'],
     'Véhicule ajouté à la démo.': ['Vehicle added to the demo.', 'تمت إضافة السيارة إلى العرض التجريبي.'],
     'Réseaux sociaux enregistrés dans la démo uniquement.': ['Social media saved in the demo only.', 'تم حفظ شبكات التواصل في العرض التجريبي فقط.'],
+    'Modifications enregistrées dans la démo uniquement.': ['Changes saved in the demo only.', 'تم حفظ التعديلات في العرض التجريبي فقط.'],
     'Simulation terminée. Aucun fichier publié ni modifié.': ['Simulation complete. No files published or changed.', 'اكتملت المحاكاة. لم يتم نشر أو تعديل أي ملفات.'],
     'ID enregistré dans la démo uniquement. Aucun suivi activé.': ['ID saved in the demo only. No tracking enabled.', 'تم حفظ المعرّف في العرض التجريبي فقط. لم يتم تفعيل التتبع.'],
     'ID effacé dans la démo uniquement. Aucun suivi modifié.': ['ID cleared in the demo only. No tracking changed.', 'تم مسح المعرّف في العرض التجريبي فقط. لم يتم تغيير التتبع.'],
@@ -509,6 +654,13 @@
     'Envoi en cours…': ['Uploading…', 'جارٍ الإرسال…'],
     'Véhicule ajouté et visible sur le site.': ['Vehicle added and visible on the site.', 'تمت إضافة السيارة وأصبحت ظاهرة على الموقع.'],
     'Véhicule mis à jour.': ['Vehicle updated.', 'تم تحديث السيارة.'],
+    'Véhicule ajouté !': ['Vehicle added!', 'تمت إضافة السيارة!'],
+    'Véhicule mis à jour': ['Vehicle updated', 'تم تحديث السيارة'],
+    'Vos modifications sont enregistrées.': ['Your changes have been saved.', 'تم حفظ تعديلاتك.'],
+    'Enregistrement effectué.': ['Saved successfully.', 'تم الحفظ بنجاح.'],
+    'Voir l’annonce sur le site ↗': ['View listing on the site ↗', 'عرض الإعلان على الموقع ↗'],
+    '+ Ajouter un autre véhicule': ['+ Add another vehicle', '+ إضافة سيارة أخرى'],
+    'Fermer': ['Close', 'إغلاق'],
     'Rendez-vous ajouté.': ['Appointment added.', 'تمت إضافة الموعد.'],
     'Mot de passe incorrect.': ['Incorrect password.', 'كلمة المرور غير صحيحة.'],
     'Session expirée.': ['Session expired.', 'انتهت الجلسة.'],
@@ -759,7 +911,7 @@
     '+ Ajouter une publication': ['+ Add a post', '+ إضافة منشور'],
     'Diffusion en direct': ['Live streaming', 'البث المباشر'],
     'Annoncer un live en cours': ['Announce an active live stream', 'الإعلان عن بث مباشر جارٍ'],
-    'Activez uniquement pendant votre diffusion, puis désactivez à la fin du live.': ['Enable only during your broadcast, then switch off when it ends.', 'فعّل هذا الخيار أثناء البث فقط، ثم عطّله عند انتهاء البث.'],
+    'Activez avant ou pendant votre diffusion (par exemple 50 min avant le début) : l’emplacement du live apparaît alors sur le site. Désactivez à la fin du live pour le masquer.': ['Enable before or during your broadcast (for example 50 minutes before it starts): the live slot then appears on the site. Switch off when the live ends to hide it.', 'فعّل هذا الخيار قبل البث أو أثناءه (مثلًا قبل 50 دقيقة من بدايته): يظهر عندها مكان البث على الموقع. عطّله عند انتهاء البث لإخفائه.'],
     'Facebook propose un lecteur intégré. Instagram et TikTok ouvrent le live sur leur plateforme et nécessitent le compte correspondant.': ['Facebook provides an embedded player. Instagram and TikTok open the live on their platform and require the matching account.', 'يوفر فيسبوك مشغلًا مدمجًا. يفتح إنستغرام وتيك توك البث على منصتهما ويتطلبان الحساب الموافق.'],
     'Toutes les modifications sont enregistrées.': ['All changes are saved.', 'تم حفظ جميع التعديلات.'],
     'Modifications non enregistrées.': ['Unsaved changes.', 'تعديلات غير محفوظة.'],
@@ -783,6 +935,8 @@
     'Réseaux sociaux enregistrés. Pour le site vitrine statique, régénérez puis republiez le dossier front-office.': ['Social media saved. For the static showcase, regenerate and republish the front-office folder.', 'تم حفظ الشبكات الاجتماعية. للموقع الثابت، أعد إنشاء مجلد front-office ونشره.']
   });
   PATTERNS.unshift(
+    [/^(\d+) \/ (\d+) caractères recommandés$/, (match, index) => [`${match[1]} / ${match[2]} recommended characters`, `${match[1]} / ${match[2]} حرفًا موصى به`][index]],
+    [/^Exemple, SUV de 100 000 TND depuis les Émirats : export (.+) · export seul avec dédouanement (.+)$/, (match, index) => [`Example, 100,000 TND SUV from the UAE: export ${match[1]} · export only with customs ${match[2]}`, `مثال، سيارة SUV بقيمة 100 000 د.ت من الإمارات: التصدير ${match[1].replace('TND', 'د.ت')} · التصدير فقط مع التخليص ${match[2].replace('TND', 'د.ت')}`][index]],
     [/^Dernière génération : (.+)$/, (match, index) => [`Last generated: ${match[1]}`, `آخر إنشاء: ${match[1]}`][index]],
     [/^Modifier : (.+)$/, (match, index) => [`Edit: ${match[1]}`, `تعديل: ${match[1]}`][index]],
     [/^(.*) · (\d{4}) · (France|Dubaï)$/, (match, index, word) => `${match[1]} · ${match[2]} · ${word(match[3])}`],
@@ -952,7 +1106,7 @@
           <a data-admin-page="vehicles" href="?section=vehicles">Véhicules</a>
           <a class="admin-nav-child" data-admin-page="add-car" href="?section=add-car">+ Ajouter un véhicule</a>
         </div>
-        <a data-admin-page="appointments" href="?section=appointments">Rendez-vous</a><a data-admin-page="social" href="?section=social">Réseaux sociaux</a><a data-admin-page="static-site" href="?section=static-site">Site vitrine</a><a data-admin-page="analytics" href="?section=analytics">Google Analytics</a><a data-admin-page="reservations" href="?section=reservations">Réservations</a>
+        <a data-admin-page="appointments" href="?section=appointments">Rendez-vous</a><a data-admin-page="export-requests" href="?section=export-requests">Demandes d’export</a><a data-admin-page="social" href="?section=social">Réseaux sociaux</a><a data-admin-page="static-site" href="?section=static-site">Site vitrine</a><a data-admin-page="analytics" href="?section=analytics">Google Analytics</a><a data-admin-page="reservations" href="?section=reservations">Réservations</a>
       </nav>
       <a class="sidebar-site-link" href="../index.html" target="_blank" rel="noopener">Voir le site ↗</a>
     </aside>
@@ -1069,6 +1223,12 @@
       <div class="table-wrap"><table><thead><tr><th>Date</th><th>Véhicule</th><th>Client</th><th>Note</th><th>Statut</th><th></th></tr></thead><tbody id="appointment-list"></tbody></table></div>
     </section>
 
+    <section class="card" id="export-requests-section">
+      <h2>Demandes d’export</h2>
+      <p class="help" style="margin:0 0 12px">Véhicules qui ne sont pas sur le site : le client demande uniquement le transport jusqu’à Tunis (formulaire « Mon propre véhicule » de la page Importation &amp; livraison).</p>
+      <div class="table-wrap"><table><thead><tr><th>Date</th><th>Véhicule</th><th>Départ</th><th>Client</th><th>Estimation</th><th>Statut</th><th></th></tr></thead><tbody id="export-request-list"></tbody></table></div>
+    </section>
+
     <form class="card" id="social-form">
       <h2>Réseaux sociaux</h2>
       <p class="form-intro">Gérez vos profils, les publications affichées sur le site et vos annonces de live depuis un seul endroit.</p>
@@ -1089,7 +1249,7 @@
       <fieldset class="form-block">
         <legend>Diffusion en direct</legend>
         <label class="switch"><input type="checkbox" id="l-active"> Annoncer un live en cours</label>
-        <p class="help">Activez uniquement pendant votre diffusion, puis désactivez à la fin du live.</p>
+        <p class="help">Activez avant ou pendant votre diffusion (par exemple 50 min avant le début) : l’emplacement du live apparaît alors sur le site. Désactivez à la fin du live pour le masquer.</p>
         <div class="grid social-live-fields hidden" id="social-live-fields">
           <div><label for="l-platform">Plateforme du live</label><select id="l-platform"><option value="instagram">Instagram</option><option value="facebook">Facebook (lecteur intégré au site)</option><option value="tiktok">TikTok</option></select></div>
           <div id="l-url-wrap"><label for="l-url">Lien de la vidéo live Facebook</label><input id="l-url" type="url" placeholder="https://www.facebook.com/allaniauto/videos/123…"></div>
@@ -1100,39 +1260,94 @@
       <p class="msg" id="social-msg" role="status" aria-live="polite"></p>
     </form>
 
-    <form class="card" id="static-site-form">
+    <form class="card site-settings" id="static-site-form">
       <h2>Site vitrine statique</h2>
-      <p class="help" style="margin:0 0 16px">Textes et coordonnées du site vitrine généré dans le dossier <code>front-office/</code>. Le catalogue et les réseaux sociaux y sont copiés au moment de la régénération : après une modification des véhicules ou des réseaux sociaux, cliquez sur « Régénérer » puis republiez le dossier.</p>
-      <div class="wallpaper-settings">
-        <label for="st-wallpaper">Image de fond de l’accueil</label>
-        <img class="wallpaper-preview" id="st-wallpaper-preview" alt="Aperçu de l’image de fond">
-        <input id="st-wallpaper" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="st-wallpaper-help st-wallpaper-error">
-        <p class="help" id="st-wallpaper-help">JPG, PNG ou WebP · 8 Mo maximum. L’image sera appliquée après enregistrement et génération.</p>
-        <button class="light" type="button" id="st-wallpaper-reset">Rétablir l’image par défaut</button>
-        <p class="msg error" id="st-wallpaper-error" role="alert"></p>
+      <p class="form-intro">Réglez ici ce que voient vos visiteurs : référencement, image d’accueil, coordonnées et tarifs. Le catalogue et les réseaux sociaux sont copiés à chaque régénération du dossier <code>front-office/</code>.</p>
+      <nav class="site-jump" aria-label="Sections du site vitrine"><button type="button" class="light" data-site-jump="site-block-seo">1 · Référencement</button><button type="button" class="light" data-site-jump="site-block-look">2 · Apparence</button><button type="button" class="light" data-site-jump="site-block-contact">3 · Coordonnées</button><button type="button" class="light" data-site-jump="site-block-rates">4 · Tarifs</button></nav>
+      <div class="editor-layout site-layout">
+        <div class="editor-fields">
+          <fieldset class="form-block" id="site-block-seo">
+            <legend><span class="step-number">1</span>Référencement &amp; partage</legend>
+            <p class="help">Ce texte apparaît dans l’onglet du navigateur, sur Google et dans l’aperçu des liens partagés (WhatsApp, Facebook…).</p>
+            <div class="field">
+              <label for="st-title">Titre *</label>
+              <input id="st-title" dir="auto" required maxlength="120" aria-describedby="st-title-count">
+              <span class="field-hint counter" id="st-title-count" data-max="60"></span>
+            </div>
+            <div class="field">
+              <label for="st-description">Description *</label>
+              <textarea id="st-description" dir="auto" required maxlength="300" style="min-height:90px" aria-describedby="st-description-count"></textarea>
+              <span class="field-hint counter" id="st-description-count" data-max="160"></span>
+            </div>
+            <div class="field">
+              <label for="st-url">Adresse publique du site</label>
+              <input id="st-url" dir="ltr" type="url" maxlength="200" placeholder="https://prime-cars.netlify.app">
+              <span class="field-hint">Facultatif : sert à l’URL canonique et aux liens des véhicules pour le référencement.</span>
+            </div>
+          </fieldset>
+
+          <fieldset class="form-block" id="site-block-look">
+            <legend><span class="step-number">2</span>Apparence de l’accueil</legend>
+            <div class="wallpaper-settings">
+              <img class="wallpaper-preview" id="st-wallpaper-preview" alt="Aperçu de l’image de fond">
+              <div class="wallpaper-controls">
+                <label for="st-wallpaper">Image de fond de l’accueil</label>
+                <label class="photo-dropzone wallpaper-drop"><input id="st-wallpaper" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="st-wallpaper-help st-wallpaper-error"><b>Choisir une image</b><span>ou glissez-la ici</span></label>
+                <p class="help" id="st-wallpaper-help">JPG, PNG ou WebP · 8 Mo maximum. L’image sera appliquée après enregistrement et génération.</p>
+                <button class="light" type="button" id="st-wallpaper-reset">Rétablir l’image par défaut</button>
+                <p class="msg error" id="st-wallpaper-error" role="alert"></p>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="form-block" id="site-block-contact">
+            <legend><span class="step-number">3</span>Coordonnées de contact</legend>
+            <p class="help">Utilisées par les boutons Appeler, WhatsApp, SMS et E-mail du site, ainsi que dans le pied de page.</p>
+            <div class="grid contact-grid">
+              <div><label for="st-phone">Téléphone (appel, SMS) *</label><input id="st-phone" dir="ltr" type="tel" required maxlength="30" placeholder="+971543280723"><span class="field-hint">Format international, sans espaces.</span></div>
+              <div><label for="st-phone-display">Numéro affiché</label><input id="st-phone-display" dir="ltr" maxlength="30" placeholder="+971 54 328 0723"><span class="field-hint">Version lisible montrée aux visiteurs.</span></div>
+              <div><label for="st-whatsapp">WhatsApp</label><input id="st-whatsapp" dir="ltr" type="tel" maxlength="30" placeholder="+971543280723"><span class="field-hint">Laissez vide pour utiliser le téléphone.</span></div>
+              <div><label for="st-email">E-mail *</label><input id="st-email" dir="ltr" type="email" required maxlength="120" placeholder="contact@prime-cars.com"><span class="field-hint">Reçoit les demandes par e-mail.</span></div>
+            </div>
+          </fieldset>
+
+          <fieldset class="form-block" id="site-block-rates">
+            <legend><span class="step-number">4</span>Tarifs d’export vers la Tunisie</legend>
+            <p class="help">Tous les véhicules sont exportés vers la Tunisie. <b>Export</b> : un de nos véhicules, vendu sur le site (simulateur et fiche véhicule). <b>Export seul</b> : un véhicule acheté chez un autre vendeur (formulaire « Mon propre véhicule » ; départ d’un autre pays sur devis).</p>
+            <div class="rate-wrap"><table class="rate-table">
+              <thead><tr><th scope="col">Poste</th><th scope="col" id="rate-col-import">Export<small>Nos véhicules</small></th><th scope="col" id="rate-col-export">Export seul<small>Véhicules d’autres vendeurs</small></th></tr></thead>
+              <tbody>
+                <tr><th scope="row" id="rate-france">Transport depuis la France</th><td><span class="rate-cell-label" aria-hidden="true">Export</span><span class="unit-input"><input id="st-shipping-france" type="number" min="0" step="1" inputmode="numeric" aria-labelledby="rate-france rate-col-import"><span aria-hidden="true">TND</span></span></td><td><span class="rate-cell-label" aria-hidden="true">Export seul</span><span class="unit-input"><input id="st-export-france" type="number" min="0" step="1" inputmode="numeric" aria-labelledby="rate-france rate-col-export"><span aria-hidden="true">TND</span></span></td></tr>
+                <tr><th scope="row" id="rate-dubai">Transport depuis les Émirats arabes unis</th><td><span class="rate-cell-label" aria-hidden="true">Export</span><span class="unit-input"><input id="st-shipping-dubai" type="number" min="0" step="1" inputmode="numeric" aria-labelledby="rate-dubai rate-col-import"><span aria-hidden="true">TND</span></span></td><td><span class="rate-cell-label" aria-hidden="true">Export seul</span><span class="unit-input"><input id="st-export-dubai" type="number" min="0" step="1" inputmode="numeric" aria-labelledby="rate-dubai rate-col-export"><span aria-hidden="true">TND</span></span></td></tr>
+                <tr><th scope="row" id="rate-suv">Supplément SUV / 4×4<small>Ajouté au transport</small></th><td><span class="rate-cell-label" aria-hidden="true">Export</span><span class="unit-input"><input id="st-shipping-suv" type="number" min="0" step="1" inputmode="numeric" aria-labelledby="rate-suv rate-col-import"><span aria-hidden="true">TND</span></span></td><td><span class="rate-cell-label" aria-hidden="true">Export seul</span><span class="unit-input"><input id="st-export-suv" type="number" min="0" step="1" inputmode="numeric" aria-labelledby="rate-suv rate-col-export"><span aria-hidden="true">TND</span></span></td></tr>
+                <tr><th scope="row" id="rate-insurance">Assurance transport<small>% de la valeur du véhicule</small></th><td><span class="rate-cell-label" aria-hidden="true">Export</span><span class="unit-input"><input id="st-insurance-rate" type="number" min="0" max="100" step="0.1" inputmode="decimal" aria-labelledby="rate-insurance rate-col-import"><span aria-hidden="true">%</span></span></td><td><span class="rate-cell-label" aria-hidden="true">Export seul</span><span class="unit-input"><input id="st-export-insurance" type="number" min="0" max="100" step="0.1" inputmode="decimal" aria-labelledby="rate-insurance rate-col-export"><span aria-hidden="true">%</span></span></td></tr>
+                <tr><th scope="row" id="rate-support">Accompagnement<small>Frais de dossier et suivi</small></th><td><span class="rate-cell-label" aria-hidden="true">Export</span><span class="unit-input"><input id="st-support-fee" type="number" min="0" step="1" inputmode="numeric" aria-labelledby="rate-support rate-col-import"><span aria-hidden="true">TND</span></span></td><td><span class="rate-cell-label" aria-hidden="true">Export seul</span><span class="unit-input"><input id="st-export-support" type="number" min="0" step="1" inputmode="numeric" aria-labelledby="rate-support rate-col-export"><span aria-hidden="true">TND</span></span></td></tr>
+                <tr><th scope="row" id="rate-customs">Dédouanement<small>Option cochée par le client</small></th><td><span class="rate-cell-label" aria-hidden="true">Export</span><span class="rate-na">Non proposé</span></td><td><span class="rate-cell-label" aria-hidden="true">Export seul</span><span class="unit-input"><input id="st-export-customs" type="number" min="0" step="1" inputmode="numeric" aria-labelledby="rate-customs rate-col-export"><span aria-hidden="true">TND</span></span></td></tr>
+              </tbody>
+            </table></div>
+            <p class="rate-example" id="rate-example" aria-live="polite"></p>
+          </fieldset>
+        </div>
+
+        <aside class="vehicle-preview site-preview" aria-label="Aperçu">
+          <h3>Aperçu sur Google</h3>
+          <div class="serp" dir="auto">
+            <span class="serp-url" id="serp-url" dir="ltr" data-no-i18n></span>
+            <strong class="serp-title" id="serp-title" dir="auto" data-no-i18n></strong>
+            <p class="serp-desc" id="serp-description" dir="auto" data-no-i18n></p>
+          </div>
+          <h3 style="margin-top:18px">Contact affiché</h3>
+          <ul class="contact-preview">
+            <li><span>Téléphone</span><b id="preview-phone" dir="ltr" data-no-i18n>—</b></li>
+            <li><span>WhatsApp</span><b id="preview-whatsapp" dir="ltr" data-no-i18n>—</b></li>
+            <li><span>E-mail</span><b id="preview-email" dir="ltr" data-no-i18n>—</b></li>
+          </ul>
+        </aside>
       </div>
-      <div class="grid">
-        <div><label for="st-phone">Téléphone (appel, SMS) *</label><input id="st-phone" type="tel" required maxlength="30" placeholder="+971543280723"></div>
-        <div><label for="st-phone-display">Numéro affiché</label><input id="st-phone-display" maxlength="30" placeholder="+971 54 328 0723"></div>
-        <div><label for="st-whatsapp">WhatsApp</label><input id="st-whatsapp" type="tel" maxlength="30" placeholder="+971543280723"></div>
-        <div><label for="st-email">E-mail *</label><input id="st-email" type="email" required maxlength="120" placeholder="contact@prime-cars.com"></div>
+      <div class="editor-actions">
+        <div><p class="editor-status" id="static-site-dirty"></p><p class="help" id="static-site-status" style="margin:0"></p><p class="msg" id="static-site-msg" style="margin:4px 0 0"></p></div>
+        <div class="actions"><button type="button" class="light" id="publish-static-site">Simuler la génération</button><button type="submit" id="save-static-site">Enregistrer dans la démo</button></div>
       </div>
-      <div style="margin-top:14px">
-        <label for="st-url">Adresse publique du site</label>
-        <input id="st-url" type="url" maxlength="200" placeholder="https://prime-cars.netlify.app">
-        <p class="help">Facultatif : sert à l’URL canonique et aux liens des véhicules pour le référencement.</p>
-      </div>
-      <div style="margin-top:14px">
-        <label for="st-title">Titre (onglet, Google, aperçu des liens) *</label>
-        <input id="st-title" required maxlength="120">
-      </div>
-      <div style="margin-top:14px">
-        <label for="st-description">Description (Google, aperçu des liens) *</label>
-        <textarea id="st-description" required maxlength="300" style="min-height:90px"></textarea>
-      </div>
-      <div class="actions"><button type="submit" id="save-static-site">Enregistrer dans la démo</button><button type="button" class="light" id="publish-static-site">Simuler la génération</button></div>
-      <p class="help" id="static-site-status"></p>
-      <p class="msg" id="static-site-msg"></p>
     </form>
 
     <section class="card" id="analytics-section">
@@ -1165,18 +1380,33 @@
     </div>
   </main>
 
+  <div class="toast hidden" id="car-toast" role="status" aria-live="polite" aria-atomic="true">
+    <span class="toast-icon" aria-hidden="true">✓</span>
+    <div class="toast-body">
+      <strong id="car-toast-title"></strong>
+      <span class="toast-car" id="car-toast-car" data-no-i18n></span>
+      <p id="car-toast-text"></p>
+      <div class="toast-actions"><a id="car-toast-view" href="/" target="_blank" rel="noopener">Voir l’annonce sur le site ↗</a><button type="button" id="car-toast-add">+ Ajouter un autre véhicule</button></div>
+    </div>
+    <button type="button" class="toast-close" id="car-toast-close" aria-label="Fermer">×</button>
+    <span class="toast-progress" aria-hidden="true"></span>
+  </div>
+
   <script>
     const $ = id => document.getElementById(id);
     const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     const imgUrl = src => /^(blob:|data:image\/|\/uploads\/)/.test(src) ? src : `https://images.unsplash.com/${encodeURIComponent(src)}?auto=format&fit=crop&w=200&q=70`;
     const statusLabel = { available: 'Disponible', reserved: 'Réservé', sold: 'Vendu', pending: 'En attente', paid: 'Payé' };
     const appointmentStatusLabel = { planned: 'À confirmer', confirmed: 'Confirmé', completed: 'Terminé', cancelled: 'Annulé' };
+    const exportStatusLabel = { new: 'Nouvelle', contacted: 'Client contacté', quoted: 'Devis envoyé', closed: 'Clôturée' };
+    let exportRequests = [];
     let cars = [];
     let appointments = [];
     let reservations = [];
     let carBrandFilter = '';
     let showDemoReservations = false;
     let editingId = null;
+    let highlightedCarId = null;
     const adminReadOnly = false;
     let selectedPhotos = [];
     let currentPhotoUrls = [];
@@ -1189,6 +1419,7 @@
       'add-car': 'car-form',
       vehicles: 'vehicle-list-section',
       appointments: 'appointments-section',
+      'export-requests': 'export-requests-section',
       social: 'social-form',
       'static-site': 'static-site-form',
       analytics: 'analytics-section',
@@ -1222,6 +1453,8 @@
     ...snapshot.staticSite
   };
   const appointments = [];
+  // The static demo never receives real export requests (the public form only shows a demo confirmation).
+  const exportRequests = [];
   const photoUrls = new Set();
   const placeholder = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="240"><rect width="100%" height="100%" fill="#eee"/><text x="50%" y="50%" text-anchor="middle" fill="#777" font-family="sans-serif">Prime Cars</text></svg>');
   const copy = value => structuredClone(value);
@@ -1252,6 +1485,7 @@
       if (url === '/api/cars') return copy(snapshot.cars);
       if (url === '/api/social') return copy(snapshot.social);
       if (url === '/api/admin/appointments') return copy(appointments);
+      if (url === '/api/admin/export-requests') return copy(exportRequests);
       if (url === '/api/admin/reservations') return [];
       if (url === '/api/admin/static-site') return { settings: copy(snapshot.staticSite), generatedAt: null };
       if (url === '/api/admin/analytics') return copy(snapshot.analytics);
@@ -1312,6 +1546,16 @@
         return copy(appointment);
       }
     }
+    const exportMatch = url.match(/^\/api\/admin\/export-requests\/([^/]+)$/);
+    if (exportMatch && (method === 'PATCH' || method === 'DELETE')) {
+      const item = findItem(exportRequests, decodeURIComponent(exportMatch[1]));
+      if (method === 'DELETE') {
+        exportRequests.splice(exportRequests.indexOf(item), 1);
+        return { ok: true };
+      }
+      item.status = readBody(options).status;
+      return copy(item);
+    }
     if (url === '/api/admin/social' && method === 'PUT') {
       const body = readBody(options);
       snapshot.social = { ...body, posts: body.posts.map(url => ({ url })) };
@@ -1320,10 +1564,18 @@
     if (url === '/api/admin/static-site' && method === 'PUT') {
       const multipart = options.body instanceof FormData;
       const form = multipart ? options.body : null;
+      const pickRates = fields => Object.fromEntries(Object.entries(fields)
+        .filter(([, field]) => form.get(field) !== null && form.get(field) !== '').map(([key, field]) => [key, Number(form.get(field))]));
       const body = multipart ? {
         siteUrl: form.get('siteUrl'), title: form.get('title'), description: form.get('description'),
-        contact: { phone: form.get('phone'), phoneDisplay: form.get('phoneDisplay'), whatsapp: form.get('whatsapp'), email: form.get('email') }
+        contact: { phone: form.get('phone'), phoneDisplay: form.get('phoneDisplay'), whatsapp: form.get('whatsapp'), email: form.get('email') },
+        shipping: pickRates({ france: 'shippingFrance', dubai: 'shippingDubai', suv: 'shippingSuv', insuranceRate: 'insuranceRate', support: 'supportFee' }),
+        exportShipping: pickRates({ france: 'exportFrance', dubai: 'exportDubai', suv: 'exportSuv', insuranceRate: 'exportInsuranceRate', support: 'exportSupport', customs: 'exportCustoms' })
       } : readBody(options);
+      const rates = [...Object.entries(body.shipping || {}), ...Object.entries(body.exportShipping || {})];
+      if (rates.some(([key, value]) => !Number.isFinite(value) || value < 0 || (key === 'insuranceRate' && value > 100))) throw new Error('Tarifs d’importation invalides : nombres positifs uniquement (assurance entre 0 et 100 %).');
+      body.shipping = { ...snapshot.staticSite.shipping, ...body.shipping };
+      body.exportShipping = { ...snapshot.staticSite.exportShipping, ...body.exportShipping };
       const resetValue = multipart ? form.get('resetWallpaper') : body.resetWallpaper;
       if (resetValue !== null && resetValue !== undefined && ![true, false, 'true', 'false'].includes(resetValue)) {
         throw new Error('Choix de l’image de fond invalide.');
@@ -1360,7 +1612,7 @@
   return request;
 }
 
-    const demoAdminApi = createDemoAdminApi({"cars":[{"id":"mercedes","brand":"Mercedes-Benz","name":"Mercedes-Benz Classe C","trim":"220 d AMG Line","year":2023,"km":"24 500","fuel":"Diesel","origin":"France","kind":"occasion","price":169000,"power":"200 ch","image":"photo-1618843479313-40f8afb4b4d8","images":[],"status":"available","description":{"fr":"Berline de référence, la Classe C 220 d allie confort de grande routière et sobriété du diesel. La finition AMG Line lui donne une allure sportive : boucliers spécifiques, jantes AMG et sellerie soignée. Avec 200 ch et seulement 24 500 km, cet exemplaire de 2023 importé de France est idéal pour les longs trajets comme pour la ville.","en":"A benchmark saloon, the C-Class 220 d combines grand-touring comfort with diesel efficiency. The AMG Line trim adds a sporty look: dedicated bumpers, AMG wheels and refined upholstery. With 200 hp and only 24,500 km, this 2023 car imported from France is ideal for long journeys as well as city driving.","ar":"سيدان مرجعية، تجمع مرسيدس الفئة C ‏220 d بين راحة السفر الطويل واقتصاد محرك الديزل. تمنحها فئة AMG Line مظهرًا رياضيًا: مصدّات خاصة وجنوط AMG ومقاعد راقية. بقوة 200 حصان و24,500 كم فقط، هذه النسخة من موديل 2023 المستوردة من فرنسا مثالية للرحلات الطويلة وللقيادة في المدينة."}},{"id":"bmw","brand":"BMW","name":"BMW Série 3","trim":"320i M Sport","year":2025,"km":"0","fuel":"Essence","origin":"Dubaï","kind":"neuf","price":195000,"power":"184 ch","image":"photo-1555215695-3004980ad54e","images":[],"status":"available","description":{"fr":"Neuve et livrée depuis les Émirats arabes unis, cette BMW Série 3 320i M Sport incarne le plaisir de conduite à la bavaroise : propulsion, direction précise et moteur essence de 184 ch. Le pack M Sport ajoute un look affûté, des sièges sport et un châssis plus dynamique. Une berline polyvalente, élégante au quotidien.","en":"Brand new and shipped from the United Arab Emirates, this BMW 3 Series 320i M Sport embodies Bavarian driving pleasure: rear-wheel drive, precise steering and a 184 hp petrol engine. The M Sport package adds a sharper look, sport seats and a more dynamic chassis. A versatile saloon that stays elegant every day.","ar":"جديدة ومشحونة من الإمارات العربية المتحدة، تجسّد BMW الفئة الثالثة 320i M Sport متعة القيادة البافارية: دفع خلفي وتوجيه دقيق ومحرك بنزين بقوة 184 حصانًا. تضيف حزمة M Sport مظهرًا أكثر حدّة ومقاعد رياضية وهيكلًا أكثر ديناميكية. سيدان متعددة الاستخدامات وأنيقة في الحياة اليومية."}},{"id":"audi","brand":"Audi","name":"Audi A5 Sportback","trim":"40 TDI S line","year":2022,"km":"38 000","fuel":"Diesel","origin":"France","kind":"occasion","price":158000,"power":"204 ch","image":"photo-1606152421802-db97b9c7a11b","images":[],"status":"available","description":{"fr":"L'Audi A5 Sportback marie la ligne d'un coupé à la praticité d'un hayon cinq portes. Le moteur 40 TDI de 204 ch offre de belles performances avec une consommation maîtrisée, et la finition S line apporte une présentation sportive. Un exemplaire de 2022 avec 38 000 km, en provenance de France.","en":"The Audi A5 Sportback blends coupé styling with the practicality of a five-door hatch. The 204 hp 40 TDI engine delivers strong performance with controlled fuel consumption, and the S line trim adds a sporty finish. A 2022 car with 38,000 km, coming from France.","ar":"تجمع أودي A5 سبورتباك بين خطوط الكوبيه وعملية الباب الخلفي بخمسة أبواب. يقدّم محرك 40 TDI بقوة 204 أحصنة أداءً قويًا مع استهلاك معتدل للوقود، وتضيف فئة S line لمسة رياضية. نسخة من موديل 2022 بعدّاد 38,000 كم، قادمة من فرنسا."}},{"id":"volkswagen","brand":"Volkswagen","name":"Volkswagen Golf","trim":"1.5 eTSI R-Line","year":2025,"km":"0","fuel":"Hybride","origin":"France","kind":"neuf","price":132000,"power":"150 ch","image":"photo-1502877338535-766e1452684a","images":[],"status":"available","description":{"fr":"Icône de sa catégorie, la Golf neuve en finition R-Line associe compacité, qualité de fabrication et équipement moderne. Sa motorisation 1.5 eTSI de 150 ch à hybridation légère réduit la consommation en ville. Une compacte facile à vivre, parfaite pour le quotidien en Tunisie.","en":"An icon of its class, the new Golf in R-Line trim combines compact size, build quality and modern equipment. Its 150 hp 1.5 eTSI mild-hybrid engine lowers fuel consumption in town. An easy-going hatchback, perfect for everyday life in Tunisia.","ar":"أيقونة فئتها، تجمع فولكس فاغن غولف الجديدة بفئة R-Line بين الحجم المدمج وجودة التصنيع والتجهيزات الحديثة. يقلّل محرك 1.5 eTSI الهجين الخفيف بقوة 150 حصانًا استهلاك الوقود داخل المدينة. سيارة مدمجة سهلة الاستخدام، مثالية للحياة اليومية في تونس."}},{"id":"porsche","brand":"Porsche","name":"Porsche 911","trim":"Carrera PDK","year":2021,"km":"31 200","fuel":"Essence","origin":"Dubaï","kind":"occasion","price":389000,"power":"385 ch","image":"photo-1503376780353-7e6692767b70","images":[],"status":"available","description":{"fr":"Mythe de l'automobile sportive, la Porsche 911 Carrera (génération 992) associe un six-cylindres à plat de 385 ch à la boîte PDK à double embrayage. Performances, sonorité et confort au quotidien : ce modèle 2021 de 31 200 km, en provenance des Émirats arabes unis, offre l'expérience 911 dans toute sa pureté.","en":"A legend among sports cars, the Porsche 911 Carrera (992 generation) pairs a 385 hp flat-six engine with the PDK dual-clutch gearbox. Performance, sound and everyday comfort: this 2021 car with 31,200 km, coming from the United Arab Emirates, delivers the pure 911 experience.","ar":"أسطورة السيارات الرياضية، تجمع بورشه 911 كاريرا (الجيل 992) بين محرك سداسي الأسطوانات متقابل بقوة 385 حصانًا وعلبة تروس PDK مزدوجة القابض. أداء وصوت وراحة يومية: هذه النسخة من موديل 2021 بعدّاد 31,200 كم، القادمة من الإمارات العربية المتحدة، تقدّم تجربة 911 بكل نقائها."}},{"id":"bmw-electric","brand":"BMW","name":"BMW i4","trim":"eDrive35 M Sport","year":2025,"km":"0","fuel":"Électrique","origin":"France","kind":"neuf","price":218000,"power":"286 ch","image":"photo-1556189250-72ba954cfc2b","images":[],"status":"available","description":{"fr":"La BMW i4 eDrive35 est un Gran Coupé 100 % électrique : silencieux, réactif et sans émissions à l'usage. Ses 286 ch et la finition M Sport lui donnent un caractère dynamique, tandis que son hayon offre un vrai coffre familial. Un véhicule neuf pour passer à l'électrique sans renoncer au plaisir de conduire.","en":"The BMW i4 eDrive35 is a fully electric Gran Coupé: quiet, responsive and emission-free on the road. Its 286 hp and M Sport trim give it a dynamic character, while its tailgate provides a genuine family-sized boot. A brand-new car to go electric without giving up driving pleasure.","ar":"BMW i4 eDrive35 هي غران كوبيه كهربائية بالكامل: هادئة وسريعة الاستجابة وبدون انبعاثات أثناء القيادة. تمنحها قوة 286 حصانًا وفئة M Sport طابعًا ديناميكيًا، بينما يوفّر بابها الخلفي صندوقًا عائليًا حقيقيًا. سيارة جديدة للانتقال إلى الكهرباء دون التخلي عن متعة القيادة."}}],"social":{"instagramUsername":"","facebookUrl":"","posts":[{"platform":"instagram","type":"post","url":"https://www.instagram.com/p/Ddlr-iqmz4O/","embed":"https://www.instagram.com/p/Ddlr-iqmz4O/embed","demo":true},{"platform":"facebook","type":"page","url":"https://www.facebook.com/facebook/","embed":"https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Ffacebook%2F&tabs=timeline&width=500&height=600&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=false","demo":true}],"live":{"active":false,"platform":"instagram","url":"","embed":""}},"staticSite":{"siteUrl":"https://primecar-uae-tunis.com","title":"Prime Cars — Voitures neuves et d’occasion de France et des Émirats arabes unis à Tunis","description":"Prime Cars sélectionne des voitures neuves et d’occasion en France et aux Émirats arabes unis et les livre jusqu’à Tunis : Mercedes, BMW, Audi, Porsche, Volkswagen. Accompagnement à chaque étape.","contact":{"phone":"+971543280723","phoneDisplay":"+971 54 328 0723","whatsapp":"+971543280723","email":"contact@example.com"},"wallpaperImage":"","defaultWallpaperImage":"https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=2200&q=90"},"analytics":{"measurementId":""}});
+    const demoAdminApi = createDemoAdminApi({"cars":[{"id":"navara-ce65d0","km":"0","fuel":"Diesel","kind":"neuf","name":"Navara","trim":"pro 4x4","year":2026,"brand":"Nissan","image":"/uploads/cdb763140440ffe42fcc07b8.jpg","power":"2.4L","price":102000,"images":["/uploads/cdb763140440ffe42fcc07b8.jpg","/uploads/b8f85f6d79ae5e8ff6ff379c.jpg","/uploads/551fc6739f3f58aa05660fc3.jpg","/uploads/f1cd46637d5ce2deae47a69d.jpg","/uploads/4fab1b4cb34231baad3c861a.jpg","/uploads/74ef3f41b010bfd6f59fa4ff.jpg","/uploads/221862ca8774c699eddb256a.jpg","/uploads/00dc23ca6ce711869a8b863d.jpg","/uploads/002e33f0411e0f597e5e33fb.jpg","/uploads/d5675036255ce6837e0cd4e3.jpg"],"origin":"Dubaï","status":"available"},{"id":"mustang-b9e4b5","km":"20000","fuel":"Essence","kind":"occasion","name":"mustang","trim":"GT500","year":2022,"brand":"ford","image":"/uploads/9986303281a4ae55ab8722f3.jpg","power":"500","price":20000,"images":["/uploads/9986303281a4ae55ab8722f3.jpg"],"origin":"France","status":"available"},{"id":"mercedes","km":"24 500","fuel":"Diesel","kind":"occasion","name":"Mercedes-Benz Classe C","trim":"220 d AMG Line","year":2023,"brand":"Mercedes-Benz","image":"photo-1618843479313-40f8afb4b4d8","power":"200 ch","price":169000,"images":[],"origin":"France","status":"available","description":{"ar":"سيدان مرجعية، تجمع مرسيدس الفئة C ‏220 d بين راحة السفر الطويل واقتصاد محرك الديزل. تمنحها فئة AMG Line مظهرًا رياضيًا: مصدّات خاصة وجنوط AMG ومقاعد راقية. بقوة 200 حصان و24,500 كم فقط، هذه النسخة من موديل 2023 المستوردة من فرنسا مثالية للرحلات الطويلة وللقيادة في المدينة.","en":"A benchmark saloon, the C-Class 220 d combines grand-touring comfort with diesel efficiency. The AMG Line trim adds a sporty look: dedicated bumpers, AMG wheels and refined upholstery. With 200 hp and only 24,500 km, this 2023 car imported from France is ideal for long journeys as well as city driving.","fr":"Berline de référence, la Classe C 220 d allie confort de grande routière et sobriété du diesel. La finition AMG Line lui donne une allure sportive : boucliers spécifiques, jantes AMG et sellerie soignée. Avec 200 ch et seulement 24 500 km, cet exemplaire de 2023 importé de France est idéal pour les longs trajets comme pour la ville."}},{"id":"bmw","km":"0","fuel":"Essence","kind":"neuf","name":"BMW Série 3","trim":"320i M Sport","year":2025,"brand":"BMW","image":"photo-1555215695-3004980ad54e","power":"184 ch","price":195000,"images":[],"origin":"Dubaï","status":"available","description":{"ar":"جديدة ومشحونة من الإمارات العربية المتحدة، تجسّد BMW الفئة الثالثة 320i M Sport متعة القيادة البافارية: دفع خلفي وتوجيه دقيق ومحرك بنزين بقوة 184 حصانًا. تضيف حزمة M Sport مظهرًا أكثر حدّة ومقاعد رياضية وهيكلًا أكثر ديناميكية. سيدان متعددة الاستخدامات وأنيقة في الحياة اليومية.","en":"Brand new and shipped from the United Arab Emirates, this BMW 3 Series 320i M Sport embodies Bavarian driving pleasure: rear-wheel drive, precise steering and a 184 hp petrol engine. The M Sport package adds a sharper look, sport seats and a more dynamic chassis. A versatile saloon that stays elegant every day.","fr":"Neuve et livrée depuis les Émirats arabes unis, cette BMW Série 3 320i M Sport incarne le plaisir de conduite à la bavaroise : propulsion, direction précise et moteur essence de 184 ch. Le pack M Sport ajoute un look affûté, des sièges sport et un châssis plus dynamique. Une berline polyvalente, élégante au quotidien."}},{"id":"audi","km":"38 000","fuel":"Diesel","kind":"occasion","name":"Audi A5 Sportback","trim":"40 TDI S line","year":2022,"brand":"Audi","image":"photo-1606152421802-db97b9c7a11b","power":"204 ch","price":158000,"images":[],"origin":"France","status":"available","description":{"ar":"تجمع أودي A5 سبورتباك بين خطوط الكوبيه وعملية الباب الخلفي بخمسة أبواب. يقدّم محرك 40 TDI بقوة 204 أحصنة أداءً قويًا مع استهلاك معتدل للوقود، وتضيف فئة S line لمسة رياضية. نسخة من موديل 2022 بعدّاد 38,000 كم، قادمة من فرنسا.","en":"The Audi A5 Sportback blends coupé styling with the practicality of a five-door hatch. The 204 hp 40 TDI engine delivers strong performance with controlled fuel consumption, and the S line trim adds a sporty finish. A 2022 car with 38,000 km, coming from France.","fr":"L'Audi A5 Sportback marie la ligne d'un coupé à la praticité d'un hayon cinq portes. Le moteur 40 TDI de 204 ch offre de belles performances avec une consommation maîtrisée, et la finition S line apporte une présentation sportive. Un exemplaire de 2022 avec 38 000 km, en provenance de France."}},{"id":"volkswagen","km":"0","fuel":"Hybride","kind":"neuf","name":"Volkswagen Golf","trim":"1.5 eTSI R-Line","year":2025,"brand":"Volkswagen","image":"photo-1502877338535-766e1452684a","power":"150 ch","price":132000,"images":[],"origin":"France","status":"available","description":{"ar":"أيقونة فئتها، تجمع فولكس فاغن غولف الجديدة بفئة R-Line بين الحجم المدمج وجودة التصنيع والتجهيزات الحديثة. يقلّل محرك 1.5 eTSI الهجين الخفيف بقوة 150 حصانًا استهلاك الوقود داخل المدينة. سيارة مدمجة سهلة الاستخدام، مثالية للحياة اليومية في تونس.","en":"An icon of its class, the new Golf in R-Line trim combines compact size, build quality and modern equipment. Its 150 hp 1.5 eTSI mild-hybrid engine lowers fuel consumption in town. An easy-going hatchback, perfect for everyday life in Tunisia.","fr":"Icône de sa catégorie, la Golf neuve en finition R-Line associe compacité, qualité de fabrication et équipement moderne. Sa motorisation 1.5 eTSI de 150 ch à hybridation légère réduit la consommation en ville. Une compacte facile à vivre, parfaite pour le quotidien en Tunisie."}},{"id":"porsche","km":"31 200","fuel":"Essence","kind":"occasion","name":"Porsche 911","trim":"Carrera PDK","year":2021,"brand":"Porsche","image":"photo-1503376780353-7e6692767b70","power":"385 ch","price":389000,"images":[],"origin":"Dubaï","status":"available","description":{"ar":"أسطورة السيارات الرياضية، تجمع بورشه 911 كاريرا (الجيل 992) بين محرك سداسي الأسطوانات متقابل بقوة 385 حصانًا وعلبة تروس PDK مزدوجة القابض. أداء وصوت وراحة يومية: هذه النسخة من موديل 2021 بعدّاد 31,200 كم، القادمة من الإمارات العربية المتحدة، تقدّم تجربة 911 بكل نقائها.","en":"A legend among sports cars, the Porsche 911 Carrera (992 generation) pairs a 385 hp flat-six engine with the PDK dual-clutch gearbox. Performance, sound and everyday comfort: this 2021 car with 31,200 km, coming from the United Arab Emirates, delivers the pure 911 experience.","fr":"Mythe de l'automobile sportive, la Porsche 911 Carrera (génération 992) associe un six-cylindres à plat de 385 ch à la boîte PDK à double embrayage. Performances, sonorité et confort au quotidien : ce modèle 2021 de 31 200 km, en provenance des Émirats arabes unis, offre l'expérience 911 dans toute sa pureté."}},{"id":"bmw-electric","km":"0","fuel":"Électrique","kind":"neuf","name":"BMW i4","trim":"eDrive35 M Sport","year":2025,"brand":"BMW","image":"photo-1556189250-72ba954cfc2b","power":"286 ch","price":218000,"images":[],"origin":"France","status":"available","description":{"ar":"BMW i4 eDrive35 هي غران كوبيه كهربائية بالكامل: هادئة وسريعة الاستجابة وبدون انبعاثات أثناء القيادة. تمنحها قوة 286 حصانًا وفئة M Sport طابعًا ديناميكيًا، بينما يوفّر بابها الخلفي صندوقًا عائليًا حقيقيًا. سيارة جديدة للانتقال إلى الكهرباء دون التخلي عن متعة القيادة.","en":"The BMW i4 eDrive35 is a fully electric Gran Coupé: quiet, responsive and emission-free on the road. Its 286 hp and M Sport trim give it a dynamic character, while its tailgate provides a genuine family-sized boot. A brand-new car to go electric without giving up driving pleasure.","fr":"La BMW i4 eDrive35 est un Gran Coupé 100 % électrique : silencieux, réactif et sans émissions à l'usage. Ses 286 ch et la finition M Sport lui donnent un caractère dynamique, tandis que son hayon offre un vrai coffre familial. Un véhicule neuf pour passer à l'électrique sans renoncer au plaisir de conduire."}}],"social":{"live":{"url":"https://www.instagram.com/primecars_uae_tunis/live/","embed":"","active":true,"platform":"instagram"},"posts":[{"url":"https://www.instagram.com/p/Ddlr-iqmz4O/","demo":true,"type":"post","embed":"https://www.instagram.com/p/Ddlr-iqmz4O/embed","platform":"instagram"},{"url":"https://www.instagram.com/p/Dfr_zJSAGQw/","type":"post","embed":"https://www.instagram.com/p/Dfr_zJSAGQw/embed","platform":"instagram"},{"url":"https://www.instagram.com/reel/DfU70xqgyaC/","type":"reel","embed":"https://www.instagram.com/reel/DfU70xqgyaC/embed","platform":"instagram"}],"facebookUrl":"https://www.facebook.com/share/1R62ot92xe/?mibextid=wwXIfr","tiktokUsername":"","instagramUsername":"primecars_uae_tunis"},"staticSite":{"siteUrl":"","title":"Prime Cars — Voitures neuves et d’occasion de France et des Émirats arabes unis à Tunis","description":"Prime Cars sélectionne des voitures neuves et d’occasion en France et aux Émirats arabes unis et les livre jusqu’à Tunis : Mercedes, BMW, Audi, Porsche, Volkswagen. Accompagnement à chaque étape.","contact":{"phone":"+971543280723","phoneDisplay":"+971 54 328 0723","whatsapp":"+971543280723","email":"contact@example.com"},"shipping":{"france":4500,"dubai":8500,"suv":1500,"insuranceRate":1,"support":1200},"exportShipping":{"france":5500,"dubai":9500,"suv":1500,"insuranceRate":1,"support":1800,"customs":900},"wallpaperImage":"","defaultWallpaperImage":"https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=2200&q=90"},"analytics":{"measurementId":""}});
     window.addEventListener('pagehide', event => { if (!event.persisted) demoAdminApi.dispose(); });
     async function api(url, options = {}) {
           return demoAdminApi(url, options);
@@ -1431,8 +1683,10 @@
       reservations = await api('/api/admin/reservations');
       renderReservations();
       appointments = await api('/api/admin/appointments');
+      exportRequests = await api('/api/admin/export-requests');
       renderDashboard();
       renderAppointments();
+      renderExportRequests();
     }
 
     const MONTHS = ['Jan.', 'Fév.', 'Mars', 'Avr.', 'Mai', 'Juin', 'Juil.', 'Août', 'Sept.', 'Oct.', 'Nov.', 'Déc.'];
@@ -1497,6 +1751,7 @@
       const alerts = [];
       const addAlert = (count, singular, plural, page, info = false) => { if (count) alerts.push(`<li><a class="${info ? 'info' : ''}" data-admin-page="${page}" href="?section=${page}"><i></i><b>${count}</b><span>${count > 1 ? plural : singular}</span></a></li>`); };
       addAlert(toConfirm, 'rendez-vous à confirmer', 'rendez-vous à confirmer', 'appointments');
+      addAlert(exportRequests.filter(item => item.status === 'new').length, 'nouvelle demande d’export', 'nouvelles demandes d’export', 'export-requests');
       addAlert(pending.length, 'réservation en attente de paiement', 'réservations en attente de paiement', 'reservations');
       addAlert(cars.filter(car => !String(car.description?.fr || '').trim()).length, 'véhicule sans description', 'véhicules sans description', 'vehicles');
       addAlert(cars.filter(car => (car.images?.length || (car.image ? 1 : 0)) < 2).length, 'véhicule avec moins de 2 photos', 'véhicules avec moins de 2 photos', 'vehicles');
@@ -1524,9 +1779,20 @@
 
     function renderCars() {
       const visibleCars = carBrandFilter ? cars.filter(car => car.brand === carBrandFilter) : cars;
-      $('car-list').innerHTML = visibleCars.map(car => `<tr><td><img src="${esc(imgUrl(car.image))}" alt=""></td><td><strong>${esc(car.name)}</strong><br><small>${esc(car.trim)} · ${esc(car.year)} · ${esc(car.origin)}</small></td><td>${Number(car.price).toLocaleString('fr-FR')} TND</td><td><span class="pill ${esc(car.status)}">${statusLabel[car.status] || ''}</span></td><td><div class="share-actions"><button class="light" type="button" data-share-facebook="${esc(car.id)}">Facebook</button><button class="light" type="button" data-share-instagram="${esc(car.id)}">Instagram</button></div></td><td style="white-space:nowrap"><button class="light" data-edit="${esc(car.id)}">Modifier</button> <button class="danger" data-delete="${esc(car.id)}">Supprimer</button></td></tr>`).join('') || '<tr><td colspan="6">Aucun véhicule pour cette marque.</td></tr>';
+      $('car-list').innerHTML = visibleCars.map(car => `<tr data-car-id="${esc(car.id)}"${car.id === highlightedCarId ? ' class="row-new"' : ''}><td><img src="${esc(imgUrl(car.image))}" alt=""></td><td><strong>${esc(car.name)}</strong><br><small>${esc(car.trim)} · ${esc(car.year)} · ${esc(car.origin)}</small></td><td>${Number(car.price).toLocaleString('fr-FR')} TND</td><td><span class="pill ${esc(car.status)}">${statusLabel[car.status] || ''}</span></td><td><div class="share-actions"><button class="light" type="button" data-share-facebook="${esc(car.id)}">Facebook</button><button class="light" type="button" data-share-instagram="${esc(car.id)}">Instagram</button></div></td><td style="white-space:nowrap"><button class="light" data-edit="${esc(car.id)}">Modifier</button> <button class="danger" data-delete="${esc(car.id)}">Supprimer</button></td></tr>`).join('') || '<tr><td colspan="6">Aucun véhicule pour cette marque.</td></tr>';
       $('clear-car-filter').classList.toggle('hidden', !carBrandFilter);
       $('clear-car-filter').textContent = carBrandFilter ? `Voir tous · ${carBrandFilter}` : 'Voir tous';
+    }
+
+    function renderExportRequests() {
+      const amount = value => value === null || value === undefined ? 'Sur devis' : formatMoney(value);
+      $('export-request-list').innerHTML = exportRequests.map(item => {
+        const estimate = item.estimate || {};
+        const details = [item.year, item.km != null ? `${Number(item.km).toLocaleString('fr-FR')} km` : '', item.condition === 'neuf' ? 'Neuf' : 'Occasion', item.vehicleType === 'suv' ? 'SUV / 4×4' : 'Berline'].filter(Boolean).join(' · ');
+        const link = /^https?:\/\//.test(item.listingUrl || '') ? `<br><a href="${esc(item.listingUrl)}" target="_blank" rel="noopener noreferrer">Annonce ↗</a>` : '';
+        const departure = item.departureCountry === 'Autre' ? item.otherCountry : item.departureCountry;
+        return `<tr><td>${new Date(item.createdAt).toLocaleString('fr-FR')}<br><small>Réf. ${esc(String(item.id).slice(0, 8).toUpperCase())}</small></td><td><strong>${esc(item.brand)} ${esc(item.model)}</strong><br><small>${esc(details)}${item.vin ? `<br>VIN ${esc(item.vin)}` : ''}</small>${link}</td><td>${esc(departure)}${item.departureCity ? `<br><small>${esc(item.departureCity)}</small>` : ''}</td><td><strong>${esc(item.name)}</strong><br><small>${esc(item.email)} ${esc(item.phone)}</small>${item.note ? `<br><small>${esc(item.note)}</small>` : ''}</td><td>Valeur ${formatMoney(item.value)}<br><small>Transport ${amount(estimate.shipping)} · Assurance ${amount(estimate.insurance)} · Accompagnement ${amount(estimate.support)}${item.customs ? ` · Dédouanement ${amount(estimate.customs)}` : ''}</small><br><strong>Total ${amount(estimate.total)}</strong></td><td><select aria-label="Statut de la demande de ${esc(item.name)}" data-export-status="${esc(item.id)}">${Object.entries(exportStatusLabel).map(([value, label]) => `<option value="${value}" ${item.status === value ? 'selected' : ''}>${label}</option>`).join('')}</select></td><td><button class="danger" type="button" data-delete-export="${esc(item.id)}" aria-label="Supprimer la demande de ${esc(item.name)}">Supprimer</button></td></tr>`;
+      }).join('') || '<tr><td colspan="7">Aucune demande d’export pour le moment.</td></tr>';
     }
 
     function renderAppointments() {
@@ -1672,6 +1938,22 @@
         await loadAll();
       } catch (error) { alert(error.message); }
     });
+    $('export-request-list').addEventListener('change', async event => {
+      const select = event.target.closest('[data-export-status]');
+      if (!select) return;
+      try {
+        await api('/api/admin/export-requests/' + encodeURIComponent(select.dataset.exportStatus), { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: select.value }) });
+        await loadAll();
+      } catch (error) { alert(error.message); }
+    });
+    $('export-request-list').addEventListener('click', async event => {
+      const button = event.target.closest('[data-delete-export]');
+      if (!button || !confirm('Supprimer cette demande d’export ?')) return;
+      try {
+        await api('/api/admin/export-requests/' + encodeURIComponent(button.dataset.deleteExport), { method: 'DELETE' });
+        await loadAll();
+      } catch (error) { alert(error.message); }
+    });
 
     function clearSelectedPhotos() {
       selectedPhotos.forEach(photo => URL.revokeObjectURL(photo.url));
@@ -1792,6 +2074,26 @@
       }
     });
 
+    let carToastTimer;
+    function hideCarToast() { clearTimeout(carToastTimer); $('car-toast').classList.add('hidden'); }
+    function showCarToast(car, updated) {
+      $('car-toast-title').textContent = updated ? 'Véhicule mis à jour' : 'Véhicule ajouté !';
+      $('car-toast-car').textContent = car ? [car.name, car.trim, car.year].filter(Boolean).join(' · ') : '';
+      $('car-toast-text').textContent = updated ? 'Vos modifications sont enregistrées.' : 'Véhicule ajouté à la démo.';
+      const siteUrl = document.querySelector('.sidebar-site-link').href;
+      $('car-toast-view').href = car?.id ? new URL(`?screen=vehicule&id=${encodeURIComponent(car.id)}`, siteUrl).href : siteUrl;
+      $('car-toast-add').classList.toggle('hidden', updated);
+      const toast = $('car-toast');
+      toast.classList.add('hidden'); void toast.offsetWidth; toast.classList.remove('hidden');
+      clearTimeout(carToastTimer);
+      carToastTimer = setTimeout(hideCarToast, 8000);
+      document.querySelector('#car-list tr.row-new')?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+    $('car-toast').addEventListener('mouseenter', () => clearTimeout(carToastTimer));
+    $('car-toast').addEventListener('mouseleave', () => { carToastTimer = setTimeout(hideCarToast, 3000); });
+    $('car-toast-close').addEventListener('click', hideCarToast);
+    $('car-toast-add').addEventListener('click', () => { hideCarToast(); resetForm(); openCarForm(); });
+
     $('car-form').addEventListener('submit', async event => {
       event.preventDefault();
       const body = new FormData($('car-form'));
@@ -1801,9 +2103,16 @@
       $('submit-car').disabled = true; message('car-msg', 'Envoi en cours…', true);
       try {
         const url = editingId ? '/api/admin/cars/' + encodeURIComponent(editingId) : '/api/admin/cars';
-        await api(url, { method: editingId ? 'PUT' : 'POST', body });
-        message('car-msg', editingId ? 'Véhicule mis à jour.' : 'Véhicule ajouté à la démo.', true);
-        resetForm(); await loadAll();
+        const wasEditing = Boolean(editingId);
+        const saved = await api(url, { method: wasEditing ? 'PUT' : 'POST', body });
+        resetForm();
+        message('car-msg', 'Votre annonce n’est pas encore enregistrée.', true);
+        highlightedCarId = saved?.id || null;
+        carBrandFilter = '';
+        await loadAll();
+        showAdminPage('vehicles', true);
+        $('admin-content').scrollTop = 0;
+        showCarToast(saved, wasEditing);
       } catch (error) { message('car-msg', error.message); }
       finally {
         $('car-form').querySelectorAll('fieldset,button:not(.panel-toggle)').forEach(field => { field.disabled = false; });
@@ -1975,6 +2284,19 @@
       $('st-phone-display').value = settings.contact?.phoneDisplay || '';
       $('st-whatsapp').value = settings.contact?.whatsapp || '';
       $('st-email').value = settings.contact?.email || '';
+      const shipping = settings.shipping || {};
+      $('st-shipping-france').value = shipping.france ?? '';
+      $('st-shipping-dubai').value = shipping.dubai ?? '';
+      $('st-shipping-suv').value = shipping.suv ?? '';
+      $('st-insurance-rate').value = shipping.insuranceRate ?? '';
+      $('st-support-fee').value = shipping.support ?? '';
+      const exportShipping = settings.exportShipping || {};
+      $('st-export-france').value = exportShipping.france ?? '';
+      $('st-export-dubai').value = exportShipping.dubai ?? '';
+      $('st-export-suv').value = exportShipping.suv ?? '';
+      $('st-export-insurance').value = exportShipping.insuranceRate ?? '';
+      $('st-export-support').value = exportShipping.support ?? '';
+      $('st-export-customs').value = exportShipping.customs ?? '';
       dashContactEmail = settings.contact?.email || '';
       $('static-site-status').textContent = generatedAt ? `Dernière génération : ${new Date(generatedAt).toLocaleString('fr-FR')}` : '';
     }
@@ -2014,7 +2336,7 @@
       message('static-site-msg', 'Régénération en cours…', true);
       try {
         renderStaticSite(await api(url, options));
-        message('static-site-msg', 'Simulation terminée. Aucun fichier publié ni modifié.', true);
+        message('static-site-msg', options.method === 'PUT' ? 'Modifications enregistrées dans la démo uniquement.' : 'Simulation terminée. Aucun fichier publié ni modifié.', true);
       } catch (error) { message('static-site-msg', error.message); }
       finally { controls.forEach(control => { control.disabled = false; }); }
     }
@@ -2023,7 +2345,11 @@
       const body = new FormData();
       for (const [key, id] of Object.entries({
         siteUrl: 'st-url', title: 'st-title', description: 'st-description',
-        phone: 'st-phone', phoneDisplay: 'st-phone-display', whatsapp: 'st-whatsapp', email: 'st-email'
+        phone: 'st-phone', phoneDisplay: 'st-phone-display', whatsapp: 'st-whatsapp', email: 'st-email',
+        shippingFrance: 'st-shipping-france', shippingDubai: 'st-shipping-dubai', shippingSuv: 'st-shipping-suv',
+        insuranceRate: 'st-insurance-rate', supportFee: 'st-support-fee',
+        exportFrance: 'st-export-france', exportDubai: 'st-export-dubai', exportSuv: 'st-export-suv',
+        exportInsuranceRate: 'st-export-insurance', exportSupport: 'st-export-support', exportCustoms: 'st-export-customs'
       })) body.set(key, $(id).value);
       if ($('st-wallpaper').files[0]) body.set('wallpaper', $('st-wallpaper').files[0]);
       if (resetWallpaper) body.set('resetWallpaper', 'true');
@@ -2036,6 +2362,39 @@
       }
       staticSiteRequest('/api/admin/static-site/publish', { method: 'POST' });
     });
+    const siteForm = $('static-site-form');
+    const tnd = value => `${Math.round(value).toLocaleString('fr-FR')} TND`;
+    function updateSitePreview() {
+      for (const id of ['st-title', 'st-description']) {
+        const counter = $(`${id}-count`), length = $(id).value.length, max = Number(counter.dataset.max);
+        counter.textContent = `${length} / ${max} caractères recommandés`;
+        counter.classList.toggle('over', length > max);
+      }
+      let host = 'prime-cars.netlify.app';
+      try { if ($('st-url').value) host = new URL($('st-url').value).host + new URL($('st-url').value).pathname.replace(/\/$/, ''); } catch { /* keep default while typing */ }
+      $('serp-url').textContent = host;
+      $('serp-title').textContent = $('st-title').value || '—';
+      const description = $('st-description').value;
+      $('serp-description').textContent = description.length > 160 ? `${description.slice(0, 157)}…` : description || '—';
+      $('preview-phone').textContent = $('st-phone-display').value || $('st-phone').value || '—';
+      $('preview-whatsapp').textContent = $('st-whatsapp').value || $('st-phone').value || '—';
+      $('preview-email').textContent = $('st-email').value || '—';
+      const num = id => Number($(id).value) || 0;
+      const importFees = num('st-shipping-dubai') + num('st-shipping-suv') + 100000 * num('st-insurance-rate') / 100 + num('st-support-fee');
+      const exportFees = num('st-export-dubai') + num('st-export-suv') + 100000 * num('st-export-insurance') / 100 + num('st-export-support') + num('st-export-customs');
+      $('rate-example').textContent = `Exemple, SUV de 100 000 TND depuis les Émirats : export ${tnd(importFees)} · export seul avec dédouanement ${tnd(exportFees)}`;
+    }
+    const setSiteDirty = dirty => { $('static-site-dirty').textContent = dirty ? 'Modifications non enregistrées' : ''; $('static-site-dirty').classList.toggle('over', dirty); };
+    siteForm.addEventListener('input', () => { updateSitePreview(); setSiteDirty(true); });
+    siteForm.addEventListener('change', () => setSiteDirty(true));
+    $('st-wallpaper-reset').addEventListener('click', () => setSiteDirty(true));
+    const renderStaticSiteBase = renderStaticSite;
+    renderStaticSite = data => { renderStaticSiteBase(data); updateSitePreview(); setSiteDirty(false); };
+    siteForm.querySelectorAll('[data-site-jump]').forEach(button => button.addEventListener('click', () => $(button.dataset.siteJump).scrollIntoView({ behavior: 'smooth', block: 'start' })));
+    const wallpaperDrop = siteForm.querySelector('.wallpaper-drop');
+    ['dragenter', 'dragover'].forEach(type => wallpaperDrop.addEventListener(type, () => wallpaperDrop.classList.add('drag-over')));
+    ['dragleave', 'drop'].forEach(type => wallpaperDrop.addEventListener(type, () => wallpaperDrop.classList.remove('drag-over')));
+    updateSitePreview();
 
     // ---------- Google Analytics: fictitious, deterministic demo data until the GA connection is set up ----------
     function demoRandom(seed) {

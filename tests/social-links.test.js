@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { normalizeProfile, profileUrl, parseSocialUrl } = require('../social-links');
+const { normalizeProfile, profileUrl, parseSocialUrl, parseLivePlayer } = require('../social-links');
 
 test('profiles accept handles or full profile links and produce canonical links', () => {
   for (const [platform, raw, expected] of [
@@ -70,4 +70,14 @@ test('unsupported and unsafe post links return no embeddable result', () => {
     'https://user@www.tiktok.com/@scout/video/123',
     'https://www.instagram.com/primecars/'
   ]) assert.equal(parseSocialUrl(raw), null, String(raw));
+});
+
+test('live player accepts HTTPS links or iframe code and normalizes YouTube links', () => {
+  assert.equal(parseLivePlayer(''), '');
+  assert.equal(parseLivePlayer('https://player.restream.io/?token=abc#x'), 'https://player.restream.io/?token=abc');
+  assert.equal(parseLivePlayer('<iframe src="https://player.restream.io/?token=a&amp;b=1" allowfullscreen></iframe>'), 'https://player.restream.io/?token=a&b=1');
+  for (const raw of ['https://www.youtube.com/watch?v=dQw4w9WgXcQ', 'https://youtu.be/dQw4w9WgXcQ', 'https://www.youtube.com/live/dQw4w9WgXcQ?si=x'])
+    assert.equal(parseLivePlayer(raw), 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1');
+  for (const raw of ['http://player.example.com/', 'javascript:alert(1)', 'https://user:pass@example.com/', 'https://example.com/"onload="x', '<iframe src="http://example.com/"></iframe>', 'https://www.youtube.com/channel/abc'])
+    assert.equal(parseLivePlayer(raw), null, raw);
 });

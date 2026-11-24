@@ -130,6 +130,22 @@
     @keyframes row-new{0%,40%{background:#dff3e7}100%{background:transparent}}
     @media(prefers-reduced-motion:reduce){.toast,#car-list tr.row-new td{animation:none}.toast-progress{display:none}}
     @media(max-width:480px){.form-block{padding:14px}.social-post-row{grid-template-columns:20px minmax(0,1fr);padding:10px}.post-controls{grid-column:2;margin-top:0}.social-section-head{align-items:flex-start;flex-direction:column}.editor-actions{align-items:stretch}.editor-actions .actions{width:100%}.editor-actions .actions button{flex:1}.photo-heading{align-items:flex-start;flex-direction:column}}
+        .site-settings .form-block{scroll-margin-top:16px}.site-settings .form-block .help{margin:0 0 14px}.site-settings .field{margin-bottom:14px}.site-settings .field:last-child{margin-bottom:0}
+        .site-jump{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px}.site-jump button{padding:7px 12px;font-size:12px;border-radius:999px}
+        .counter.over{color:#b42318;font-weight:700}
+        .car-filters{display:grid;grid-template-columns:minmax(200px,2fr) repeat(6,minmax(0,1fr));gap:8px;margin:0 0 8px}.car-filters input,.car-filters select{min-width:0;font-size:13px}.car-count{margin:0 0 10px;color:var(--muted);font-size:12px}
+        @media(max-width:1100px){.car-filters{grid-template-columns:repeat(3,minmax(0,1fr))}.car-filters input{grid-column:1/-1}}
+        @media(max-width:600px){.car-filters{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+        .site-settings .wallpaper-settings{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:18px;align-items:start;margin:0}.site-settings .wallpaper-preview{width:100%;margin:0}.wallpaper-controls{display:grid;gap:8px}.wallpaper-controls>label:first-child{margin:0}.wallpaper-controls .help,.wallpaper-controls .msg{margin:0}.wallpaper-controls button{justify-self:start;margin:0}.wallpaper-drop{padding:16px 12px}
+        .contact-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+        .rate-wrap{overflow-x:auto}.rate-table{width:100%;border-collapse:collapse;font-size:13px}.rate-table th,.rate-table td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:start;vertical-align:middle}.rate-table thead th{font-size:12px;text-transform:uppercase;letter-spacing:.04em}.rate-table th small{display:block;margin-top:2px;color:var(--muted);font-weight:400;font-size:11px;text-transform:none;letter-spacing:0}.rate-table tbody th{font-weight:700;width:38%}.rate-table tbody tr:last-child>*{border-bottom:0}.rate-na{color:var(--muted);font-size:12px;font-style:italic}.rate-cell-label{display:none}
+        .unit-input{position:relative;display:flex;align-items:center}.unit-input input{width:100%;text-align:start;padding-inline-end:48px;margin:0}.unit-input>span{position:absolute;inset-inline-end:10px;color:var(--muted);font-size:12px;font-weight:700;pointer-events:none}
+        .rate-example{margin:12px 0 0;padding:10px 12px;border-radius:6px;background:#f5f7f3;color:var(--muted);font-size:12px;line-height:1.6}.rate-example b{color:inherit}
+        .serp{padding:12px;border:1px solid var(--line);border-radius:6px;background:white}.serp-url{display:block;color:#3c4043;font-size:11px;overflow-wrap:anywhere}.site-preview .serp-title{margin:4px 0;color:#1a0dab;font:400 16px/1.3 Arial,sans-serif}.site-preview .serp-desc{margin:0;color:#4d5156;font-size:12px;line-height:1.5}
+        .contact-preview{list-style:none;margin:0;padding:0;display:grid;gap:8px;font-size:12px}.contact-preview li{display:flex;justify-content:space-between;gap:8px}.contact-preview span{color:var(--muted)}.contact-preview b{overflow-wrap:anywhere;text-align:end;unicode-bidi:isolate}[dir="rtl"] .site-settings input[dir="ltr"]{text-align:right}
+        .site-settings .editor-actions{padding-bottom:4px}
+        @media(max-width:1100px){.site-settings .site-preview{position:static;display:block;order:-1}}
+        @media(max-width:700px){.site-settings .wallpaper-settings,.contact-grid{grid-template-columns:minmax(0,1fr)}.rate-table thead{display:none}.rate-table,.rate-table tbody,.rate-table tr,.rate-table th,.rate-table td{display:block;width:auto}.rate-table tr{padding:10px 0;border-bottom:1px solid var(--line)}.rate-table tbody th,.rate-table td{border:0;padding:4px 0}.rate-table .rate-cell-label{display:block;margin-bottom:3px;color:var(--muted);font-size:11px;font-weight:700}}
   </style>
   <script src="/social-links.js"></script>
 </head>
@@ -154,7 +170,7 @@
           <a data-admin-page="vehicles" href="?section=vehicles">Véhicules</a>
           <a class="admin-nav-child" data-admin-page="add-car" href="?section=add-car">+ Ajouter un véhicule</a>
         </div>
-        <a data-admin-page="appointments" href="?section=appointments">Rendez-vous</a><a data-admin-page="social" href="?section=social">Réseaux sociaux</a><a data-admin-page="static-site" href="?section=static-site">Site vitrine</a><a data-admin-page="analytics" href="?section=analytics">Google Analytics</a><a data-admin-page="reservations" href="?section=reservations">Réservations</a>
+        <a data-admin-page="appointments" href="?section=appointments">Rendez-vous</a><a data-admin-page="export-requests" href="?section=export-requests">Demandes d’export</a><a data-admin-page="social" href="?section=social">Réseaux sociaux</a><a data-admin-page="static-site" href="?section=static-site">Site vitrine</a><a data-admin-page="analytics" href="?section=analytics">Google Analytics</a><a data-admin-page="reservations" href="?section=reservations">Réservations</a>
       </nav>
       <a class="sidebar-site-link" href="/" target="_blank" rel="noopener">Voir le site ↗</a>
     </aside>
@@ -250,6 +266,16 @@
 
     <section class="card" id="vehicle-list-section">
       <div class="section-heading"><h2>Véhicules en ligne</h2><div class="actions panel-heading-extra" style="margin:0"><button class="light hidden" type="button" id="clear-car-filter">Voir tous</button><button type="button" id="new-vehicle" class="editor-only">+ Ajouter un véhicule</button></div></div>
+      <div class="car-filters" role="search" aria-label="Filtrer les véhicules">
+        <input type="search" id="car-search" placeholder="Rechercher : nom, marque, finition, année…" aria-label="Rechercher un véhicule" autocomplete="off">
+        <select id="car-filter-brand" aria-label="Marque"><option value="">Toutes les marques</option></select>
+        <select id="car-filter-status" aria-label="Statut"><option value="">Tous les statuts</option><option value="available">Disponible</option><option value="reserved">Réservé</option><option value="sold">Vendu</option></select>
+        <select id="car-filter-kind" aria-label="État"><option value="">Neuf & occasion</option><option value="neuf">Neuf</option><option value="occasion">Occasion</option></select>
+        <select id="car-filter-origin" aria-label="Provenance"><option value="">Toutes les provenances</option><option value="France">France</option><option value="Dubaï">Émirats arabes unis</option></select>
+        <select id="car-filter-fuel" aria-label="Motorisation"><option value="">Toutes les motorisations</option><option>Essence</option><option>Diesel</option><option>Hybride</option><option>Électrique</option></select>
+        <select id="car-sort" aria-label="Trier"><option value="">Ordre d’ajout</option><option value="price-asc">Prix croissant</option><option value="price-desc">Prix décroissant</option><option value="year-desc">Année (récent)</option><option value="name">Nom (A → Z)</option></select>
+      </div>
+      <p class="car-count" id="car-count" aria-live="polite"></p>
       <div class="table-wrap"><table><thead><tr><th>Photo</th><th>Véhicule</th><th>Prix</th><th>Statut</th><th>Publier</th><th></th></tr></thead><tbody id="car-list"></tbody></table></div>
       <p class="help">Facebook partage le lien de l’annonce. Instagram ouvre le partage natif avec la photo si le téléphone le permet; sinon la légende est copiée et Instagram s’ouvre pour terminer la publication. La publication automatique nécessite une configuration Meta Business.</p>
     </section>
@@ -269,6 +295,12 @@
         <p class="msg" id="appointment-msg"></p>
       </form>
       <div class="table-wrap"><table><thead><tr><th>Date</th><th>Véhicule</th><th>Client</th><th>Note</th><th>Statut</th><th></th></tr></thead><tbody id="appointment-list"></tbody></table></div>
+    </section>
+
+    <section class="card" id="export-requests-section">
+      <h2>Demandes d’export</h2>
+      <p class="help" style="margin:0 0 12px">Véhicules qui ne sont pas sur le site : le client demande uniquement le transport jusqu’à Tunis (formulaire « Mon propre véhicule » de la page Importation &amp; livraison).</p>
+      <div class="table-wrap"><table><thead><tr><th>Date</th><th>Véhicule</th><th>Départ</th><th>Client</th><th>Estimation</th><th>Statut</th><th></th></tr></thead><tbody id="export-request-list"></tbody></table></div>
     </section>
 
     <form class="card" id="social-form">
@@ -291,50 +323,106 @@
       <fieldset class="form-block">
         <legend>Diffusion en direct</legend>
         <label class="switch"><input type="checkbox" id="l-active"> Annoncer un live en cours</label>
-        <p class="help">Activez uniquement pendant votre diffusion, puis désactivez à la fin du live.</p>
+        <p class="help">Activez avant ou pendant votre diffusion (par exemple 50 min avant le début) : l’emplacement du live apparaît alors sur le site. Désactivez à la fin du live pour le masquer.</p>
         <div class="grid social-live-fields hidden" id="social-live-fields">
           <div><label for="l-platform">Plateforme du live</label><select id="l-platform"><option value="instagram">Instagram</option><option value="facebook">Facebook (lecteur intégré au site)</option><option value="tiktok">TikTok</option></select></div>
           <div id="l-url-wrap"><label for="l-url">Lien de la vidéo live Facebook</label><input id="l-url" type="url" placeholder="https://www.facebook.com/allaniauto/videos/123…"></div>
+          <div id="l-player-wrap"><label for="l-player">Lien du lecteur intégré (optionnel)</label><input id="l-player" maxlength="2000" placeholder="https://… ou &lt;iframe src=&quot;…&quot;&gt;" autocomplete="off" spellcheck="false" aria-describedby="l-player-hint"><small class="field-hint" id="l-player-hint">Pour voir le live directement sur le site : diffusez en même temps via Restream, StreamYard ou YouTube Live, puis collez ici le lien du lecteur ou son code &lt;iframe&gt;.</small></div>
         </div>
-        <p class="help">Facebook propose un lecteur intégré. Instagram et TikTok ouvrent le live sur leur plateforme et nécessitent le compte correspondant.</p>
+        <p class="help">Facebook propose un lecteur intégré. Instagram et TikTok ouvrent le live sur leur plateforme, sauf si vous renseignez un lecteur intégré.</p>
       </fieldset>
       <div class="editor-actions"><p class="editor-status" id="social-status" role="status" aria-live="polite">Toutes les modifications sont enregistrées.</p><div class="actions"><button class="light" type="button" id="undo-social" disabled>Annuler les changements</button><button type="submit" id="save-social" disabled>Enregistrer les réseaux sociaux</button></div></div>
       <p class="msg" id="social-msg" role="status" aria-live="polite"></p>
     </form>
 
-    <form class="card" id="static-site-form">
+    <form class="card site-settings" id="static-site-form">
       <h2>Site vitrine statique</h2>
-      <p class="help" style="margin:0 0 16px">Textes et coordonnées du site vitrine généré dans le dossier <code>front-office/</code>. Le catalogue et les réseaux sociaux y sont copiés au moment de la régénération : après une modification des véhicules ou des réseaux sociaux, cliquez sur « Régénérer » puis republiez le dossier.</p>
-      <div class="wallpaper-settings">
-        <label for="st-wallpaper">Image de fond de l’accueil</label>
-        <img class="wallpaper-preview" id="st-wallpaper-preview" alt="Aperçu de l’image de fond">
-        <input id="st-wallpaper" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="st-wallpaper-help st-wallpaper-error">
-        <p class="help" id="st-wallpaper-help">JPG, PNG ou WebP · 8 Mo maximum. L’image sera appliquée après enregistrement et génération.</p>
-        <button class="light" type="button" id="st-wallpaper-reset">Rétablir l’image par défaut</button>
-        <p class="msg error" id="st-wallpaper-error" role="alert"></p>
+      <p class="form-intro">Réglez ici ce que voient vos visiteurs : référencement, image d’accueil, coordonnées et tarifs. Le catalogue et les réseaux sociaux sont copiés à chaque régénération du dossier <code>front-office/</code>.</p>
+      <nav class="site-jump" aria-label="Sections du site vitrine"><button type="button" class="light" data-site-jump="site-block-seo">1 · Référencement</button><button type="button" class="light" data-site-jump="site-block-look">2 · Apparence</button><button type="button" class="light" data-site-jump="site-block-contact">3 · Coordonnées</button><button type="button" class="light" data-site-jump="site-block-rates">4 · Tarifs</button></nav>
+      <div class="editor-layout site-layout">
+        <div class="editor-fields">
+          <fieldset class="form-block" id="site-block-seo">
+            <legend><span class="step-number">1</span>Référencement &amp; partage</legend>
+            <p class="help">Ce texte apparaît dans l’onglet du navigateur, sur Google et dans l’aperçu des liens partagés (WhatsApp, Facebook…).</p>
+            <div class="field">
+              <label for="st-title">Titre *</label>
+              <input id="st-title" dir="auto" required maxlength="120" aria-describedby="st-title-count">
+              <span class="field-hint counter" id="st-title-count" data-max="60"></span>
+            </div>
+            <div class="field">
+              <label for="st-description">Description *</label>
+              <textarea id="st-description" dir="auto" required maxlength="300" style="min-height:90px" aria-describedby="st-description-count"></textarea>
+              <span class="field-hint counter" id="st-description-count" data-max="160"></span>
+            </div>
+            <div class="field">
+              <label for="st-url">Adresse publique du site</label>
+              <input id="st-url" dir="ltr" type="url" maxlength="200" placeholder="https://prime-cars.netlify.app">
+              <span class="field-hint">Facultatif : sert à l’URL canonique et aux liens des véhicules pour le référencement.</span>
+            </div>
+          </fieldset>
+
+          <fieldset class="form-block" id="site-block-look">
+            <legend><span class="step-number">2</span>Apparence de l’accueil</legend>
+            <div class="wallpaper-settings">
+              <img class="wallpaper-preview" id="st-wallpaper-preview" alt="Aperçu de l’image de fond">
+              <div class="wallpaper-controls">
+                <label for="st-wallpaper">Image de fond de l’accueil</label>
+                <label class="photo-dropzone wallpaper-drop"><input id="st-wallpaper" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="st-wallpaper-help st-wallpaper-error"><b>Choisir une image</b><span>ou glissez-la ici</span></label>
+                <p class="help" id="st-wallpaper-help">JPG, PNG ou WebP · 8 Mo maximum. L’image sera appliquée après enregistrement et génération.</p>
+                <button class="light" type="button" id="st-wallpaper-reset">Rétablir l’image par défaut</button>
+                <p class="msg error" id="st-wallpaper-error" role="alert"></p>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="form-block" id="site-block-contact">
+            <legend><span class="step-number">3</span>Coordonnées de contact</legend>
+            <p class="help">Utilisées par les boutons Appeler, WhatsApp, SMS et E-mail du site, ainsi que dans le pied de page.</p>
+            <div class="grid contact-grid">
+              <div><label for="st-phone">Téléphone (appel, SMS) *</label><input id="st-phone" dir="ltr" type="tel" required maxlength="30" placeholder="+971543280723"><span class="field-hint">Format international, sans espaces.</span></div>
+              <div><label for="st-phone-display">Numéro affiché</label><input id="st-phone-display" dir="ltr" maxlength="30" placeholder="+971 54 328 0723"><span class="field-hint">Version lisible montrée aux visiteurs.</span></div>
+              <div><label for="st-whatsapp">WhatsApp</label><input id="st-whatsapp" dir="ltr" type="tel" maxlength="30" placeholder="+971543280723"><span class="field-hint">Laissez vide pour utiliser le téléphone.</span></div>
+              <div><label for="st-email">E-mail *</label><input id="st-email" dir="ltr" type="email" required maxlength="120" placeholder="contact@prime-cars.com"><span class="field-hint">Reçoit les demandes par e-mail.</span></div>
+            </div>
+          </fieldset>
+
+          <fieldset class="form-block" id="site-block-rates">
+            <legend><span class="step-number">4</span>Tarifs d’export vers la Tunisie</legend>
+            <p class="help">Tous les véhicules sont exportés vers la Tunisie. <b>Export</b> : un de nos véhicules, vendu sur le site (simulateur et fiche véhicule). <b>Export seul</b> : un véhicule acheté chez un autre vendeur (formulaire « Mon propre véhicule » ; départ d’un autre pays sur devis).</p>
+            <div class="rate-wrap"><table class="rate-table">
+              <thead><tr><th scope="col">Poste</th><th scope="col" id="rate-col-import">Export<small>Nos véhicules</small></th><th scope="col" id="rate-col-export">Export seul<small>Véhicules d’autres vendeurs</small></th></tr></thead>
+              <tbody>
+                <tr><th scope="row" id="rate-france">Transport depuis la France</th><td><span class="rate-cell-label" aria-hidden="true">Export</span><span class="unit-input"><input id="st-shipping-france" type="number" min="0" step="1" inputmode="numeric" aria-labelledby="rate-france rate-col-import"><span aria-hidden="true">TND</span></span></td><td><span class="rate-cell-label" aria-hidden="true">Export seul</span><span class="unit-input"><input id="st-export-france" type="number" min="0" step="1" inputmode="numeric" aria-labelledby="rate-france rate-col-export"><span aria-hidden="true">TND</span></span></td></tr>
+                <tr><th scope="row" id="rate-dubai">Transport depuis les Émirats arabes unis</th><td><span class="rate-cell-label" aria-hidden="true">Export</span><span class="unit-input"><input id="st-shipping-dubai" type="number" min="0" step="1" inputmode="numeric" aria-labelledby="rate-dubai rate-col-import"><span aria-hidden="true">TND</span></span></td><td><span class="rate-cell-label" aria-hidden="true">Export seul</span><span class="unit-input"><input id="st-export-dubai" type="number" min="0" step="1" inputmode="numeric" aria-labelledby="rate-dubai rate-col-export"><span aria-hidden="true">TND</span></span></td></tr>
+                <tr><th scope="row" id="rate-suv">Supplément SUV / 4×4<small>Ajouté au transport</small></th><td><span class="rate-cell-label" aria-hidden="true">Export</span><span class="unit-input"><input id="st-shipping-suv" type="number" min="0" step="1" inputmode="numeric" aria-labelledby="rate-suv rate-col-import"><span aria-hidden="true">TND</span></span></td><td><span class="rate-cell-label" aria-hidden="true">Export seul</span><span class="unit-input"><input id="st-export-suv" type="number" min="0" step="1" inputmode="numeric" aria-labelledby="rate-suv rate-col-export"><span aria-hidden="true">TND</span></span></td></tr>
+                <tr><th scope="row" id="rate-insurance">Assurance transport<small>% de la valeur du véhicule</small></th><td><span class="rate-cell-label" aria-hidden="true">Export</span><span class="unit-input"><input id="st-insurance-rate" type="number" min="0" max="100" step="0.1" inputmode="decimal" aria-labelledby="rate-insurance rate-col-import"><span aria-hidden="true">%</span></span></td><td><span class="rate-cell-label" aria-hidden="true">Export seul</span><span class="unit-input"><input id="st-export-insurance" type="number" min="0" max="100" step="0.1" inputmode="decimal" aria-labelledby="rate-insurance rate-col-export"><span aria-hidden="true">%</span></span></td></tr>
+                <tr><th scope="row" id="rate-support">Accompagnement<small>Frais de dossier et suivi</small></th><td><span class="rate-cell-label" aria-hidden="true">Export</span><span class="unit-input"><input id="st-support-fee" type="number" min="0" step="1" inputmode="numeric" aria-labelledby="rate-support rate-col-import"><span aria-hidden="true">TND</span></span></td><td><span class="rate-cell-label" aria-hidden="true">Export seul</span><span class="unit-input"><input id="st-export-support" type="number" min="0" step="1" inputmode="numeric" aria-labelledby="rate-support rate-col-export"><span aria-hidden="true">TND</span></span></td></tr>
+                <tr><th scope="row" id="rate-customs">Dédouanement<small>Option cochée par le client</small></th><td><span class="rate-cell-label" aria-hidden="true">Export</span><span class="rate-na">Non proposé</span></td><td><span class="rate-cell-label" aria-hidden="true">Export seul</span><span class="unit-input"><input id="st-export-customs" type="number" min="0" step="1" inputmode="numeric" aria-labelledby="rate-customs rate-col-export"><span aria-hidden="true">TND</span></span></td></tr>
+              </tbody>
+            </table></div>
+            <p class="rate-example" id="rate-example" aria-live="polite"></p>
+          </fieldset>
+        </div>
+
+        <aside class="vehicle-preview site-preview" aria-label="Aperçu">
+          <h3>Aperçu sur Google</h3>
+          <div class="serp" dir="auto">
+            <span class="serp-url" id="serp-url" dir="ltr" data-no-i18n></span>
+            <strong class="serp-title" id="serp-title" dir="auto" data-no-i18n></strong>
+            <p class="serp-desc" id="serp-description" dir="auto" data-no-i18n></p>
+          </div>
+          <h3 style="margin-top:18px">Contact affiché</h3>
+          <ul class="contact-preview">
+            <li><span>Téléphone</span><b id="preview-phone" dir="ltr" data-no-i18n>—</b></li>
+            <li><span>WhatsApp</span><b id="preview-whatsapp" dir="ltr" data-no-i18n>—</b></li>
+            <li><span>E-mail</span><b id="preview-email" dir="ltr" data-no-i18n>—</b></li>
+          </ul>
+        </aside>
       </div>
-      <div class="grid">
-        <div><label for="st-phone">Téléphone (appel, SMS) *</label><input id="st-phone" type="tel" required maxlength="30" placeholder="+971543280723"></div>
-        <div><label for="st-phone-display">Numéro affiché</label><input id="st-phone-display" maxlength="30" placeholder="+971 54 328 0723"></div>
-        <div><label for="st-whatsapp">WhatsApp</label><input id="st-whatsapp" type="tel" maxlength="30" placeholder="+971543280723"></div>
-        <div><label for="st-email">E-mail *</label><input id="st-email" type="email" required maxlength="120" placeholder="contact@prime-cars.com"></div>
+      <div class="editor-actions">
+        <div><p class="editor-status" id="static-site-dirty"></p><p class="help" id="static-site-status" style="margin:0"></p><p class="msg" id="static-site-msg" style="margin:4px 0 0"></p></div>
+        <div class="actions"><button type="button" class="light" id="publish-static-site">Régénérer avec les données actuelles</button><button type="submit" id="save-static-site">Enregistrer et régénérer</button></div>
       </div>
-      <div style="margin-top:14px">
-        <label for="st-url">Adresse publique du site</label>
-        <input id="st-url" type="url" maxlength="200" placeholder="https://prime-cars.netlify.app">
-        <p class="help">Facultatif : sert à l’URL canonique et aux liens des véhicules pour le référencement.</p>
-      </div>
-      <div style="margin-top:14px">
-        <label for="st-title">Titre (onglet, Google, aperçu des liens) *</label>
-        <input id="st-title" required maxlength="120">
-      </div>
-      <div style="margin-top:14px">
-        <label for="st-description">Description (Google, aperçu des liens) *</label>
-        <textarea id="st-description" required maxlength="300" style="min-height:90px"></textarea>
-      </div>
-      <div class="actions"><button type="submit" id="save-static-site">Enregistrer et régénérer</button><button type="button" class="light" id="publish-static-site">Régénérer avec les données actuelles</button></div>
-      <p class="help" id="static-site-status"></p>
-      <p class="msg" id="static-site-msg"></p>
     </form>
 
     <section class="card" id="analytics-section">
@@ -385,6 +473,8 @@
     const imgUrl = src => /^\/uploads\//.test(src) ? src : `https://images.unsplash.com/${encodeURIComponent(src)}?auto=format&fit=crop&w=200&q=70`;
     const statusLabel = { available: 'Disponible', reserved: 'Réservé', sold: 'Vendu', pending: 'En attente', paid: 'Payé' };
     const appointmentStatusLabel = { planned: 'À confirmer', confirmed: 'Confirmé', completed: 'Terminé', cancelled: 'Annulé' };
+    const exportStatusLabel = { new: 'Nouvelle', contacted: 'Client contacté', quoted: 'Devis envoyé', closed: 'Clôturée' };
+    let exportRequests = [];
     let cars = [];
     let appointments = [];
     let reservations = [];
@@ -404,6 +494,7 @@
       'add-car': 'car-form',
       vehicles: 'vehicle-list-section',
       appointments: 'appointments-section',
+      'export-requests': 'export-requests-section',
       social: 'social-form',
       'static-site': 'static-site-form',
       analytics: 'analytics-section',
@@ -503,8 +594,10 @@
       reservations = await api('/api/admin/reservations');
       renderReservations();
       appointments = await api('/api/admin/appointments');
+      exportRequests = await api('/api/admin/export-requests');
       renderDashboard();
       renderAppointments();
+      renderExportRequests();
     }
 
     const MONTHS = ['Jan.', 'Fév.', 'Mars', 'Avr.', 'Mai', 'Juin', 'Juil.', 'Août', 'Sept.', 'Oct.', 'Nov.', 'Déc.'];
@@ -569,6 +662,7 @@
       const alerts = [];
       const addAlert = (count, singular, plural, page, info = false) => { if (count) alerts.push(`<li><a class="${info ? 'info' : ''}" data-admin-page="${page}" href="?section=${page}"><i></i><b>${count}</b><span>${count > 1 ? plural : singular}</span></a></li>`); };
       addAlert(toConfirm, 'rendez-vous à confirmer', 'rendez-vous à confirmer', 'appointments');
+      addAlert(exportRequests.filter(item => item.status === 'new').length, 'nouvelle demande d’export', 'nouvelles demandes d’export', 'export-requests');
       addAlert(pending.length, 'réservation en attente de paiement', 'réservations en attente de paiement', 'reservations');
       addAlert(cars.filter(car => !String(car.description?.fr || '').trim()).length, 'véhicule sans description', 'véhicules sans description', 'vehicles');
       addAlert(cars.filter(car => (car.images?.length || (car.image ? 1 : 0)) < 2).length, 'véhicule avec moins de 2 photos', 'véhicules avec moins de 2 photos', 'vehicles');
@@ -594,11 +688,62 @@
       $('dash-updated').textContent = new Date().toLocaleString('fr-FR', { dateStyle: 'medium', timeStyle: 'short' });
     }
 
+    const normalizeSearch = value => String(value ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+    const carFilterIds = ['car-search', 'car-filter-status', 'car-filter-kind', 'car-filter-origin', 'car-filter-fuel'];
+
+    function filterCars(list, filters) {
+      const terms = normalizeSearch(filters.q).split(/\s+/).filter(Boolean);
+      const result = list.filter(car => {
+        if (filters.brand && car.brand !== filters.brand) return false;
+        if (filters.status && car.status !== filters.status) return false;
+        if (filters.kind && car.kind !== filters.kind) return false;
+        if (filters.origin && car.origin !== filters.origin) return false;
+        if (filters.fuel && car.fuel !== filters.fuel) return false;
+        if (!terms.length) return true;
+        const haystack = normalizeSearch([car.name, car.brand, car.trim, car.year, car.id, car.fuel, car.origin === 'Dubaï' ? 'Dubaï Émirats arabes unis' : car.origin].join(' '));
+        return terms.every(term => haystack.includes(term));
+      });
+      const byNumber = key => (a, b) => (Number(a[key]) || 0) - (Number(b[key]) || 0);
+      if (filters.sort === 'price-asc') result.sort(byNumber('price'));
+      else if (filters.sort === 'price-desc') result.sort((a, b) => byNumber('price')(b, a));
+      else if (filters.sort === 'year-desc') result.sort((a, b) => byNumber('year')(b, a));
+      else if (filters.sort === 'name') result.sort((a, b) => String(a.name).localeCompare(String(b.name), 'fr', { sensitivity: 'base' }));
+      return result;
+    }
+
+    function currentCarFilters() {
+      return { q: $('car-search').value, brand: carBrandFilter, status: $('car-filter-status').value, kind: $('car-filter-kind').value, origin: $('car-filter-origin').value, fuel: $('car-filter-fuel').value, sort: $('car-sort').value };
+    }
+
+    function resetCarFilters() {
+      carBrandFilter = '';
+      carFilterIds.forEach(id => { $(id).value = ''; });
+    }
+
     function renderCars() {
-      const visibleCars = carBrandFilter ? cars.filter(car => car.brand === carBrandFilter) : cars;
-      $('car-list').innerHTML = visibleCars.map(car => `<tr data-car-id="${esc(car.id)}"${car.id === highlightedCarId ? ' class="row-new"' : ''}><td><img src="${esc(imgUrl(car.image))}" alt=""></td><td><strong>${esc(car.name)}</strong><br><small>${esc(car.trim)} · ${esc(car.year)} · ${esc(car.origin)}</small></td><td>${Number(car.price).toLocaleString('fr-FR')} TND</td><td><span class="pill ${esc(car.status)}">${statusLabel[car.status] || ''}</span></td><td><div class="share-actions"><button class="light" type="button" data-share-facebook="${esc(car.id)}">Facebook</button><button class="light" type="button" data-share-instagram="${esc(car.id)}">Instagram</button></div></td><td style="white-space:nowrap"><button class="light" data-edit="${esc(car.id)}">Modifier</button> <button class="danger" data-delete="${esc(car.id)}">Supprimer</button></td></tr>`).join('') || '<tr><td colspan="6">Aucun véhicule pour cette marque.</td></tr>';
-      $('clear-car-filter').classList.toggle('hidden', !carBrandFilter);
-      $('clear-car-filter').textContent = carBrandFilter ? `Voir tous · ${carBrandFilter}` : 'Voir tous';
+      const brands = [...new Set(cars.map(car => car.brand).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'fr'));
+      if (carBrandFilter && !brands.includes(carBrandFilter)) brands.push(carBrandFilter);
+      $('car-filter-brand').innerHTML = '<option value="">Toutes les marques</option>' + brands.map(brand => `<option value="${esc(brand)}">${esc(brand)}</option>`).join('');
+      $('car-filter-brand').value = carBrandFilter;
+      const filters = currentCarFilters();
+      const visibleCars = filterCars(cars, filters);
+      const filtered = Boolean(filters.q.trim() || filters.brand || filters.status || filters.kind || filters.origin || filters.fuel);
+      const empty = cars.length ? 'Aucun véhicule ne correspond à votre recherche.' : 'Aucun véhicule enregistré pour le moment.';
+      $('car-list').innerHTML = visibleCars.map(car => `<tr data-car-id="${esc(car.id)}"${car.id === highlightedCarId ? ' class="row-new"' : ''}><td><img src="${esc(imgUrl(car.image))}" alt=""></td><td><strong>${esc(car.name)}</strong><br><small>${esc(car.trim)} · ${esc(car.year)} · ${esc(car.origin)}</small></td><td>${Number(car.price).toLocaleString('fr-FR')} TND</td><td><span class="pill ${esc(car.status)}">${statusLabel[car.status] || ''}</span></td><td><div class="share-actions"><button class="light" type="button" data-share-facebook="${esc(car.id)}">Facebook</button><button class="light" type="button" data-share-instagram="${esc(car.id)}">Instagram</button></div></td><td style="white-space:nowrap"><button class="light" data-edit="${esc(car.id)}">Modifier</button> <button class="danger" data-delete="${esc(car.id)}">Supprimer</button></td></tr>`).join('') || `<tr><td colspan="6">${empty}</td></tr>`;
+      $('car-count').textContent = filtered ? `${visibleCars.length} véhicule(s) sur ${cars.length}` : `${cars.length} véhicule(s)`;
+      $('clear-car-filter').classList.toggle('hidden', !filtered);
+      $('clear-car-filter').textContent = 'Réinitialiser les filtres';
+    }
+
+    function renderExportRequests() {
+      const amount = value => value === null || value === undefined ? 'Sur devis' : formatMoney(value);
+      $('export-request-list').innerHTML = exportRequests.map(item => {
+        const estimate = item.estimate || {};
+        const details = [item.year, item.km != null ? `${Number(item.km).toLocaleString('fr-FR')} km` : '', item.condition === 'neuf' ? 'Neuf' : 'Occasion', item.vehicleType === 'suv' ? 'SUV / 4×4' : 'Berline'].filter(Boolean).join(' · ');
+        const link = /^https?:\/\//.test(item.listingUrl || '') ? `<br><a href="${esc(item.listingUrl)}" target="_blank" rel="noopener noreferrer">Annonce ↗</a>` : '';
+        const departure = item.departureCountry === 'Autre' ? item.otherCountry : item.departureCountry;
+        return `<tr><td>${new Date(item.createdAt).toLocaleString('fr-FR')}<br><small>Réf. ${esc(String(item.id).slice(0, 8).toUpperCase())}</small></td><td><strong>${esc(item.brand)} ${esc(item.model)}</strong><br><small>${esc(details)}${item.vin ? `<br>VIN ${esc(item.vin)}` : ''}</small>${link}</td><td>${esc(departure)}${item.departureCity ? `<br><small>${esc(item.departureCity)}</small>` : ''}</td><td><strong>${esc(item.name)}</strong><br><small>${esc(item.email)} ${esc(item.phone)}</small>${item.note ? `<br><small>${esc(item.note)}</small>` : ''}</td><td>Valeur ${formatMoney(item.value)}<br><small>Transport ${amount(estimate.shipping)} · Assurance ${amount(estimate.insurance)} · Accompagnement ${amount(estimate.support)}${item.customs ? ` · Dédouanement ${amount(estimate.customs)}` : ''}</small><br><strong>Total ${amount(estimate.total)}</strong></td><td><select aria-label="Statut de la demande de ${esc(item.name)}" data-export-status="${esc(item.id)}">${Object.entries(exportStatusLabel).map(([value, label]) => `<option value="${value}" ${item.status === value ? 'selected' : ''}>${label}</option>`).join('')}</select></td><td><button class="danger" type="button" data-delete-export="${esc(item.id)}" aria-label="Supprimer la demande de ${esc(item.name)}">Supprimer</button></td></tr>`;
+      }).join('') || '<tr><td colspan="7">Aucune demande d’export pour le moment.</td></tr>';
     }
 
     function renderAppointments() {
@@ -702,7 +847,10 @@
       renderDashboard(); renderCars();
       showAdminPage('vehicles', true);
     });
-    $('clear-car-filter').addEventListener('click', () => { carBrandFilter = ''; renderDashboard(); renderCars(); });
+    $('clear-car-filter').addEventListener('click', () => { resetCarFilters(); $('car-sort').value = ''; renderDashboard(); renderCars(); });
+    $('car-search').addEventListener('input', renderCars);
+    $('car-filter-brand').addEventListener('change', () => { carBrandFilter = $('car-filter-brand').value; renderDashboard(); renderCars(); });
+    ['car-filter-status', 'car-filter-kind', 'car-filter-origin', 'car-filter-fuel', 'car-sort'].forEach(id => $(id).addEventListener('change', renderCars));
     $('dashboard-section').addEventListener('click', event => {
       const link = event.target.closest('a[data-admin-page]');
       if (!link) return;
@@ -741,6 +889,22 @@
       if (!button || !confirm('Supprimer ce rendez-vous ?')) return;
       try {
         await api('/api/admin/appointments/' + encodeURIComponent(button.dataset.deleteAppointment), { method: 'DELETE' });
+        await loadAll();
+      } catch (error) { alert(error.message); }
+    });
+    $('export-request-list').addEventListener('change', async event => {
+      const select = event.target.closest('[data-export-status]');
+      if (!select) return;
+      try {
+        await api('/api/admin/export-requests/' + encodeURIComponent(select.dataset.exportStatus), { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: select.value }) });
+        await loadAll();
+      } catch (error) { alert(error.message); }
+    });
+    $('export-request-list').addEventListener('click', async event => {
+      const button = event.target.closest('[data-delete-export]');
+      if (!button || !confirm('Supprimer cette demande d’export ?')) return;
+      try {
+        await api('/api/admin/export-requests/' + encodeURIComponent(button.dataset.deleteExport), { method: 'DELETE' });
         await loadAll();
       } catch (error) { alert(error.message); }
     });
@@ -903,7 +1067,7 @@
         resetForm();
         message('car-msg', 'Votre annonce n’est pas encore enregistrée.', true);
         highlightedCarId = saved?.id || null;
-        carBrandFilter = '';
+        resetCarFilters();
         await loadAll();
         showAdminPage('vehicles', true);
         $('admin-content').scrollTop = 0;
@@ -924,7 +1088,7 @@
       return {
         instagramUsername: $('s-insta').value.trim(), facebookUrl: $('s-fb').value.trim(), tiktokUsername: $('s-tiktok').value.trim(),
         posts: [...$('social-posts').querySelectorAll('input')].map(input => input.value.trim()).filter(Boolean),
-        live: { active: $('l-active').checked, platform: $('l-platform').value, url: $('l-url').value.trim() }
+        live: { active: $('l-active').checked, platform: $('l-platform').value, url: $('l-url').value.trim(), player: $('l-player').value.trim() }
       };
     }
     function toggleLiveUrl() {
@@ -937,6 +1101,12 @@
       $('l-url').required = facebook;
       const parsed = facebook ? SocialLinks.parseSocialUrl($('l-url').value) : null;
       $('l-url').setCustomValidity(facebook && (!parsed || parsed.platform !== 'facebook') ? 'Pour un live Facebook, collez le lien de la vidéo en direct.' : '');
+      const playerEnabled = active && !facebook;
+      $('l-player-wrap').classList.toggle('hidden', !playerEnabled);
+      $('l-player').disabled = !playerEnabled || socialSaving || adminReadOnly;
+      const playerInvalid = playerEnabled && SocialLinks.parseLivePlayer($('l-player').value) === null;
+      $('l-player').setCustomValidity(playerInvalid ? 'Lien du lecteur intégré invalide : collez un lien HTTPS ou le code <iframe> fourni par votre outil de diffusion.' : '');
+      $('l-player').setAttribute('aria-invalid', String(playerInvalid));
     }
     function updatePostRow(row) {
       const input = row.querySelector('input');
@@ -1007,6 +1177,7 @@
       $('l-active').checked = Boolean(social.live?.active);
       $('l-platform').value = social.live?.platform || 'instagram';
       $('l-url').value = social.live?.platform === 'facebook' ? social.live.url || '' : '';
+      $('l-player').value = social.live?.platform !== 'facebook' ? social.live?.player || '' : '';
       savedSocialBody = JSON.stringify(socialFormData());
       updateSocialState();
     }
@@ -1079,6 +1250,19 @@
       $('st-phone-display').value = settings.contact?.phoneDisplay || '';
       $('st-whatsapp').value = settings.contact?.whatsapp || '';
       $('st-email').value = settings.contact?.email || '';
+      const shipping = settings.shipping || {};
+      $('st-shipping-france').value = shipping.france ?? '';
+      $('st-shipping-dubai').value = shipping.dubai ?? '';
+      $('st-shipping-suv').value = shipping.suv ?? '';
+      $('st-insurance-rate').value = shipping.insuranceRate ?? '';
+      $('st-support-fee').value = shipping.support ?? '';
+      const exportShipping = settings.exportShipping || {};
+      $('st-export-france').value = exportShipping.france ?? '';
+      $('st-export-dubai').value = exportShipping.dubai ?? '';
+      $('st-export-suv').value = exportShipping.suv ?? '';
+      $('st-export-insurance').value = exportShipping.insuranceRate ?? '';
+      $('st-export-support').value = exportShipping.support ?? '';
+      $('st-export-customs').value = exportShipping.customs ?? '';
       dashContactEmail = settings.contact?.email || '';
       $('static-site-status').textContent = generatedAt ? `Dernière génération : ${new Date(generatedAt).toLocaleString('fr-FR')}` : '';
     }
@@ -1118,7 +1302,7 @@
       message('static-site-msg', 'Régénération en cours…', true);
       try {
         renderStaticSite(await api(url, options));
-        message('static-site-msg', 'Site vitrine régénéré. Republiez le dossier front-office pour le mettre en ligne.', true);
+        message('static-site-msg', options.method === 'PUT' ? 'Enregistrement effectué.' : 'Site vitrine régénéré. Republiez le dossier front-office pour le mettre en ligne.', true);
       } catch (error) { message('static-site-msg', error.message); }
       finally { controls.forEach(control => { control.disabled = false; }); }
     }
@@ -1127,7 +1311,11 @@
       const body = new FormData();
       for (const [key, id] of Object.entries({
         siteUrl: 'st-url', title: 'st-title', description: 'st-description',
-        phone: 'st-phone', phoneDisplay: 'st-phone-display', whatsapp: 'st-whatsapp', email: 'st-email'
+        phone: 'st-phone', phoneDisplay: 'st-phone-display', whatsapp: 'st-whatsapp', email: 'st-email',
+        shippingFrance: 'st-shipping-france', shippingDubai: 'st-shipping-dubai', shippingSuv: 'st-shipping-suv',
+        insuranceRate: 'st-insurance-rate', supportFee: 'st-support-fee',
+        exportFrance: 'st-export-france', exportDubai: 'st-export-dubai', exportSuv: 'st-export-suv',
+        exportInsuranceRate: 'st-export-insurance', exportSupport: 'st-export-support', exportCustoms: 'st-export-customs'
       })) body.set(key, $(id).value);
       if ($('st-wallpaper').files[0]) body.set('wallpaper', $('st-wallpaper').files[0]);
       if (resetWallpaper) body.set('resetWallpaper', 'true');
@@ -1140,6 +1328,39 @@
       }
       staticSiteRequest('/api/admin/static-site/publish', { method: 'POST' });
     });
+    const siteForm = $('static-site-form');
+    const tnd = value => `${Math.round(value).toLocaleString('fr-FR')} TND`;
+    function updateSitePreview() {
+      for (const id of ['st-title', 'st-description']) {
+        const counter = $(`${id}-count`), length = $(id).value.length, max = Number(counter.dataset.max);
+        counter.textContent = `${length} / ${max} caractères recommandés`;
+        counter.classList.toggle('over', length > max);
+      }
+      let host = 'prime-cars.netlify.app';
+      try { if ($('st-url').value) host = new URL($('st-url').value).host + new URL($('st-url').value).pathname.replace(/\/$/, ''); } catch { /* keep default while typing */ }
+      $('serp-url').textContent = host;
+      $('serp-title').textContent = $('st-title').value || '—';
+      const description = $('st-description').value;
+      $('serp-description').textContent = description.length > 160 ? `${description.slice(0, 157)}…` : description || '—';
+      $('preview-phone').textContent = $('st-phone-display').value || $('st-phone').value || '—';
+      $('preview-whatsapp').textContent = $('st-whatsapp').value || $('st-phone').value || '—';
+      $('preview-email').textContent = $('st-email').value || '—';
+      const num = id => Number($(id).value) || 0;
+      const importFees = num('st-shipping-dubai') + num('st-shipping-suv') + 100000 * num('st-insurance-rate') / 100 + num('st-support-fee');
+      const exportFees = num('st-export-dubai') + num('st-export-suv') + 100000 * num('st-export-insurance') / 100 + num('st-export-support') + num('st-export-customs');
+      $('rate-example').textContent = `Exemple, SUV de 100 000 TND depuis les Émirats : export ${tnd(importFees)} · export seul avec dédouanement ${tnd(exportFees)}`;
+    }
+    const setSiteDirty = dirty => { $('static-site-dirty').textContent = dirty ? 'Modifications non enregistrées' : ''; $('static-site-dirty').classList.toggle('over', dirty); };
+    siteForm.addEventListener('input', () => { updateSitePreview(); setSiteDirty(true); });
+    siteForm.addEventListener('change', () => setSiteDirty(true));
+    $('st-wallpaper-reset').addEventListener('click', () => setSiteDirty(true));
+    const renderStaticSiteBase = renderStaticSite;
+    renderStaticSite = data => { renderStaticSiteBase(data); updateSitePreview(); setSiteDirty(false); };
+    siteForm.querySelectorAll('[data-site-jump]').forEach(button => button.addEventListener('click', () => $(button.dataset.siteJump).scrollIntoView({ behavior: 'smooth', block: 'start' })));
+    const wallpaperDrop = siteForm.querySelector('.wallpaper-drop');
+    ['dragenter', 'dragover'].forEach(type => wallpaperDrop.addEventListener(type, () => wallpaperDrop.classList.add('drag-over')));
+    ['dragleave', 'drop'].forEach(type => wallpaperDrop.addEventListener(type, () => wallpaperDrop.classList.remove('drag-over')));
+    updateSitePreview();
 
     // ---------- Google Analytics: fictitious, deterministic demo data until the GA connection is set up ----------
     function demoRandom(seed) {

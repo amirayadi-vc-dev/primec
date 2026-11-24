@@ -120,6 +120,62 @@ test('social posts, site settings and analytics remain editable only in memory',
   await assert.rejects(api('/api/unsupported'), /non prise en charge/);
 });
 
+test('admin vehicle list filters by search terms, criteria and sorts results', () => {
+  const html = fs.readFileSync(path.join(__dirname, '..', 'admin.html'), 'utf8');
+  const normalize = html.match(/const normalizeSearch = .*;/);
+  const filter = html.match(/function filterCars\(list, filters\) \{[\s\S]*?\n    \}/);
+  assert.ok(normalize && filter);
+  const filterCars = vm.runInNewContext(`${normalize[0]}\n${filter[0]}\nfilterCars`);
+  const cars = [
+    { id: 'a', name: 'Mercedes-Benz Classe C', brand: 'Mercedes-Benz', trim: 'AMG Line', year: 2022, fuel: 'Diesel', origin: 'France', kind: 'occasion', status: 'available', price: 90000 },
+    { id: 'b', name: 'BMW X5', brand: 'BMW', trim: 'M Sport', year: 2025, fuel: 'Hybride', origin: 'Dubaï', kind: 'neuf', status: 'reserved', price: 250000 },
+    { id: 'c', name: 'Audi A3', brand: 'Audi', trim: 'S line', year: 2020, fuel: 'Électrique', origin: 'Dubaï', kind: 'occasion', status: 'sold', price: 60000 }
+  ];
+  const ids = filters => Array.from(filterCars(cars, { q: '', ...filters }), car => car.id);
+  assert.deepEqual(ids({}), ['a', 'b', 'c']);
+  assert.deepEqual(ids({ q: 'mercedes amg' }), ['a']);
+  assert.deepEqual(ids({ q: 'electrique' }), ['c']);
+  assert.deepEqual(ids({ q: 'emirats' }), ['b', 'c']);
+  assert.deepEqual(ids({ origin: 'Dubaï', kind: 'occasion' }), ['c']);
+  assert.deepEqual(ids({ status: 'reserved' }), ['b']);
+  assert.deepEqual(ids({ brand: 'BMW', fuel: 'Diesel' }), []);
+  assert.deepEqual(ids({ sort: 'price-desc' }), ['b', 'a', 'c']);
+  assert.deepEqual(ids({ sort: 'year-desc' }), ['b', 'a', 'c']);
+  assert.deepEqual(ids({ sort: 'name' }), ['c', 'b', 'a']);
+  assert.deepEqual(Array.from(cars, car => car.id), ['a', 'b', 'c']);
+});
+
+test('site settings report save, regeneration and errors appropriately in live and demo admins', async () => {
+  const live = require('./sync').renderLiveAdmin();
+  const demo = fs.readFileSync(path.join(__dirname, 'allani', 'index.html'), 'utf8');
+  for (const [html, saved, regenerated] of [
+    [live, 'Enregistrement effectué.', 'Site vitrine régénéré. Republiez le dossier front-office pour le mettre en ligne.'],
+    [demo, 'Modifications enregistrées dans la démo uniquement.', 'Simulation terminée. Aucun fichier publié ni modifié.']
+  ]) {
+    const source = html.match(/async function staticSiteRequest\(url, options\) \{[\s\S]*?\n    \}/);
+    assert.ok(source);
+    const messages = [];
+    let fail = false;
+    const request = vm.runInNewContext(`(${source[0]})`, {
+      $: () => ({}),
+      message: (id, text, ok) => messages.push({ id, text, ok }),
+      renderStaticSite: () => {},
+      api: async () => { if (fail) throw new Error('Erreur de test'); return {}; }
+    });
+    await request('/api/admin/static-site', { method: 'PUT' });
+    assert.deepEqual(messages.pop(), { id: 'static-site-msg', text: saved, ok: true });
+    await request('/api/admin/static-site/publish', { method: 'POST' });
+    assert.deepEqual(messages.pop(), { id: 'static-site-msg', text: regenerated, ok: true });
+    fail = true;
+    await request('/api/admin/static-site', { method: 'PUT' });
+    assert.deepEqual(messages.pop(), { id: 'static-site-msg', text: 'Erreur de test', ok: undefined });
+  }
+  const translations = {};
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname, 'admin-i18n.js'), 'utf8'), { DICT: translations, PATTERNS: [] });
+  assert.deepEqual(Array.from(translations['Enregistrement effectué.']), ['Saved successfully.', 'تم الحفظ بنجاح.']);
+  assert.deepEqual(Array.from(translations['Modifications enregistrées dans la démo uniquement.']), ['Changes saved in the demo only.', 'تم حفظ التعديلات في العرض التجريبي فقط.']);
+});
+
 test('generated demo embeds the adapter, enables controls and keeps live rendering unchanged', () => {
   const html = fs.readFileSync(path.join(__dirname, 'allani', 'index.html'), 'utf8');
   assert.match(html, /const demoAdminApi = createDemoAdminApi\(/);
@@ -135,7 +191,7 @@ test('generated demo embeds the adapter, enables controls and keeps live renderi
   assert.match(html, /\$\('logout'\)\.addEventListener\('click', \(\) => \{ showLogin\(\); \}\)/);
   assert.match(html, /showAdminPage\(new URLSearchParams\(location\.search\)\.get\('section'\)\);\s*showLogin\(\);/);
   assert.doesNotMatch(html, /api\('\/api\/admin\/(?:login|logout)'/);
-  assert.match(html, /message\('car-msg', editingId \? 'Véhicule mis à jour\.' : 'Véhicule ajouté à la démo\.'/);
+  assert.match(html, /\$\('car-toast-text'\)\.textContent = updated \? 'Vos modifications sont enregistrées\.' : 'Véhicule ajouté à la démo\.'/);
   for (const [, script] of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)) {
     new vm.Script(script);
   }

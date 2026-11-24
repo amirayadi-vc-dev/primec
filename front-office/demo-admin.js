@@ -6,6 +6,8 @@ function createDemoAdminApi(initialSnapshot) {
     ...snapshot.staticSite
   };
   const appointments = [];
+  // The static demo never receives real export requests (the public form only shows a demo confirmation).
+  const exportRequests = [];
   const photoUrls = new Set();
   const placeholder = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="240"><rect width="100%" height="100%" fill="#eee"/><text x="50%" y="50%" text-anchor="middle" fill="#777" font-family="sans-serif">Prime Cars</text></svg>');
   const copy = value => structuredClone(value);
@@ -36,6 +38,7 @@ function createDemoAdminApi(initialSnapshot) {
       if (url === '/api/cars') return copy(snapshot.cars);
       if (url === '/api/social') return copy(snapshot.social);
       if (url === '/api/admin/appointments') return copy(appointments);
+      if (url === '/api/admin/export-requests') return copy(exportRequests);
       if (url === '/api/admin/reservations') return [];
       if (url === '/api/admin/static-site') return { settings: copy(snapshot.staticSite), generatedAt: null };
       if (url === '/api/admin/analytics') return copy(snapshot.analytics);
@@ -96,6 +99,16 @@ function createDemoAdminApi(initialSnapshot) {
         return copy(appointment);
       }
     }
+    const exportMatch = url.match(/^\/api\/admin\/export-requests\/([^/]+)$/);
+    if (exportMatch && (method === 'PATCH' || method === 'DELETE')) {
+      const item = findItem(exportRequests, decodeURIComponent(exportMatch[1]));
+      if (method === 'DELETE') {
+        exportRequests.splice(exportRequests.indexOf(item), 1);
+        return { ok: true };
+      }
+      item.status = readBody(options).status;
+      return copy(item);
+    }
     if (url === '/api/admin/social' && method === 'PUT') {
       const body = readBody(options);
       snapshot.social = { ...body, posts: body.posts.map(url => ({ url })) };
@@ -104,10 +117,18 @@ function createDemoAdminApi(initialSnapshot) {
     if (url === '/api/admin/static-site' && method === 'PUT') {
       const multipart = options.body instanceof FormData;
       const form = multipart ? options.body : null;
+      const pickRates = fields => Object.fromEntries(Object.entries(fields)
+        .filter(([, field]) => form.get(field) !== null && form.get(field) !== '').map(([key, field]) => [key, Number(form.get(field))]));
       const body = multipart ? {
         siteUrl: form.get('siteUrl'), title: form.get('title'), description: form.get('description'),
-        contact: { phone: form.get('phone'), phoneDisplay: form.get('phoneDisplay'), whatsapp: form.get('whatsapp'), email: form.get('email') }
+        contact: { phone: form.get('phone'), phoneDisplay: form.get('phoneDisplay'), whatsapp: form.get('whatsapp'), email: form.get('email') },
+        shipping: pickRates({ france: 'shippingFrance', dubai: 'shippingDubai', suv: 'shippingSuv', insuranceRate: 'insuranceRate', support: 'supportFee' }),
+        exportShipping: pickRates({ france: 'exportFrance', dubai: 'exportDubai', suv: 'exportSuv', insuranceRate: 'exportInsuranceRate', support: 'exportSupport', customs: 'exportCustoms' })
       } : readBody(options);
+      const rates = [...Object.entries(body.shipping || {}), ...Object.entries(body.exportShipping || {})];
+      if (rates.some(([key, value]) => !Number.isFinite(value) || value < 0 || (key === 'insuranceRate' && value > 100))) throw new Error('Tarifs d’importation invalides : nombres positifs uniquement (assurance entre 0 et 100 %).');
+      body.shipping = { ...snapshot.staticSite.shipping, ...body.shipping };
+      body.exportShipping = { ...snapshot.staticSite.exportShipping, ...body.exportShipping };
       const resetValue = multipart ? form.get('resetWallpaper') : body.resetWallpaper;
       if (resetValue !== null && resetValue !== undefined && ![true, false, 'true', 'false'].includes(resetValue)) {
         throw new Error('Choix de l’image de fond invalide.');

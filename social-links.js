@@ -67,7 +67,29 @@
     return null;
   }
 
-  const links = { normalizeProfile, profileUrl, parseSocialUrl };
+  // Embedded live player (Restream, YouTube Live…): accepts a player URL or a pasted <iframe> code.
+  function parseLivePlayer(raw) {
+    let value = String(raw ?? '').trim();
+    if (!value) return '';
+    if (value.length > 2000) return null;
+    const iframe = value.match(/<iframe\b[^>]*\bsrc\s*=\s*["']([^"']+)["']/i);
+    if (iframe) value = iframe[1].replace(/&amp;/g, '&');
+    else if (/[<>"']/.test(value)) return null;
+    const url = secureUrl(value);
+    if (!url) return null;
+    url.hash = '';
+    const host = url.hostname.replace(/^(www\.|m\.)/, '');
+    const youtubeId = host === 'youtu.be' ? url.pathname.slice(1)
+      : host === 'youtube.com' ? (url.pathname === '/watch' ? url.searchParams.get('v') : (url.pathname.match(/^\/(?:live|embed)\/([\w-]+)/) || [])[1]) : null;
+    if (youtubeId !== null && youtubeId !== undefined) {
+      if (!/^[\w-]{6,20}$/.test(youtubeId)) return null;
+      return `https://www.youtube.com/embed/${youtubeId}?autoplay=1`;
+    }
+    if (host === 'youtube.com') return null;
+    return url.href;
+  }
+
+  const links = { normalizeProfile, profileUrl, parseSocialUrl, parseLivePlayer };
   if (typeof module !== 'undefined' && module.exports) module.exports = links;
   else window.SocialLinks = links;
 }());

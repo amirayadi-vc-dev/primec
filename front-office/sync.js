@@ -17,6 +17,10 @@ const DEFAULT_SETTINGS = {
   title: 'Prime Cars — Voitures neuves et d’occasion de France et des Émirats arabes unis à Tunis',
   description: 'Prime Cars sélectionne des voitures neuves et d’occasion en France et aux Émirats arabes unis et les livre jusqu’à Tunis : Mercedes, BMW, Audi, Porsche, Volkswagen. Accompagnement à chaque étape.',
   contact: { phone: '+971543280723', phoneDisplay: '+971 54 328 0723', whatsapp: '+971543280723', email: 'contact@example.com' },
+  // Import cost estimate (TND, insurance in % of the vehicle value), editable in the back-office.
+  shipping: { france: 4500, dubai: 8500, suv: 1500, insuranceRate: 1, support: 1200 },
+  // « Export seul » (customer's own vehicle, not in the catalogue): separate rates, plus optional customs clearance.
+  exportShipping: { france: 5500, dubai: 9500, suv: 1500, insuranceRate: 1, support: 1800, customs: 900 },
   wallpaperImage: '',
   defaultWallpaperImage: DEFAULT_WALLPAPER
 };
@@ -38,7 +42,7 @@ function readSettings(saved) {
     saved = {};
     try { saved = readJson('static-site.json'); } catch (error) { if (error.code !== 'ENOENT') throw error; }
   }
-  return { ...DEFAULT_SETTINGS, ...saved, contact: { ...DEFAULT_SETTINGS.contact, ...saved.contact }, defaultWallpaperImage: DEFAULT_WALLPAPER };
+  return { ...DEFAULT_SETTINGS, ...saved, contact: { ...DEFAULT_SETTINGS.contact, ...saved.contact }, shipping: { ...DEFAULT_SETTINGS.shipping, ...saved.shipping }, exportShipping: { ...DEFAULT_SETTINGS.exportShipping, ...saved.exportShipping }, defaultWallpaperImage: DEFAULT_WALLPAPER };
 }
 // Google Analytics (back-office « Google Analytics » page, data/analytics.json); empty ID = no tracking.
 const MEASUREMENT_ID_RE = /^G-[A-Z0-9]{4,12}$/;
@@ -212,7 +216,8 @@ function renderSite(options = {}, { live = false } = {}) {
     ...(live ? [] : [
       ["(await fetch('/api/cars').then(response=>response.ok?response.json():[]).catch(()=>[]))", 'window.SITE_DATA.cars'],
       ["await fetch('/api/social').then(response=>response.json()).catch(()=>({posts:[]}))", 'window.SITE_DATA.social'],
-      ["fetch('/api/payment-config')", 'Promise.reject()']
+      ["fetch('/api/payment-config')", 'Promise.reject()'],
+      ["const EXPORT_API='/api/export-requests';", "const EXPORT_API='';"]
     ]),
     // Rebranding: ALLANI Auto -> Prime Cars, with the PrimeCar logo
     ['<span class="brandmark"><b></b><b></b></span>ALLANI<small>AUTO</small>', '<span class="logo-img brand-logo" aria-hidden="true"></span>'],
@@ -242,7 +247,7 @@ function renderSite(options = {}, { live = false } = {}) {
     html = html.replace(I18N_TAG, () => `<script>\n${i18n}</script>`);
   }
   const contactScript = fs.readFileSync(path.join(OUT, 'contact.js'), 'utf8').replace(/<\/script/gi, '<\\/script');
-  html = html.replace('</head>', () => `  <script>\nwindow.SITE_CONTACT = ${JSON.stringify(CONTACT).replace(/</g, '\\u003c')};\n${contactScript}</script>\n</head>`);
+  html = html.replace('</head>', () => `  <script>\nwindow.SITE_CONTACT = ${JSON.stringify(CONTACT).replace(/</g, '\\u003c')};\nwindow.SITE_SHIPPING = ${JSON.stringify(settings.shipping)};\nwindow.SITE_EXPORT_SHIPPING = ${JSON.stringify(settings.exportShipping)};\n${contactScript}</script>\n</head>`);
   if (analytics.measurementId) {
     const analyticsScript = fs.readFileSync(path.join(OUT, 'analytics.js'), 'utf8').replace(/<\/script/gi, '<\\/script');
     html = html.replace('</head>', () => `  <script>\nwindow.SITE_ANALYTICS = ${JSON.stringify(analytics)};\n${analyticsScript}</script>\n</head>`);
@@ -313,6 +318,7 @@ function renderAdmin({ snapshot, i18n, logo }) {
     ["      if (!editingId && !selectedPhotos.length) {\n        $('photo-error').textContent = 'Ajoutez au moins une photo.';\n        $('f-photos').focus();\n        return;\n      }\n", ''],
     ['Véhicule ajouté et visible sur le site.', 'Véhicule ajouté à la démo.'],
     ['Réseaux sociaux enregistrés. Pour le site vitrine statique, régénérez puis republiez le dossier front-office.', 'Réseaux sociaux enregistrés dans la démo uniquement.'],
+    ['Enregistrement effectué.', 'Modifications enregistrées dans la démo uniquement.'],
     ['Site vitrine régénéré. Republiez le dossier front-office pour le mettre en ligne.', 'Simulation terminée. Aucun fichier publié ni modifié.'],
     ['Suivi activé sur le site vitrine. Republiez le dossier front-office pour le mettre en ligne.', 'ID enregistré dans la démo uniquement. Aucun suivi activé.'],
     ['Suivi désactivé sur le site vitrine. Republiez le dossier front-office.', 'ID effacé dans la démo uniquement. Aucun suivi modifié.'],

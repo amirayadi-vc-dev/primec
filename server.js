@@ -9,7 +9,7 @@ const express = require('express');
 const multer = require('multer');
 const Stripe = require('stripe');
 const staticSite = require('./front-office/sync');
-const { parseSocialUrl, normalizeProfile } = require('./social-links');
+const { parseSocialUrl, normalizeProfile, parseLivePlayer } = require('./social-links');
 const { storageFromEnvironment, IMAGE_NAME_RE, uploadNameFromUrl } = require('./storage');
 
 const PORT = Number(process.env.PORT || 3000);
@@ -315,7 +315,7 @@ app.put('/api/admin/social', requireAdmin, async (req, res) => {
   if (facebookUrl === null) return res.status(400).json({ error: 'Lien de page Facebook invalide.' });
   const livePlatform = body.live?.platform || 'instagram';
   if (!['instagram', 'facebook', 'tiktok'].includes(livePlatform)) return res.status(400).json({ error: 'Plateforme du live invalide.' });
-  const live = { active: Boolean(body.live?.active), platform: livePlatform, url: '', embed: '' };
+  const live = { active: Boolean(body.live?.active), platform: livePlatform, url: '', embed: '', player: '' };
   if (live.active && live.platform === 'facebook') {
     const parsed = parseSocialUrl(body.live?.url);
     if (!parsed || parsed.platform !== 'facebook') return res.status(400).json({ error: 'Pour un live Facebook, collez le lien de la vidéo en direct.' });
@@ -329,6 +329,11 @@ app.put('/api/admin/social', requireAdmin, async (req, res) => {
   if (live.active && live.platform === 'tiktok') {
     if (!tiktokUsername) return res.status(400).json({ error: 'Renseignez le compte TikTok pour annoncer le live.' });
     live.url = `https://www.tiktok.com/@${tiktokUsername}/live`;
+  }
+  if (live.active && live.platform !== 'facebook') {
+    const player = parseLivePlayer(body.live?.player);
+    if (player === null) return res.status(400).json({ error: 'Lien du lecteur intégré invalide : collez un lien HTTPS ou le code <iframe> fourni par votre outil de diffusion.' });
+    live.player = player;
   }
   const social = { instagramUsername: username, facebookUrl, tiktokUsername, posts, live };
   await writeJson('social.json', social);
@@ -351,6 +356,18 @@ async function regenerateStaticSite() {
   }
 }
 const PHONE_RE = /^\+?\d{6,15}$/;
+// Validates optional rate fields (TND amounts, insuranceRate in %); empty fields keep the saved value.
+function parseRates(input) {
+  const rates = {};
+  for (const [key, max] of Object.entries({ france: 1e6, dubai: 1e6, suv: 1e6, insuranceRate: 100, support: 1e6, customs: 1e6 })) {
+    const raw = input?.[key];
+    if (raw === undefined || raw === null || raw === '') continue;
+    const value = Number(raw);
+    if (!Number.isFinite(value) || value < 0 || value > max) return null;
+    rates[key] = value;
+  }
+  return rates;
+}
 
 app.get('/api/admin/static-site', requireAdmin, async (req, res) => res.json(await staticSiteStatus()));
 
@@ -381,12 +398,23 @@ app.put('/api/admin/static-site', requireAdmin, wallpaperUpload.single('wallpape
   if (!PHONE_RE.test(whatsapp)) return res.status(400).json({ error: 'Numéro WhatsApp invalide (ex. +971543280723).' });
   if (!/^[+\d\s().-]+$/.test(phoneDisplay)) return res.status(400).json({ error: 'Numéro affiché invalide : chiffres, espaces, +, -, ( ) uniquement.' });
   if (!/^[^\s@<>"']+@[^\s@<>"']+\.[^\s@<>"']+$/.test(email)) return res.status(400).json({ error: 'Adresse e-mail invalide.' });
+  const multipart = req.is('multipart/form-data');
+  const shipping = parseRates(multipart ? {
+    france: body.shippingFrance, dubai: body.shippingDubai, suv: body.shippingSuv, insuranceRate: body.insuranceRate, support: body.supportFee
+  } : body.shipping);
+  const exportShipping = parseRates(multipart ? {
+    france: body.exportFrance, dubai: body.exportDubai, suv: body.exportSuv, insuranceRate: body.exportInsuranceRate,
+    support: body.exportSupport, customs: body.exportCustoms
+  } : body.exportShipping);
+  if (!shipping || !exportShipping) return res.status(400).json({ error: 'Tarifs d’importation invalides : nombres positifs uniquement (assurance entre 0 et 100 %).' });
   const newImages = req.file ? await saveImages([req.file]) : [];
   try {
     await storage.change(['static-site.json'], documents => {
       const previous = documents['static-site.json'];
       documents['static-site.json'] = {
         ...previous, siteUrl, title, description, contact: { phone, phoneDisplay, whatsapp, email },
+        shipping: { ...previous.shipping, ...shipping },
+        exportShipping: { ...previous.exportShipping, ...exportShipping },
         wallpaperImage: newImages[0] || (resetWallpaper ? '' : previous.wallpaperImage || '')
       };
     });
@@ -593,6 +621,80 @@ app.delete('/api/admin/appointments/:id', requireAdmin, async (req, res) => {
     const index = appointments.findIndex(item => item.id === req.params.id);
     if (index < 0) throw httpError(404, 'Rendez-vous introuvable.');
     appointments.splice(index, 1);
+  });
+  res.json({ ok: true });
+});
+
+// ---------- « Export seul » requests (customer's own vehicle, not in the catalogue) ----------
+const EXPORT_STATUSES = ['new', 'contacted', 'quoted', 'closed'];
+const EXPORT_COUNTRIES = ['France', 'Dubaï', 'Autre'];
+const MAX_EXPORT_REQUESTS = 5000;
+function exportEstimate(request, rates) {
+  const insurance = Math.round(request.value * rates.insuranceRate / 100);
+  const customs = request.customs ? rates.customs : 0;
+  if (request.departureCountry === 'Autre') return { shipping: null, insurance, support: rates.support, customs, total: null };
+  const shipping = (request.departureCountry === 'France' ? rates.france : rates.dubai) + (request.vehicleType === 'suv' ? rates.suv : 0);
+  return { shipping, insurance, support: rates.support, customs, total: request.value + shipping + insurance + rates.support + customs };
+}
+
+app.post('/api/export-requests', async (req, res) => {
+  const body = req.body || {};
+  const currentYear = new Date().getFullYear();
+  const request = {
+    brand: text(body.brand, 60), model: text(body.model, 80),
+    year: Number(body.year), km: Number(body.km), value: Number(body.value),
+    vin: text(body.vin, 40).toUpperCase(), listingUrl: text(body.listingUrl, 300),
+    departureCountry: text(body.departureCountry, 20), otherCountry: text(body.otherCountry, 60), departureCity: text(body.departureCity, 80),
+    vehicleType: body.vehicleType === 'suv' ? 'suv' : 'berline', condition: body.condition === 'neuf' ? 'neuf' : 'occasion',
+    customs: body.customs === true || body.customs === 'true',
+    name: text(body.name, 80), email: text(body.email, 120), phone: text(body.phone, 30), note: text(body.note, 500)
+  };
+  if (!request.brand || !request.model) return res.status(400).json({ error: 'Marque et modèle requis.' });
+  if (!Number.isInteger(request.year) || request.year < 1950 || request.year > currentYear + 1) return res.status(400).json({ error: 'Année invalide.' });
+  if (!Number.isInteger(request.km) || request.km < 0 || request.km > 2000000) return res.status(400).json({ error: 'Kilométrage invalide.' });
+  if (!Number.isFinite(request.value) || request.value <= 0 || request.value > 1e8) return res.status(400).json({ error: 'Valeur d’achat invalide.' });
+  if (request.vin && !/^[A-HJ-NPR-Z0-9]{17}$/.test(request.vin)) return res.status(400).json({ error: 'Numéro de châssis (VIN) invalide : 17 caractères, sans I, O ni Q.' });
+  if (request.listingUrl) {
+    try { if (!['http:', 'https:'].includes(new URL(request.listingUrl).protocol)) throw 0; }
+    catch { return res.status(400).json({ error: 'Lien de l’annonce invalide.' }); }
+  }
+  if (!EXPORT_COUNTRIES.includes(request.departureCountry)) return res.status(400).json({ error: 'Pays de départ invalide.' });
+  if (request.departureCountry === 'Autre' && !request.otherCountry) return res.status(400).json({ error: 'Précisez le pays de départ.' });
+  if (request.departureCountry !== 'Autre') request.otherCountry = '';
+  if (!request.name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(request.email)) return res.status(400).json({ error: 'Nom et e-mail valides requis.' });
+  if (request.phone && !/^[+\d\s().-]{6,30}$/.test(request.phone)) return res.status(400).json({ error: 'Numéro de téléphone invalide.' });
+  const item = await storage.change(['static-site.json', 'export-requests.json'], documents => {
+    const requests = documents['export-requests.json'];
+    if (requests.length >= MAX_EXPORT_REQUESTS) throw httpError(503, 'Demandes temporairement indisponibles. Contactez-nous par téléphone ou WhatsApp.');
+    const rates = staticSite.readSettings(documents['static-site.json']).exportShipping;
+    const entry = { id: crypto.randomUUID(), ...request, estimate: exportEstimate(request, rates), status: 'new', createdAt: new Date().toISOString() };
+    requests.push(entry);
+    return entry;
+  });
+  res.status(201).json({ id: item.id, estimate: item.estimate });
+});
+
+app.get('/api/admin/export-requests', requireAdmin, async (req, res) => {
+  res.json((await readJson('export-requests.json')).slice().reverse());
+});
+
+app.patch('/api/admin/export-requests/:id', requireAdmin, async (req, res) => {
+  if (!EXPORT_STATUSES.includes(req.body?.status)) return res.status(400).json({ error: 'Statut de demande invalide.' });
+  const item = await storage.change(['export-requests.json'], documents => {
+    const entry = documents['export-requests.json'].find(request => request.id === req.params.id);
+    if (!entry) throw httpError(404, 'Demande introuvable.');
+    entry.status = req.body.status;
+    return entry;
+  });
+  res.json(item);
+});
+
+app.delete('/api/admin/export-requests/:id', requireAdmin, async (req, res) => {
+  await storage.change(['export-requests.json'], documents => {
+    const requests = documents['export-requests.json'];
+    const index = requests.findIndex(request => request.id === req.params.id);
+    if (index < 0) throw httpError(404, 'Demande introuvable.');
+    requests.splice(index, 1);
   });
   res.json({ ok: true });
 });

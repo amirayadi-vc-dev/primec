@@ -9,9 +9,12 @@ const DOCUMENT_DEFAULTS = {
   'static-site.json': {},
   'analytics.json': {},
   'reservations.json': [],
-  'appointments.json': []
+  'appointments.json': [],
+  'export-requests.json': []
 };
 const DOCUMENT_NAMES = Object.keys(DOCUMENT_DEFAULTS);
+// Documents added after the first database seed: created on first write, read as their default until then.
+const OPTIONAL_DOCUMENTS = new Set(['export-requests.json']);
 const IMAGE_NAME_RE = /^[a-f0-9]{24}\.(jpg|png|webp)$/;
 const IMAGE_TYPES = { jpg: 'image/jpeg', png: 'image/png', webp: 'image/webp' };
 
@@ -216,7 +219,7 @@ class PostgresStorage {
       const existing = await query(client, `SELECT name FROM ${this.documents}`);
       if (existing.rows.length) {
         const names = new Set(existing.rows.map(row => row.name));
-        if (DOCUMENT_NAMES.some(name => !names.has(name))) {
+        if (DOCUMENT_NAMES.some(name => !OPTIONAL_DOCUMENTS.has(name) && !names.has(name))) {
           throw new Error('La base contient déjà des données incomplètes ; aucun import n’a été effectué.');
         }
         await query(client, 'COMMIT');
@@ -266,6 +269,7 @@ class PostgresStorage {
     const result = await query(this.pool, `SELECT name, value FROM ${this.documents} WHERE name = ANY($1::text[])`, [selected]);
     const documents = Object.fromEntries(result.rows.map(row => [row.name, row.value]));
     for (const name of selected) {
+      if (!Object.hasOwn(documents, name) && OPTIONAL_DOCUMENTS.has(name)) documents[name] = structuredClone(DOCUMENT_DEFAULTS[name]);
       if (!Object.hasOwn(documents, name)) throw new Error(`Document PostgreSQL manquant : ${name}.`);
       validateDocument(name, documents[name]);
     }
@@ -281,6 +285,9 @@ class PostgresStorage {
     return this.transaction(async client => {
       for (const name of selected) {
         await query(client, 'SELECT pg_advisory_xact_lock(hashtext($1), hashtext($2))', [`${this.schema}.prime_cars_documents`, name]);
+        if (OPTIONAL_DOCUMENTS.has(name)) {
+          await query(client, `INSERT INTO ${this.documents} (name, value) VALUES ($1, $2::jsonb) ON CONFLICT (name) DO NOTHING`, [name, JSON.stringify(DOCUMENT_DEFAULTS[name])]);
+        }
       }
       const result = await query(client, `SELECT name, value FROM ${this.documents} WHERE name = ANY($1::text[]) FOR UPDATE`, [selected]);
       const documents = Object.fromEntries(result.rows.map(row => [row.name, row.value]));
