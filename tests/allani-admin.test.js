@@ -112,6 +112,22 @@ test('Node /allani is authenticated and editable; the static snapshot uses an is
     assert.match(infoHtml, /data:image\/jpeg;base64,/);
   }
 
+  for (const route of ['/qrcode', '/qrcode/']) {
+    const response = await fetch(`${base}${route}`);
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get('cache-control'), 'no-store');
+    const card = await response.text();
+    assert.match(card, /Scannez-moi/);
+    assert.ok(card.includes(`QR code : ${base}/info/`));
+    assert.ok(card.includes('href="/qrcode/qr-code.svg"'));
+  }
+  const qrDownload = await fetch(`${base}/qrcode/qr-code.svg`);
+  assert.equal(qrDownload.status, 200);
+  assert.match(qrDownload.headers.get('content-type'), /^image\/svg\+xml/);
+  assert.equal(qrDownload.headers.get('cache-control'), 'no-store');
+  assert.ok((await qrDownload.text()).includes(`QR code : ${base}/info/`));
+  assert.match((await fetch(`${base}/qrcode/qr-code.svg/`)).headers.get('content-type'), /^image\/svg\+xml/);
+
   assert.equal((await fetch(`${base}/api/admin/me`)).status, 401);
   assert.equal((await fetch(`${base}/api/admin/cars`, { method: 'POST' })).status, 401);
   assert.equal((await fetch(`${base}/api/admin/social`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: '{}' })).status, 401);
@@ -193,6 +209,15 @@ test('Node /allani is authenticated and editable; the static snapshot uses an is
   });
   assert.equal(jsonSettings.status, 200);
   assert.equal((await jsonSettings.json()).settings.wallpaperImage, wallpaper);
+  const configuredUrl = 'https://primec-dev.up.railway.app';
+  const qrSettings = await updateSite(siteForm(null, { siteUrl: configuredUrl }));
+  assert.equal(qrSettings.status, 200);
+  const configuredCard = await (await fetch(`${base}/qrcode`)).text();
+  const configuredSvg = await (await fetch(`${base}/qrcode/qr-code.svg`)).text();
+  assert.ok(configuredCard.includes(`QR code : ${configuredUrl}/info/`));
+  assert.ok(configuredCard.includes(configuredSvg.trim()));
+  assert.ok((await fs.readFile(path.join(fixture, 'front-office', 'qrcode', 'index.html'), 'utf8')).includes(`QR code : ${configuredUrl}/info/`));
+  assert.equal(await fs.readFile(path.join(fixture, 'front-office', 'qrcode', 'qr-code.svg'), 'utf8'), configuredSvg);
   assert.equal((await updateSite(siteForm(null, { shippingFrance: '-1' }))).status, 400);
   assert.equal((await updateSite(siteForm(null, { insuranceRate: '101' }))).status, 400);
   const shippingUpdate = await updateSite(siteForm(null, { shippingFrance: '5100', shippingDubai: '9200', shippingSuv: '1800', insuranceRate: '1.5', supportFee: '1300' }));

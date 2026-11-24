@@ -156,10 +156,16 @@ La génération produit aussi :
   « Bientôt disponible » ; les comptes se règlent dans la page **Réseaux sociaux** du back-office.
 - `qr/qr-code.svg` : QR code vers `<adresse du site>/info/` (logo au centre, correction d'erreur H).
 - `qr/index.html` : carte A6 prête à imprimer avec le QR code et un lien de téléchargement du SVG.
+- `qrcode/index.html` et `qrcode/qr-code.svg` : la même carte et son QR code, accessibles
+  à `/qrcode/` sur le site statique. Sur le site Node, `/qrcode` et `/qrcode/`
+  affichent la carte à jour ; `/qrcode/qr-code.svg` permet de télécharger le QR code.
 
 Le QR code dépend de l'adresse publique du site (section **Site vitrine** ou
 `node front-office/sync.js https://votre-site`). Sans adresse, il pointe vers
 `https://example.com/info/` et la carte affiche un avertissement : ne pas l'imprimer.
+Sur le site Node, l'adresse du back-office est prioritaire ; à défaut, le QR code utilise
+`BASE_URL`. Pour Railway, configurez l'adresse publique `https://primec-dev.up.railway.app`
+dans **Site vitrine** (sans `/info`) ou comme `BASE_URL`.
 Pour publier ces pages, déployer le dossier `front-office` entier. Code : `info-page.js`.
 
 ## Logo et thème

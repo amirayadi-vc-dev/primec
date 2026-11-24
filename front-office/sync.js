@@ -273,6 +273,18 @@ function renderLiveInfoPage(options = {}) {
   });
 }
 
+function renderLiveQrPage(options = {}) {
+  const settings = readSettings(options.settings);
+  const logo = `data:image/jpeg;base64,${fs.readFileSync(path.join(OUT, 'assets', 'logo.jpg')).toString('base64')}`;
+  const siteUrl = (options.siteUrl || settings.siteUrl || '').replace(/\/$/, '');
+  const qrSvg = infoPage.renderQrSvg(infoPage.infoUrl(siteUrl), { logo });
+  const html = infoPage.renderQrCard({
+    social: options.social || readJson('social.json'),
+    logo, siteUrl, qrSvg, qrHref: '/qrcode/qr-code.svg'
+  });
+  return { html, qrSvg };
+}
+
 function generate(options = {}) {
   const { html, settings, analytics, data, siteUrl: SITE_URL, logo: LOGO } = renderSite(options);
   const i18n = fs.readFileSync(path.join(ROOT, 'i18n.js'), 'utf8').replace(/<\/script/gi, '<\\/script');
@@ -288,6 +300,9 @@ function generate(options = {}) {
   fs.mkdirSync(path.join(OUT, 'qr'), { recursive: true });
   fs.writeFileSync(path.join(OUT, 'qr', 'qr-code.svg'), qrSvg);
   fs.writeFileSync(path.join(OUT, 'qr', 'index.html'), infoPage.renderQrCard({ social: data.social, logo: LOGO, siteUrl: SITE_URL, qrSvg }));
+  fs.mkdirSync(path.join(OUT, 'qrcode'), { recursive: true });
+  fs.writeFileSync(path.join(OUT, 'qrcode', 'qr-code.svg'), qrSvg);
+  fs.writeFileSync(path.join(OUT, 'qrcode', 'index.html'), infoPage.renderQrCard({ social: data.social, logo: LOGO, siteUrl: SITE_URL, qrSvg }));
   return { generatedAt: new Date().toISOString() };
 }
 
@@ -380,4 +395,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { generate, renderLiveSite, renderLiveInfoPage, renderLiveAdmin, renderWallpaper, readSnapshot, readSettings, readAnalytics, MEASUREMENT_ID_RE, DEFAULT_SETTINGS };
+module.exports = { generate, renderLiveSite, renderLiveInfoPage, renderLiveQrPage, renderLiveAdmin, renderWallpaper, readSnapshot, readSettings, readAnalytics, MEASUREMENT_ID_RE, DEFAULT_SETTINGS };

@@ -88,6 +88,18 @@ app.get(['/info', '/info/'], async (req, res) => {
     siteUrl: settings.siteUrl || BASE_URL
   }));
 });
+app.get(['/qrcode', '/qrcode/', '/qrcode/qr-code.svg'], async (req, res) => {
+  const documents = await storage.readMany(['social.json', 'static-site.json']);
+  const settings = staticSite.readSettings(documents['static-site.json']);
+  const page = staticSite.renderLiveQrPage({
+    settings: documents['static-site.json'],
+    social: documents['social.json'],
+    siteUrl: settings.siteUrl || BASE_URL
+  });
+  res.set('Cache-Control', 'no-store');
+  if (/\/qr-code\.svg\/?$/i.test(req.path)) return res.type('image/svg+xml').send(page.qrSvg);
+  res.type('html').send(page.html);
+});
 app.get('/i18n.js', (req, res) => res.sendFile(path.join(__dirname, 'i18n.js')));
 app.get('/social-links.js', (req, res) => res.sendFile(path.join(__dirname, 'social-links.js')));
 app.get('/share/:id', async (req, res) => {

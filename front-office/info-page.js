@@ -204,7 +204,7 @@ function renderInfoPage({ settings, social, logo, siteUrl }) {
 `;
 }
 
-function renderQrCard({ social, logo, siteUrl, qrSvg }) {
+function renderQrCard({ social, logo, siteUrl, qrSvg, qrHref = 'qr-code.svg' }) {
   const target = infoUrl(siteUrl);
   const shown = target.replace(/^https:\/\//, '').replace(/\/$/, '');
   const icons = socialAccounts(social).map(({ platform, label }) => `<span class="net ${platform}" title="${label}">${ICONS[platform]}</span>`).join('');
@@ -246,7 +246,7 @@ function renderQrCard({ social, logo, siteUrl, qrSvg }) {
   </style>
 </head>
 <body>
-  <div class="toolbar"><button class="primary" type="button" onclick="print()">🖨️ Imprimer (A6)</button><a href="qr-code.svg" download="prime-cars-qr-code.svg">⬇️ Télécharger le QR (SVG)</a><a href="${esc(siteUrl ? target : '../info/')}" target="_blank" rel="noopener">👀 Voir la page</a></div>
+  <div class="toolbar"><button class="primary" type="button" onclick="print()">🖨️ Imprimer (A6)</button><a href="${esc(qrHref)}" download="prime-cars-qr-code.svg">⬇️ Télécharger le QR (SVG)</a><a href="${esc(siteUrl ? target : '../info/')}" target="_blank" rel="noopener">👀 Voir la page</a></div>
   ${siteUrl ? '' : `<p class="warn">⚠️ <b>Adresse du site non configurée :</b> ce QR code pointe vers <code>${esc(target)}</code>. Renseignez l’adresse publique dans le back-office (Site vitrine) ou lancez <code>node front-office/sync.js https://votre-site</code>, puis réimprimez.</p>`}
   <article class="card">
     <div class="top"><div class="logo" role="img" aria-label="Prime Cars"></div></div>
