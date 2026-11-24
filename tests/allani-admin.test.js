@@ -141,20 +141,51 @@ test('Node /allani is authenticated and editable; the static snapshot uses an is
     ...options, headers: { ...options.headers, Cookie: cookie }
   });
   assert.equal((await request('/api/admin/me')).status, 200);
-  const form = new FormData();
-  for (const [key, value] of Object.entries({
+  const carFields = {
     brand: 'Test', name: 'Test car', year: '2025', km: '1000', price: '12000',
     fuel: 'Essence', origin: 'France', kind: 'occasion', status: 'available'
-  })) form.append(key, value);
+  };
+  const form = new FormData();
+  for (const [key, value] of Object.entries(carFields)) form.append(key, value);
+  form.set('color', '  Noir métallisé  ');
   const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9Zl1sAAAAASUVORK5CYII=', 'base64');
   form.append('photos', new Blob([png], { type: 'image/png' }), 'test.png');
   const create = await request('/api/admin/cars', { method: 'POST', body: form });
   assert.equal(create.status, 201);
   const car = await create.json();
   assert.equal(car.name, 'Test car');
+  assert.equal(car.color, 'Noir métallisé');
   assert.equal(car.images.length, 1);
   assert.equal((await fetch(base + car.image)).status, 200);
-  assert.equal((await (await fetch(`${base}/api/cars`)).json())[0].id, car.id);
+  const publicCar = (await (await fetch(`${base}/api/cars`)).json())[0];
+  assert.equal(publicCar.id, car.id);
+  assert.equal(publicCar.color, 'Noir métallisé');
+
+  const carUpdate = new FormData();
+  for (const [key, value] of Object.entries(carFields)) carUpdate.set(key, value);
+  const updateCar = () => request(`/api/admin/cars/${encodeURIComponent(car.id)}`, { method: 'PUT', body: carUpdate });
+  carUpdate.set('color', '  Bleu polaire satiné  ');
+  const coloredUpdate = await updateCar();
+  assert.equal(coloredUpdate.status, 200);
+  assert.equal((await coloredUpdate.json()).color, 'Bleu polaire satiné');
+  carUpdate.delete('color');
+  assert.equal((await (await updateCar()).json()).color, 'Bleu polaire satiné');
+  carUpdate.set('color', 'x'.repeat(41));
+  const invalidColor = await updateCar();
+  assert.equal(invalidColor.status, 400);
+  assert.match((await invalidColor.json()).error, /Couleur invalide/);
+  assert.equal((await (await fetch(`${base}/api/cars`)).json())[0].color, 'Bleu polaire satiné');
+  carUpdate.set('color', '');
+  assert.equal((await (await updateCar()).json()).color, '');
+
+  const legacyForm = new FormData();
+  for (const [key, value] of Object.entries(carFields)) legacyForm.set(key, value);
+  legacyForm.set('photos', new Blob([png], { type: 'image/png' }), 'test.png');
+  const legacyCreate = await request('/api/admin/cars', { method: 'POST', body: legacyForm });
+  assert.equal(legacyCreate.status, 201);
+  const legacyCar = await legacyCreate.json();
+  assert.equal(legacyCar.color, undefined);
+  assert.equal((await request(`/api/admin/cars/${encodeURIComponent(legacyCar.id)}`, { method: 'DELETE' })).status, 200);
 
   const social = await request('/api/admin/social', {
     method: 'PUT', headers: { 'Content-Type': 'application/json' },

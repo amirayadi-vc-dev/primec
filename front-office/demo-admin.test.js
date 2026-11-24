@@ -50,6 +50,26 @@ test('vehicles and photos can be created, edited and deleted without changing th
   assert.equal((await createApi(initial)('/api/cars')).length, 1);
 });
 
+test('demo vehicles retain, update and clear optional custom colours', async t => {
+  const api = createApi(initial);
+  t.after(() => api.dispose());
+  const form = carForm('Colour test');
+  form.set('color', '  Noir métallisé  ');
+  const car = await api('/api/admin/cars', { method: 'POST', body: form });
+  assert.equal(car.color, 'Noir métallisé');
+
+  const update = carForm('Colour test');
+  update.set('color', '  Bleu polaire satiné  ');
+  assert.equal((await api(`/api/admin/cars/${car.id}`, { method: 'PUT', body: update })).color, 'Bleu polaire satiné');
+  update.delete('color');
+  assert.equal((await api(`/api/admin/cars/${car.id}`, { method: 'PUT', body: update })).color, 'Bleu polaire satiné');
+  update.set('color', 'x'.repeat(41));
+  await assert.rejects(api(`/api/admin/cars/${car.id}`, { method: 'PUT', body: update }), /Couleur invalide/);
+  assert.equal((await api('/api/cars')).find(item => item.id === car.id).color, 'Bleu polaire satiné');
+  update.set('color', '');
+  assert.equal((await api(`/api/admin/cars/${car.id}`, { method: 'PUT', body: update })).color, '');
+});
+
 test('appointments support creation, status changes, deletion and refresh reset', async () => {
   const api = createApi(initial);
   const appointment = await api('/api/admin/appointments', json('POST', {

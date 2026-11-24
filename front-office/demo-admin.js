@@ -57,6 +57,10 @@ function createDemoAdminApi(initialSnapshot) {
         const existing = id ? findItem(snapshot.cars, id) : null;
         const body = options.body;
         const fields = Object.fromEntries([...body.entries()].filter(([key]) => key !== 'photos'));
+        if (fields.color !== undefined) {
+          if (typeof fields.color !== 'string' || fields.color.trim().length > 40) throw new Error('Couleur invalide (40 caractères maximum).');
+          fields.color = fields.color.trim();
+        }
         const files = body.getAll('photos').filter(file => file.size > 0);
         const images = files.length ? files.map(file => {
           const url = URL.createObjectURL(file);

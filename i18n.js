@@ -290,6 +290,44 @@
     'Mamo Pay n’est pas configuré.': ['Mamo Pay is not configured.', 'Mamo Pay غير مُفعّل.']
   };
 
+  const VEHICLE_COLORS = {
+    'Blanc': ['White', 'أبيض', '#ffffff'],
+    'Blanc nacré': ['Pearl white', 'أبيض لؤلؤي', '#f4f1e8'],
+    'Blanc cassé': ['Off-white', 'أبيض مائل للصفرة', '#e9e3d2'],
+    'Noir': ['Black', 'أسود', '#171719'],
+    'Noir métallisé': ['Metallic black', 'أسود معدني', '#383b40'],
+    'Gris': ['Grey', 'رمادي', '#888c90'],
+    'Gris clair': ['Light grey', 'رمادي فاتح', '#c4c6c8'],
+    'Gris foncé': ['Dark grey', 'رمادي داكن', '#51565b'],
+    'Gris métallisé': ['Metallic grey', 'رمادي معدني', '#9da2a8'],
+    'Gris anthracite': ['Anthracite grey', 'رمادي فحمي', '#383d42'],
+    'Argenté': ['Silver', 'فضي', '#c0c5cb'],
+    'Bleu': ['Blue', 'أزرق', '#285caa'],
+    'Bleu clair': ['Light blue', 'أزرق فاتح', '#87b9dc'],
+    'Bleu marine': ['Navy blue', 'أزرق كحلي', '#17345e'],
+    'Bleu métallisé': ['Metallic blue', 'أزرق معدني', '#386e9f'],
+    'Rouge': ['Red', 'أحمر', '#c91e2b'],
+    'Rouge métallisé': ['Metallic red', 'أحمر معدني', '#a42a36'],
+    'Bordeaux': ['Burgundy', 'عنابي', '#721e35'],
+    'Vert': ['Green', 'أخضر', '#35804b'],
+    'Vert olive': ['Olive green', 'أخضر زيتوني', '#737e45'],
+    'Vert métallisé': ['Metallic green', 'أخضر معدني', '#467764'],
+    'Jaune': ['Yellow', 'أصفر', '#e9c72f'],
+    'Orange': ['Orange', 'برتقالي', '#ed8127'],
+    'Marron': ['Brown', 'بني', '#79513b'],
+    'Beige': ['Beige', 'بيج', '#c8b79c'],
+    'Crème': ['Cream', 'كريمي', '#f2e6c6'],
+    'Ivoire': ['Ivory', 'عاجي', '#eee6d4'],
+    'Or': ['Gold', 'ذهبي', '#c69f40'],
+    'Bronze': ['Bronze', 'برونزي', '#a87948'],
+    'Cuivre': ['Copper', 'نحاسي', '#b86d45'],
+    'Rose': ['Pink', 'وردي', '#db8eac'],
+    'Violet': ['Purple', 'بنفسجي', '#805398'],
+    'Turquoise': ['Turquoise', 'فيروزي', '#40a9a4'],
+    'Multicolore': ['Multicolour', 'متعدد الألوان', 'linear-gradient(135deg,#d73535,#efc83e,#3ca76b,#317bd0)']
+  };
+  Object.assign(DICT, Object.fromEntries(Object.entries(VEHICLE_COLORS).map(([french, [english, arabic]]) => [french, [english, arabic]])));
+
   const NUM = '([\\d\\s.,]+)';
   const isolateNumber = value => `\u2066${value}\u2069`;
   const plural = (n, en, ar) => [n === 1 ? `1 ${en[0]}` : `${n} ${en[1]}`, n === 1 ? ar[0] : n === 2 ? ar[1] : n >= 3 && n <= 10 ? `${n} ${ar[2]}` : `${n} ${ar[3]}`];
@@ -325,6 +363,12 @@
 
   const norm = value => value.replace(/\s+/g, ' ').trim();
   const dict = new Map(Object.entries(DICT).map(([fr, translations]) => [norm(fr), translations]));
+  const colorNames = new Map(Object.entries(VEHICLE_COLORS).flatMap(([french, [english, arabic]]) =>
+    [french, english, arabic].map(value => [norm(value).toLowerCase(), french])));
+  window.vehicleColorSwatch = value => {
+    const french = typeof value === 'string' && colorNames.get(norm(value).toLowerCase());
+    return french ? VEHICLE_COLORS[french][2] : '';
+  };
   const params = new URLSearchParams(location.search);
   let stored = null;
   try { stored = localStorage.getItem(STORAGE_KEY); } catch {}
@@ -350,6 +394,34 @@
     }
     return localizeCountryNames(french);
   }
+  function translateVehicleColor(value) {
+    const french = colorNames.get(norm(value).toLowerCase());
+    if (french) return translate(french);
+    return norm(value) === 'À confirmer' ? translate(value) : value;
+  }
+  function updateColorSuggestions() {
+    const list = document.getElementById('color-suggestions');
+    if (!list) return;
+    list.replaceChildren(...Object.entries(VEHICLE_COLORS).map(([french, [english, arabic, color]], index) => {
+      const option = document.createElement('div');
+      option.id = `color-option-${index}`;
+      option.className = 'color-option';
+      option.setAttribute('role', 'option');
+      option.setAttribute('aria-selected', 'false');
+      option.dataset.value = translate(french);
+      option.dataset.search = [french, english, arabic].join(' ');
+      const swatch = document.createElement('span');
+      swatch.className = 'color-swatch';
+      swatch.style.background = color;
+      swatch.setAttribute('aria-hidden', 'true');
+      const label = document.createElement('span');
+      label.setAttribute('data-no-i18n', '');
+      label.textContent = option.dataset.value;
+      option.append(swatch, label);
+      return option;
+    }));
+    list.dispatchEvent(new Event('colors-updated'));
+  }
   const keepSpacing = (original, translated) => original.match(/^\s*/)[0] + translated + original.match(/\s*$/)[0];
   const skip = element => !element || element.closest('script,style,[data-no-i18n]');
 
@@ -364,7 +436,8 @@
     }
     let state = textState.get(node);
     if (!state || node.nodeValue !== state.applied) { state = { original: node.nodeValue }; textState.set(node, state); }
-    const translated = translate(state.original);
+    const translated = node.parentElement?.hasAttribute('data-vehicle-color')
+      ? translateVehicleColor(state.original) : translate(state.original);
     state.applied = translated === state.original ? state.original : keepSpacing(state.original, translated);
     if (node.nodeValue !== state.applied) node.nodeValue = state.applied;
   }
@@ -416,6 +489,7 @@
     try { localStorage.setItem(STORAGE_KEY, lang); } catch {}
     if (params.has('lang')) { params.set('lang', lang); history.replaceState(history.state, '', `?${params}${location.hash}`); }
     applyDocumentLanguage();
+    updateColorSuggestions();
     translateTree(document.documentElement);
     renderDescription();
     document.querySelectorAll('[data-lang]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.lang === lang)));

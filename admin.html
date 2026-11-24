@@ -111,6 +111,12 @@
     .editor-layout{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:22px;align-items:start}.editor-fields{min-width:0}
     .form-block{min-width:0;margin:0 0 22px;padding:18px;border:1px solid var(--line);border-radius:6px}.form-block legend{padding:0 8px;font:800 14px Manrope,sans-serif}.step-number{display:inline-grid;place-items:center;width:25px;height:25px;margin-inline-end:7px;border-radius:50%;background:#e8f0e7;color:var(--green);font-size:12px}
     .form-block .help{margin-bottom:0}.field-hint{display:block;color:var(--muted);font-size:11px;line-height:1.5;margin-top:5px}
+    .color-picker{position:relative}.color-input-wrap{position:relative}.color-input-wrap input{padding-left:12px;padding-right:40px}.color-input-wrap.has-color input{padding-left:38px}
+    html[dir="rtl"] .color-input-wrap input{padding-left:40px;padding-right:12px}html[dir="rtl"] .color-input-wrap.has-color input{padding-right:38px}
+    .color-swatch{display:inline-block;flex:0 0 16px;width:16px;height:16px;border:1px solid #0003;border-radius:50%}.color-swatch[hidden]{display:none}.color-input-wrap>.color-swatch{position:absolute;inset-inline-start:12px;top:50%;transform:translateY(-50%);pointer-events:none}
+    .color-toggle{position:absolute;inset-inline-end:4px;top:50%;transform:translateY(-50%);display:grid;place-items:center;width:32px;height:32px;padding:0;border:0;background:transparent;color:var(--muted);font-size:18px}.color-toggle:focus-visible{outline:2px solid var(--green)}
+    .color-menu{position:absolute;z-index:5;inset-inline:0;top:calc(100% + 4px);border:1px solid var(--line);border-radius:6px;background:white;box-shadow:0 10px 24px #0002;overflow:hidden}.color-menu[hidden],.color-option[hidden],.color-no-match[hidden]{display:none}
+    .color-options{max-height:230px;overflow-y:auto;overscroll-behavior:contain}.color-option{display:flex;align-items:center;gap:10px;padding:9px 12px;cursor:pointer}.color-option:hover,.color-option.active{background:var(--paper)}.color-no-match{margin:0;padding:12px;color:var(--muted);font-size:12px;line-height:1.5}.color-value{display:inline-flex;align-items:center;gap:6px;vertical-align:middle}
     .vehicle-preview{position:sticky;top:0;padding:16px;border:1px solid var(--line);border-radius:6px;background:#f5f7f3}.vehicle-preview h3{margin:0 0 12px;font-size:13px}.vehicle-preview-media{aspect-ratio:4/3;display:grid;place-items:center;margin-bottom:12px;background:#e8ebe7;border-radius:4px;overflow:hidden;color:var(--muted)}.vehicle-preview-media img{width:100%;height:100%;object-fit:cover}.vehicle-preview strong{display:block;font:800 17px Manrope,sans-serif;overflow-wrap:anywhere}.vehicle-preview p{margin:6px 0;color:var(--muted);font-size:12px}.vehicle-preview .preview-price{color:var(--green);font-weight:800;font-size:20px}.vehicle-preview .pill{margin-top:8px}
     .photo-dropzone{position:relative;display:grid;place-items:center;gap:7px;padding:24px 16px;margin:0;border:2px dashed var(--line);border-radius:6px;background:#f5f7f3;text-align:center;cursor:pointer}.photo-dropzone input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}.photo-dropzone:focus-within,.photo-dropzone.drag-over{border-color:var(--green);background:#e8f0e7}.photo-dropzone span{color:var(--muted);font-size:12px}.photo-dropzone b{color:var(--green);font-size:13px}
     .photo-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.photo-heading p{margin:0}.photo-count{white-space:nowrap;color:var(--muted);font-size:12px}.previews{display:grid;grid-template-columns:repeat(auto-fill,minmax(125px,1fr));gap:10px}.photo-tile{min-width:0;margin:0;padding:6px;border:1px solid var(--line);border-radius:5px;background:white}.photo-tile img{display:block;width:100%;height:95px;object-fit:cover;border-radius:3px}.photo-tile figcaption{display:grid;gap:5px;margin-top:6px}.photo-tile button{padding:6px;font-size:10px}.photo-tile .photo-label{font-size:10px;color:var(--muted);text-align:center}.photo-tile .pill{border-radius:3px;text-align:center;font-size:10px}
@@ -240,6 +246,21 @@
         <div><label for="f-price">Prix (TND) *</label><input id="f-price" name="price" type="number" min="1" step="0.01" required placeholder="169000" inputmode="decimal"><small class="field-hint">Prix du véhicule, hors frais d’importation.</small></div>
         <div><label for="f-km">Kilométrage</label><input id="f-km" name="km" maxlength="20" placeholder="24 500" inputmode="numeric"><small class="field-hint">Distance parcourue en kilomètres.</small></div>
         <div><label for="f-power">Puissance</label><input id="f-power" name="power" maxlength="20" placeholder="200 ch"></div>
+        <div>
+          <label for="f-color">Couleur</label>
+          <div class="color-picker" id="color-picker">
+            <div class="color-input-wrap" id="color-input-wrap">
+              <span class="color-swatch" id="color-selected-swatch" aria-hidden="true" hidden></span>
+              <input id="f-color" name="color" maxlength="40" placeholder="Ex. Noir métallisé" dir="auto" autocomplete="off" role="combobox" aria-autocomplete="list" aria-haspopup="listbox" aria-expanded="false" aria-controls="color-suggestions" aria-describedby="color-help">
+              <button type="button" class="color-toggle" id="color-toggle" tabindex="-1" aria-label="Afficher les couleurs" aria-expanded="false" aria-controls="color-suggestions"><span aria-hidden="true">▾</span></button>
+            </div>
+            <div class="color-menu" id="color-menu" hidden>
+              <div class="color-options" id="color-suggestions" role="listbox" aria-label="Suggestions de couleurs"></div>
+              <p class="color-no-match" id="color-no-match" role="status" hidden>Aucune suggestion. Vous pouvez saisir une teinte personnalisée.</p>
+            </div>
+          </div>
+          <small class="field-hint" id="color-help">Choisissez une couleur ou saisissez une teinte personnalisée.</small>
+        </div>
         <div><label for="f-fuel">Motorisation</label><select id="f-fuel" name="fuel"><option>Essence</option><option>Diesel</option><option>Hybride</option><option>Électrique</option></select></div>
         <div><label for="f-origin">Provenance</label><select id="f-origin" name="origin"><option value="France">France</option><option value="Dubaï">Émirats arabes unis</option></select></div>
         <div><label for="f-kind">État</label><select id="f-kind" name="kind"><option value="occasion">Occasion</option><option value="neuf">Neuf</option></select></div>
@@ -470,6 +491,12 @@
   <script>
     const $ = id => document.getElementById(id);
     const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const colorMarkup = value => {
+      const color = typeof value === 'string' ? value.trim() : '';
+      if (!color) return '';
+      const swatch = window.vehicleColorSwatch?.(color);
+      return `<span class="color-value">${swatch ? `<span class="color-swatch" style="background:${esc(swatch)}" aria-hidden="true"></span>` : ''}<span data-vehicle-color dir="auto">${esc(color)}</span></span>`;
+    };
     const imgUrl = src => /^\/uploads\//.test(src) ? src : `https://images.unsplash.com/${encodeURIComponent(src)}?auto=format&fit=crop&w=200&q=70`;
     const statusLabel = { available: 'Disponible', reserved: 'Réservé', sold: 'Vendu', pending: 'En attente', paid: 'Payé' };
     const appointmentStatusLabel = { planned: 'À confirmer', confirmed: 'Confirmé', completed: 'Terminé', cancelled: 'Annulé' };
@@ -729,7 +756,7 @@
       const visibleCars = filterCars(cars, filters);
       const filtered = Boolean(filters.q.trim() || filters.brand || filters.status || filters.kind || filters.origin || filters.fuel);
       const empty = cars.length ? 'Aucun véhicule ne correspond à votre recherche.' : 'Aucun véhicule enregistré pour le moment.';
-      $('car-list').innerHTML = visibleCars.map(car => `<tr data-car-id="${esc(car.id)}"${car.id === highlightedCarId ? ' class="row-new"' : ''}><td><img src="${esc(imgUrl(car.image))}" alt=""></td><td><strong>${esc(car.name)}</strong><br><small>${esc(car.trim)} · ${esc(car.year)} · ${esc(car.origin)}</small></td><td>${Number(car.price).toLocaleString('fr-FR')} TND</td><td><span class="pill ${esc(car.status)}">${statusLabel[car.status] || ''}</span></td><td><div class="share-actions"><button class="light" type="button" data-share-facebook="${esc(car.id)}">Facebook</button><button class="light" type="button" data-share-instagram="${esc(car.id)}">Instagram</button></div></td><td style="white-space:nowrap"><button class="light" data-edit="${esc(car.id)}">Modifier</button> <button class="danger" data-delete="${esc(car.id)}">Supprimer</button></td></tr>`).join('') || `<tr><td colspan="6">${empty}</td></tr>`;
+      $('car-list').innerHTML = visibleCars.map(car => `<tr data-car-id="${esc(car.id)}"${car.id === highlightedCarId ? ' class="row-new"' : ''}><td><img src="${esc(imgUrl(car.image))}" alt=""></td><td><strong>${esc(car.name)}</strong><br><small>${esc(car.trim)} · ${esc(car.year)} · ${esc(car.origin)}${typeof car.color === 'string' && car.color.trim() ? ` · ${colorMarkup(car.color)}` : ''}</small></td><td>${Number(car.price).toLocaleString('fr-FR')} TND</td><td><span class="pill ${esc(car.status)}">${statusLabel[car.status] || ''}</span></td><td><div class="share-actions"><button class="light" type="button" data-share-facebook="${esc(car.id)}">Facebook</button><button class="light" type="button" data-share-instagram="${esc(car.id)}">Instagram</button></div></td><td style="white-space:nowrap"><button class="light" data-edit="${esc(car.id)}">Modifier</button> <button class="danger" data-delete="${esc(car.id)}">Supprimer</button></td></tr>`).join('') || `<tr><td colspan="6">${empty}</td></tr>`;
       $('car-count').textContent = filtered ? `${visibleCars.length} véhicule(s) sur ${cars.length}` : `${cars.length} véhicule(s)`;
       $('clear-car-filter').classList.toggle('hidden', !filtered);
       $('clear-car-filter').textContent = 'Réinitialiser les filtres';
@@ -914,12 +941,117 @@
       selectedPhotos = [];
       $('f-photos').value = '';
     }
+    const colorInput = $('f-color');
+    const colorPicker = $('color-picker');
+    const colorList = $('color-suggestions');
+    const colorMenu = $('color-menu');
+    const colorToggle = $('color-toggle');
+    let activeColorOption = null;
+    const colorOptions = () => [...colorList.querySelectorAll('[role="option"]')];
+    const normalizeColorSearch = value => normalizeSearch(value).replace(/[\u064b-\u065f\u0670]/g, '');
+    function updateColorSwatch() {
+      const swatch = window.vehicleColorSwatch?.(colorInput.value);
+      $('color-selected-swatch').hidden = !swatch;
+      $('color-selected-swatch').style.background = swatch || '';
+      $('color-input-wrap').classList.toggle('has-color', !!swatch);
+    }
+    function setActiveColorOption(option) {
+      activeColorOption = option;
+      colorOptions().forEach(item => {
+        const active = item === option;
+        item.classList.toggle('active', active);
+        item.setAttribute('aria-selected', String(active));
+      });
+      if (option) {
+        colorInput.setAttribute('aria-activedescendant', option.id);
+        option.scrollIntoView({ block: 'nearest' });
+      } else {
+        colorInput.removeAttribute('aria-activedescendant');
+      }
+    }
+    function filterColorSuggestions(showAll = false) {
+      const terms = showAll ? [] : normalizeColorSearch(colorInput.value).split(/\s+/).filter(Boolean);
+      let matches = 0;
+      colorOptions().forEach(option => {
+        const search = normalizeColorSearch(option.dataset.search);
+        option.hidden = !terms.every(term => search.includes(term));
+        if (!option.hidden) matches++;
+      });
+      $('color-no-match').hidden = matches > 0;
+      setActiveColorOption(null);
+    }
+    function setColorMenu(open, showAll = false) {
+      colorMenu.hidden = !open;
+      colorInput.setAttribute('aria-expanded', String(open));
+      colorToggle.setAttribute('aria-expanded', String(open));
+      colorToggle.setAttribute('aria-label', open ? 'Masquer les couleurs' : 'Afficher les couleurs');
+      if (open) filterColorSuggestions(showAll);
+      else setActiveColorOption(null);
+    }
+    function selectColor(option) {
+      colorInput.value = option.dataset.value;
+      colorInput.dispatchEvent(new Event('input', { bubbles: true }));
+      colorInput.focus();
+      setColorMenu(false);
+    }
+    colorInput.addEventListener('focus', () => setColorMenu(true, !!window.vehicleColorSwatch?.(colorInput.value)));
+    colorInput.addEventListener('click', () => {
+      if (colorMenu.hidden) setColorMenu(true, !!window.vehicleColorSwatch?.(colorInput.value));
+    });
+    colorInput.addEventListener('input', () => {
+      updateColorSwatch();
+      if (colorMenu.hidden) setColorMenu(true, !!window.vehicleColorSwatch?.(colorInput.value));
+      else filterColorSuggestions();
+    });
+    colorInput.addEventListener('keydown', event => {
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        event.preventDefault();
+        if (colorMenu.hidden) setColorMenu(true);
+        const visible = colorOptions().filter(option => !option.hidden);
+        if (!visible.length) return;
+        const index = visible.indexOf(activeColorOption);
+        const next = index < 0 ? (event.key === 'ArrowDown' ? 0 : visible.length - 1)
+          : (index + (event.key === 'ArrowDown' ? 1 : -1) + visible.length) % visible.length;
+        setActiveColorOption(visible[next]);
+      } else if (event.key === 'Enter' && !colorMenu.hidden && activeColorOption) {
+        event.preventDefault();
+        selectColor(activeColorOption);
+      } else if (event.key === 'Escape' || event.key === 'Tab') {
+        setColorMenu(false);
+      }
+    });
+    colorToggle.addEventListener('click', () => {
+      const open = colorMenu.hidden;
+      colorInput.focus();
+      setColorMenu(open, true);
+    });
+    colorList.addEventListener('mousedown', event => {
+      if (event.target.closest('[role="option"]')) event.preventDefault();
+    });
+    colorList.addEventListener('click', event => {
+      const option = event.target.closest('[role="option"]');
+      if (option && !option.hidden) selectColor(option);
+    });
+    colorList.addEventListener('colors-updated', () => {
+      filterColorSuggestions();
+      updateColorSwatch();
+    });
+    document.addEventListener('click', event => {
+      if (!colorPicker.contains(event.target) && !colorMenu.hidden) setColorMenu(false);
+    });
+    document.addEventListener('focusin', event => {
+      if (!colorPicker.contains(event.target) && !colorMenu.hidden) setColorMenu(false);
+    });
     function updateCarPreview() {
       const source = selectedPhotos[0]?.url || currentPhotoUrls[0];
       $('vehicle-preview-media').innerHTML = source ? `<img src="${esc(source)}" alt="${esc($('f-name').value || 'Aperçu de l’annonce')}">` : '<span>Ajoutez vos photos</span>';
       $('vehicle-preview-name').textContent = $('f-name').value || 'Nom du véhicule';
       $('vehicle-preview-trim').textContent = $('f-trim').value;
-      $('vehicle-preview-specs').innerHTML = [$('f-year').value, $('f-fuel').value, $('f-origin').value].filter(Boolean).map(value => `<span>${esc(value)}</span>`).join(' · ');
+      const specs = [$('f-year').value, $('f-fuel').value, $('f-origin').value].filter(Boolean).map(value => `<span>${esc(value)}</span>`);
+      const color = $('f-color').value.trim();
+      if (color) specs.push(colorMarkup(color));
+      updateColorSwatch();
+      $('vehicle-preview-specs').innerHTML = specs.join(' · ');
       $('vehicle-preview-price').textContent = $('f-price').value ? `${Number($('f-price').value).toLocaleString('fr-FR')} TND` : '— TND';
       $('vehicle-preview-status').textContent = statusLabel[$('f-status').value];
       $('vehicle-preview-status').className = 'pill ' + $('f-status').value;
@@ -949,6 +1081,7 @@
       clearSelectedPhotos();
       currentPhotoUrls = [];
       $('car-form').reset();
+      setColorMenu(false);
       $('form-title').textContent = 'Ajouter un véhicule'; $('submit-car').textContent = 'Ajouter le véhicule';
       $('photo-help').textContent = 'La première photo sert de photo principale.'; $('cancel-edit').classList.add('hidden');
       $('photo-error').textContent = '';
@@ -1013,7 +1146,7 @@
         clearSelectedPhotos();
         currentPhotoUrls = (car.images?.length ? car.images : [car.image]).filter(Boolean).map(imgUrl);
         editingId = editId;
-        for (const key of ['brand', 'name', 'trim', 'year', 'km', 'power', 'price', 'fuel', 'origin', 'kind', 'status']) $('f-' + key).value = car[key] ?? '';
+        for (const key of ['brand', 'name', 'trim', 'year', 'km', 'power', 'color', 'price', 'fuel', 'origin', 'kind', 'status']) $('f-' + key).value = car[key] ?? '';
         $('form-title').textContent = 'Modifier : ' + car.name; $('submit-car').textContent = 'Enregistrer les modifications';
         $('photo-help').textContent = 'Laissez vide pour conserver les photos actuelles. De nouvelles photos remplacent les anciennes.';
         $('photo-error').textContent = '';
@@ -1055,6 +1188,7 @@
         $('f-photos').focus();
         return;
       }
+      setColorMenu(false);
       const body = new FormData($('car-form'));
       body.delete('photos');
       selectedPhotos.forEach(photo => body.append('photos', photo.file));

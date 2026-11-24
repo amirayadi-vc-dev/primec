@@ -234,6 +234,10 @@ function validateCar(body) {
     kind: body.kind, price: Number(body.price), power: text(body.power, 20), status: body.status || 'available'
   };
   const errors = [];
+  if (body.color !== undefined) {
+    if (typeof body.color !== 'string' || body.color.trim().length > 40) errors.push('Couleur invalide (40 caractères maximum).');
+    else car.color = body.color.trim();
+  }
   if (!car.brand || !car.name) errors.push('Marque et modèle obligatoires.');
   if (!Number.isInteger(car.year) || car.year < 1950 || car.year > 2100) errors.push('Année invalide.');
   if (!Number.isFinite(car.price) || car.price <= 0) errors.push('Prix invalide.');

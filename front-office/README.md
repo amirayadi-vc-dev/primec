@@ -94,6 +94,11 @@ s'ouvrent sur leur plateforme ; Facebook conserve son lecteur intégré.
 Le bouton d'enregistrement et l'annulation indiquent les changements non enregistrés.
 
 La page **Ajouter un véhicule** regroupe identité, caractéristiques/prix et photos.
+Le champ facultatif **Couleur** propose des suggestions illustrées dans la langue choisie,
+filtrables en saisissant un nom en français, anglais ou arabe. Il accepte aussi une teinte
+personnalisée. La couleur apparaît dans le catalogue et sur la fiche du véhicule ; les annonces
+sans couleur indiquent « À confirmer ». Les teintes personnalisées restent affichées telles
+qu'elles ont été saisies, sans pastille de couleur.
 Les photos peuvent être ajoutées en plusieurs sélections ou par glisser-déposer :
 10 maximum, 8 Mo chacune, JPG/PNG/WebP. Choisissez la photo principale ou retirez
 une photo avant d'enregistrer. En modification, les photos actuelles restent
